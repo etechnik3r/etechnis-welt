@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speicher-Simulation: Zendure SolarFlow im Verbund</title>
+<meta name="description" content="Live-Simulation mehrerer Zendure SolarFlow-Speicher: PV-Überschuss, Hauslast und Wallbox einstellen und sehen, wie die Home-Assistant-Integration Zendure-HA die Leistung auf die Geräte verteilt – mit dem portierten Original-Regelcode.">
+<meta name="theme-color" content="#0a0e13">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/tools.css">
+</head>
+<body>
+
+<!-- Diffuse Leiterplatten-Textur im Hintergrund -->
+<div class="tech-bg" aria-hidden="true"></div>
+
+<!-- ═══════════════ NAVIGATION (identisch zur Startseite) ═══════════════ -->
+<button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">&#9776;</button>
+<div class="nav-backdrop"></div>
+
+<nav class="sidebar" id="sidebar" aria-label="Hauptnavigation">
+    <div class="sidebar-inner">
+        <a class="brand" href="index.html">
+            <span class="brand-name">etechnik3rs Welt</span>
+            <span class="brand-role">Erfinder &middot; Ingenieur</span>
+        </a>
+        <ul class="nav-list">
+            <li><a href="index.html#start">Start</a></li>
+            <li><a href="index.html#themen">Themen im &Uuml;berblick</a></li>
+
+            <li class="nav-group">Elektromobilit&auml;t</li>
+            <li><a href="index.html#elektrofahrzeuge">Elektrofahrzeuge</a></li>
+            <li><a href="index.html#laden">Laden &amp; Ladeinfrastruktur</a></li>
+            <li><a href="index.html#nachtfahrt">Langstrecke: Nachtfahrt</a></li>
+            <li><a href="index.html#batterie">Batteriediagnose</a></li>
+            <li><a href="index.html#kostenrechner">Kostenvergleich Elektroauto</a></li>
+
+            <li class="nav-group">Energie &amp; W&auml;rme</li>
+            <li><a href="index.html#waermepumpen">W&auml;rmepumpen</a></li>
+            <li><a href="index.html#photovoltaik">Photovoltaik &amp; Speicher</a></li>
+            <li><a class="active" href="zendure-simulation.html">Speicher-Simulation Zendure</a></li>
+            <li><a href="index.html#thermografie">Thermografie</a></li>
+
+            <li class="nav-group">Smart Home &amp; Automation</li>
+            <li><a href="index.html#homeassistant">Home Assistant</a></li>
+            <li><a href="index.html#homematic">Homematic</a></li>
+
+            <li class="nav-group">Werkstatt &amp; Making</li>
+            <li><a href="index.html#druck3d">3D-Druck</a></li>
+            <li><a href="index.html#drohnen">Modellflug &amp; Drohnen</a></li>
+            <li><a href="index.html#elektronik">Elektronik &amp; Embedded</a></li>
+
+            <li class="nav-group">Erfindungen</li>
+            <li><a href="index.html#erfindungen">Erfindungen &amp; Patente</a></li>
+
+            <li class="nav-group">Kontakt</li>
+            <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+
+        <!-- Fußbereich: Einstellungen / App installieren -->
+        <div class="sidebar-foot">
+            <button class="gear-btn" id="gearBtn" aria-expanded="false" aria-haspopup="true">
+                <span class="gear-ico" aria-hidden="true">&#9881;</span> Einstellungen
+            </button>
+            <div class="gear-menu" id="gearMenu" hidden>
+                <button class="gear-item" id="installBtn" hidden>App installieren</button>
+                <button class="gear-item" id="updateCheck">Nach Updates suchen</button>
+                <div class="gear-version" id="appVersion"></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Update-Hinweis -->
+<div class="update-banner" id="updateBanner" role="alert" aria-live="polite">
+    <span>Neue Version verf&uuml;gbar.</span>
+    <button class="ub-reload" id="ubReload">Neu laden</button>
+    <button class="ub-close" id="ubClose" aria-label="Hinweis schlie&szlig;en">&times;</button>
+</div>
+
+
+
+<div class="page">
+    <div class="tool tool-wide">
+
+        <a class="backlink" href="index.html#photovoltaik">&#8592; Zur&uuml;ck zur &Uuml;bersicht</a>
+
+        <!-- Kopf -->
+        <div class="tool-kicker">Simulation &middot; Energie &amp; Speicher</div>
+        <h1 class="tool-title">Zendure-Speicher im Verbund simulieren</h1>
+        <div class="tool-sub">
+            Stell PV-Leistung, Hauslast und Wallbox ein und schau zu, wie die Home-Assistant-Integration
+            <b>Zendure-HA</b> die Leistung auf einen oder mehrere SolarFlow verteilt. Die Regelung ist
+            der portierte Original-Code der Integration (Smart Matching, Fuse Groups, Zu- und Abschalten
+            von Ger&auml;ten, Lade-Hysterese) &ndash; nur Ger&auml;te, Akku und Z&auml;hler sind ein Ersatzmodell.
+        </div>
+
+        <!-- Kontext -->
+        <div class="context-bar">
+            <div class="cx"><span class="cx-k">Modus</span><span class="cx-v" id="cx-mode"></span></div>
+            <div class="cx"><span class="cx-k">Ger&auml;te</span><span class="cx-v" id="cx-dev"></span></div>
+            <div class="cx"><span class="cx-k">Kapazit&auml;t</span><span class="cx-v" id="cx-kwh"></span></div>
+            <div class="cx"><span class="cx-k">Regelcode</span><span class="cx-v" id="cx-src"></span></div>
+        </div>
+
+        <!-- Steuerleiste -->
+        <div class="sim-bar">
+            <button class="btn primary" id="playBtn">&#9208; Pause</button>
+            <button class="btn" id="resetBtn" title="Simulation mit den aktuellen Einstellungen neu starten">&#8634; Neu starten</button>
+            <label class="speed-ctl">
+                <span class="s-label">Zeitraffer</span>
+                <input type="range" id="speed" min="0" max="1000" step="1" aria-label="Zeitraffer 1- bis 1000-fach">
+                <span class="speed-v" id="speed-v"></span>
+            </label>
+            <div class="sim-clock">Simulationszeit <b id="simTime">00:00:00</b></div>
+        </div>
+
+        <!-- Kennzahlen -->
+        <div class="readouts readouts-fixed">
+            <div class="readout">
+                <div class="r-label">Netz (P1-Z&auml;hler)</div>
+                <div class="r-value" id="ro-p1"></div>
+                <div class="r-sub" id="ro-p1-s"></div>
+            </div>
+            <div class="readout">
+                <div class="r-label">Speicher</div>
+                <div class="r-value" id="ro-batt"></div>
+                <div class="r-sub" id="ro-batt-s"></div>
+            </div>
+            <div class="readout">
+                <div class="r-label">Ladestand</div>
+                <div class="r-value" id="ro-soc"></div>
+                <div class="r-sub" id="ro-soc-s"></div>
+            </div>
+            <div class="readout">
+                <div class="r-label">Manager</div>
+                <div class="r-value" id="ro-mgr"></div>
+                <div class="r-sub" id="ro-mgr-s"></div>
+            </div>
+        </div>
+
+        <!-- Energiefluss (nach dem Vorbild des Home-Assistant-Energie-Dashboards) -->
+        <div class="panel flow-panel">
+            <div class="flow-head">
+                <span class="flow-title">Energiefluss</span>
+                <span class="flow-sub" id="flowSub"></span>
+            </div>
+            <svg id="flow" class="flow-svg" viewBox="0 0 760 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Energiefluss zwischen PV, Netz, Haus, Wallbox und Speichern"></svg>
+            <div class="chart-note">
+                Punkte flie&szlig;en von der Quelle zur Senke; je dicker die Linie und je schneller die Punkte, desto mehr Leistung.
+                Der Ring um einen Speicher zeigt seinen Ladestand. L&auml;dt ein Speicher, w&auml;hrend ein anderer entl&auml;dt, flie&szlig;t
+                Energie von Speicher zu Speicher &ndash; das ist bei Umschaltvorg&auml;ngen kurz zu sehen.
+            </div>
+        </div>
+
+        <!-- Gerätekarten -->
+        <div class="dev-grid" id="devGrid"></div>
+
+        <!-- Diagramm: Gesamthistorie mit Zoom -->
+        <div class="panel">
+            <div class="chart-tools">
+                <div class="tabs" id="chartTabs" style="margin:0">
+                    <button class="tab active" data-view="power">Leistung</button>
+                    <button class="tab" data-view="soc">Ladestand</button>
+                </div>
+                <span style="flex:1"></span>
+                <div class="btn-row">
+                    <button class="btn small" id="zoomOut" title="Herauszoomen" aria-label="Herauszoomen">&minus;</button>
+                    <button class="btn small" id="zoomIn" title="Hineinzoomen" aria-label="Hineinzoomen">+</button>
+                    <button class="btn small" id="viewAll" title="Gesamten Verlauf seit dem Neustart zeigen">Alles</button>
+                    <button class="btn small" id="viewLive" title="Den neuesten Ausschnitt mitlaufen lassen">Live</button>
+                    <select id="liveSel" class="tool-input" aria-label="Breite des Live-Ausschnitts">
+                        <option value="300">5 min</option>
+                        <option value="900" selected>15 min</option>
+                        <option value="3600">1 h</option>
+                        <option value="10800">3 h</option>
+                    </select>
+                </div>
+            </div>
+            <div class="view-info" id="viewInfo"></div>
+            <div class="chart-wrap">
+                <svg id="chart" class="chart-main" viewBox="0 0 760 330" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Verlauf der Leistungen bzw. Ladest&auml;nde"></svg>
+                <div class="tip" id="tip"></div>
+            </div>
+            <svg id="ov" class="chart-ov" viewBox="0 0 760 54" preserveAspectRatio="none" role="img" aria-label="&Uuml;bersicht &uuml;ber den gesamten Verlauf &ndash; Bereich zum Zoomen aufziehen"></svg>
+            <div class="legend" id="legend"></div>
+            <div class="chart-note" id="chartNote"></div>
+        </div>
+
+        <!-- Auswertung -->
+        <div class="extras" id="extras"></div>
+
+        <!-- Regler -->
+        <div class="controls">
+            <div class="ctrl-card">
+                <div class="ctrl-head" style="color:var(--series-b)">Haus &amp; Photovoltaik</div>
+                <div class="slider">
+                    <div class="slider-row"><span class="s-label">PV-Leistung (AC, Wechselrichter)</span><span class="s-value" id="pv-v"></span></div>
+                    <input type="range" id="pv" min="0" max="12000" step="50">
+                    <div class="s-hint">Erzeugung des separaten PV-Wechselrichters (z.&nbsp;B. Fronius), wirkt am Z&auml;hler.</div>
+                </div>
+                <div class="slider">
+                    <div class="slider-row"><span class="s-label">Hauslast</span><span class="s-value" id="load-v"></span></div>
+                    <input type="range" id="load" min="0" max="8000" step="50">
+                </div>
+                <div class="slider">
+                    <div class="slider-row"><span class="s-label">Wallbox</span><span class="s-value" id="wb-v"></span></div>
+                    <input type="range" id="wb" min="0" max="11000" step="100">
+                    <div class="s-hint">Z.&nbsp;B. EVCC-Sofortladen in der Nacht &ndash; der Speicher sieht die Wallbox als ganz normale Last.</div>
+                </div>
+                <label class="check-row"><input type="checkbox" id="clouds"> Wolkenzug (PV schwankt zuf&auml;llig)</label>
+                <div class="slider">
+                    <div class="slider-row"><span class="s-label">Messrauschen am Z&auml;hler</span><span class="s-value" id="noise-v"></span></div>
+                    <input type="range" id="noise" min="0" max="300" step="5">
+                    <div class="s-hint">Ohne Rauschen meldet ein konstanter Z&auml;hler keine neuen Werte &ndash; dann regelt die Integration auch nicht nach (Home Assistant l&ouml;st nur bei ge&auml;ndertem Wert ein Ereignis aus).</div>
+                </div>
+                <div class="sub-divider">Lastspitze</div>
+                <div class="slider">
+                    <div class="slider-row"><span class="s-label">Leistung / Dauer</span><span class="s-value" id="spike-v"></span></div>
+                    <input type="range" id="spikeP" min="200" max="6000" step="100" aria-label="Leistung der Lastspitze">
+                    <input type="range" id="spikeD" min="10" max="900" step="10" aria-label="Dauer der Lastspitze" style="margin-top:10px">
+                </div>
+                <button class="btn" id="spikeBtn">&#9889; Lastspitze ausl&ouml;sen (z.&nbsp;B. Wasserkocher)</button>
+            </div>
+
+            <div class="ctrl-card">
+                <div class="ctrl-head" style="color:var(--series-a)">Zendure Manager</div>
+                <div class="field-row">
+                    <span class="s-label">Betriebsart</span>
+                    <select id="modeSel" class="tool-input">
+                        <option value="2">Smart Matching (Laden &amp; Entladen)</option>
+                        <option value="3">Smart discharge only (nur Entladen)</option>
+                        <option value="4">Smart charge only (nur Laden)</option>
+                        <option value="5">Store solar</option>
+                        <option value="1">Manual Power</option>
+                        <option value="0">Off</option>
+                    </select>
+                    <span class="s-hint" id="mode-h"></span>
+                </div>
+                <div class="slider" id="manualBox" hidden>
+                    <div class="slider-row"><span class="s-label">Manual Power</span><span class="s-value" id="man-v"></span></div>
+                    <input type="range" id="man" min="-8000" max="8000" step="50">
+                    <div class="s-hint">Positiv = entladen ins Haus, negativ = aus dem Netz laden (AC-Seite).</div>
+                </div>
+                <div class="sub-divider">So entscheidet der Code bei dieser Konfiguration</div>
+                <div class="guide" style="margin-top:0" id="rules"></div>
+            </div>
+
+            <!-- Gerätekonfiguration -->
+            <div class="ctrl-card span-2">
+                <div class="ctrl-head">Ger&auml;te</div>
+                <div class="btn-row" style="margin-bottom:14px">
+                    <button class="btn small" data-preset="ist">Ist: 1&times; 2400 AC+ mit 2&times; AB3000L</button>
+                    <button class="btn small" data-preset="plan">Plan: 2&times; 2400 AC+ mit je 1&times; AB3000L</button>
+                    <button class="btn small" data-preset="cluster4">Cluster: 4&times; 2400 AC+</button>
+                    <button class="btn small" id="addDev">+ Ger&auml;t</button>
+                </div>
+                <div class="cfg-devs" id="cfgDevs"></div>
+                <div class="cfg-hint">
+                    <b>Entlade- und Ladelimit</b> (Regler) wirken sofort, auch w&auml;hrend die Simulation l&auml;uft. Sie entsprechen den
+                    Leistungsgrenzen, die am Ger&auml;t eingestellt sind; Standard je 2400&nbsp;W (2400&nbsp;AC+ laut Handbuch: Akku max.
+                    2400&nbsp;W, AC-Ausgang ohne Elektriker-Freigabe 800&nbsp;W). <b>&bdquo;Integration kennt die Limits&ldquo;</b> bedeutet:
+                    das Ger&auml;t meldet sie an Home Assistant (<code>inverseMaxPower</code>, <code>chargeMaxLimit</code>). Ohne Haken
+                    rechnet die Integration mit ihren Code-Werten (<code>setLimits</code>, beim 2400&nbsp;AC+ 2400&nbsp;W / 3200&nbsp;W),
+                    das Ger&auml;t setzt aber nur die eingestellten Limits um. Die &uuml;brigen Felder wirken nach &bdquo;&Uuml;bernehmen&ldquo;.
+                    Kapazit&auml;t AC+: 2,4&nbsp;kWh intern + je 2,88&nbsp;kWh AB3000L. Die Integration verwaltet beliebig viele Ger&auml;te;
+                    die Simulation erlaubt bis zu 8.
+                </div>
+                <div class="btn-row" style="margin-top:12px;align-items:center">
+                    <button class="btn primary" id="applyBtn">&Uuml;bernehmen &amp; neu starten</button>
+                    <span class="dirty-note" id="dirtyNote" hidden>Ge&auml;nderte Ger&auml;tedaten werden erst nach &bdquo;&Uuml;bernehmen&ldquo; wirksam.</span>
+                </div>
+            </div>
+
+            <!-- Modellannahmen -->
+            <div class="ctrl-card span-2">
+                <details class="thg-details">
+                    <summary>Ersatzmodell &ndash; Annahmen f&uuml;r Ger&auml;t, Akku und Z&auml;hler</summary>
+                    <div class="thg-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+                        <label class="thg-field"><span class="s-label">Reaktionszeit &tau; (s)</span><input type="number" id="ph-tau" class="tool-input" min="0.1" max="20" step="0.1"></label>
+                        <label class="thg-field"><span class="s-label">Totzeit Befehl (s)</span><input type="number" id="ph-dead" class="tool-input" min="0" max="10" step="0.1"></label>
+                        <label class="thg-field"><span class="s-label">Wirkungsgrad Round-Trip (%)</span><input type="number" id="ph-rt" class="tool-input" min="60" max="100" step="1"></label>
+                        <label class="thg-field"><span class="s-label">Z&auml;hlertakt (s)</span><input type="number" id="ph-meter" class="tool-input" min="0.2" max="10" step="0.1"></label>
+                    </div>
+                    <div class="cfg-hint" style="margin-top:12px">
+                        Diese Werte stammen <b>nicht</b> aus der Integration, sondern beschreiben das echte Ger&auml;t: wie schnell
+                        es einem neuen Sollwert folgt (PT1-Glied mit Totzeit), wie verlustbehaftet die Wandlung ist und wie
+                        oft der Netzz&auml;hler einen neuen Wert an Home Assistant meldet. Wirkungsgrad: Round-Trip AC&nbsp;&rarr;&nbsp;Akku&nbsp;&rarr;&nbsp;AC,
+                        vorbelegt mit 85&nbsp;% (Messwert aus einer realen Anlage; Zendure nennt bis zu 93&nbsp;%). Er wird je zur H&auml;lfte auf
+                        Laden und Entladen verteilt (&eta; je Richtung = &radic;Round-Trip). Reaktion des Gesamtsystems laut Testbericht von connect 3&ndash;5&nbsp;s. Alles Sch&auml;tzwerte &ndash; mit Messwerten aus
+                        deiner Anlage wird die Simulation genauer. &Auml;nderungen wirken nach &bdquo;&Uuml;bernehmen&ldquo;.
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <!-- Protokoll -->
+        <details class="table-box">
+            <summary>Regelprotokoll (Log-Ausgaben wie in der Integration)</summary>
+            <div style="padding:0 14px 14px">
+                <div class="btn-row" style="margin-bottom:8px;align-items:center">
+                    <label class="check-row" style="margin:0"><input type="checkbox" id="logCmd" checked> Befehle an Ger&auml;te</label>
+                    <label class="check-row" style="margin:0"><input type="checkbox" id="logDev"> &bdquo;no action&ldquo;-Meldungen</label>
+                    <button class="btn small" id="logFreeze">Anhalten</button>
+                </div>
+                <div class="log-box" id="logBox" aria-live="off"></div>
+            </div>
+        </details>
+
+        <p class="footnote" id="footnote">
+            Regelcode: <a class="src-url" href="https://github.com/Zendure/Zendure-HA" target="_blank" rel="noopener">Zendure/Zendure-HA</a>,
+            Stand main @ <span id="fn-commit"></span> (<span id="fn-date"></span>; Regelung identisch mit Release 1.4.4), portiert aus
+            <code>manager.py</code>, <code>fusegroup.py</code> und <code>device.py</code> (Datei <code>js/zendure-sim.js</code>).
+            Ger&auml;tedaten 2400&nbsp;AC+: Zendure-Bedienungsanleitung (Stand 22.01.2026) und Produktseite.
+            Nicht abgebildet: DC-Solareingang am Ger&auml;t (Bypass), Off-Grid-Steckdose, HEMS, Kalibrierfahrten,
+            Akkuheizung und &auml;ltere Ger&auml;te (Hyper, Hub). Keine Gew&auml;hr &ndash; die Simulation ersetzt keine
+            Messung an der echten Anlage.
+        </p>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/zendure-sim.js"></script>
+<script>
+(function () {
+"use strict";
+var Z = window.ZendureSim;
+var $ = function (id) { return document.getElementById(id); };
+var STORAGE_KEY = "ew-zendure-sim-v3";
+var DEV_COLORS = ["var(--dev-1)", "var(--dev-2)", "var(--dev-3)", "var(--dev-4)",
+                  "var(--dev-5)", "var(--dev-6)", "var(--dev-7)", "var(--dev-8)"];
+var MAX_DEV = 8;
+var MODE_NAMES = { 0: "Off", 1: "Manual Power", 2: "Smart Matching", 3: "Nur Entladen", 4: "Nur Laden", 5: "Store solar" };
+var MODE_HINTS = {
+    0: "Der Manager steuert nichts, die Ger&auml;te werden abgeschaltet.",
+    1: "Fester Sollwert an der AC-Seite, unabh&auml;ngig vom Z&auml;hler.",
+    2: "H&auml;lt den Z&auml;hler auf 0&nbsp;W: bei &Uuml;berschuss laden, bei Bezug entladen.",
+    3: "Deckt nur Bezug, l&auml;dt nie aus dem &Uuml;berschuss.",
+    4: "L&auml;dt nur aus dem &Uuml;berschuss, entl&auml;dt nie.",
+    5: "Wie &bdquo;nur Laden&ldquo;; Unterschied nur bei PV direkt am Ger&auml;t (hier nicht modelliert)."
+};
+
+/* ── Konfiguration ─────────────────────────────────────── */
+function devPreset(i, type, kWh, soc) {
+    var t = Z.DEVICE_TYPES[type];
+    return { id: "d" + (i + 1), name: "Ger\u00e4t " + (i + 1), type: type, kWh: kWh, startSoc: soc,
+             minSoc: 10, socSet: 100, fuseGroup: "owncircuit",
+             limDis: Math.min(2400, t.hwDischarge), limCh: Math.min(2400, Math.abs(t.charge)), known: true };
+}
+var PRESETS = {
+    ist:      function () { return [devPreset(0, "sf2400acplus", 8.16, 60)]; },
+    plan:     function () { return [devPreset(0, "sf2400acplus", 5.28, 60), devPreset(1, "sf2400acplus", 5.28, 55)]; },
+    cluster4: function () { return [70, 62, 55, 48].map(function (soc, i) { return devPreset(i, "sf2400acplus", 5.28, soc); }); }
+};
+var DEFAULTS = {
+    devices: PRESETS.plan(),
+    mode: 2, manualPower: 1000,
+    phys: { tau: 1.5, deadTime: 1.0, rt: 85, meterInterval: 1.0, dt: 0.1 },
+    scene: { pv: 0, load: 700, wallbox: 0, noise: 20, clouds: false, spikePower: 2000, spikeDuration: 180 },
+    speed: 10, hidden: []
+};
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+var S = clone(DEFAULTS);
+try {
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (saved && typeof saved === "object") {
+        ["mode", "manualPower", "speed"].forEach(function (k) { if (typeof saved[k] === "number") S[k] = saved[k]; });
+        if (Array.isArray(saved.hidden)) S.hidden = saved.hidden.filter(function (x) { return typeof x === "string"; });
+        ["phys", "scene"].forEach(function (k) {
+            if (saved[k]) Object.keys(S[k]).forEach(function (f) { if (typeof saved[k][f] === typeof S[k][f]) S[k][f] = saved[k][f]; });
+        });
+        if (Array.isArray(saved.devices) && saved.devices.length >= 1 && saved.devices.length <= MAX_DEV) {
+            var okDev = saved.devices.every(function (d) { return d && Z.DEVICE_TYPES[d.type] && typeof d.kWh === "number"; });
+            if (okDev) S.devices = saved.devices.map(function (d, i) { return Object.assign(devPreset(i, d.type, d.kWh, 50), d); });
+        }
+    }
+} catch (e) { /* localStorage nicht verfügbar → Standardwerte */ }
+S.speed = Math.max(1, Math.min(1000, S.speed));
+function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); } catch (e) { /* egal */ } }
+
+var draft = clone(S.devices);      // Gerätedaten im Formular (werden mit "Übernehmen" aktiv)
+var draftPhys = clone(S.phys);
+var sim = null, running = true, logFrozen = false;
+
+function engineLimits(d) {                       // Gerätedaten → Grenzen für Integration und Hardware
+    var t = Z.DEVICE_TYPES[d.type];
+    return { dischargeLimit: d.known ? d.limDis : t.discharge, chargeLimit: -(d.known ? d.limCh : Math.abs(t.charge)),
+             hwDischargeLimit: d.limDis, hwChargeLimit: d.limCh };
+}
+function buildSimConfig() {
+    var eta = Math.sqrt(S.phys.rt / 100);
+    var phys = { tau: S.phys.tau, deadTime: S.phys.deadTime, etaCh: eta, etaDis: eta, meterInterval: S.phys.meterInterval, dt: S.phys.dt };
+    var devs = S.devices.map(function (d) { return Object.assign(clone(d), engineLimits(d)); });
+    return { devices: devs, mode: S.mode, manualPower: S.manualPower, phys: phys, scene: S.scene };
+}
+function restart() {
+    sim = new Z.Simulator(buildSimConfig());
+    view.mode = "all";
+    buildDevCards();
+    buildFlow();
+    renderStatic();
+    renderLive(true);
+    renderChart();
+}
+
+/* ── Formatierung ──────────────────────────────────────── */
+function fmtW(w) {
+    var a = Math.abs(w);
+    if (a >= 1000) return (w / 1000).toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " kW";
+    return Math.round(w).toLocaleString("de-DE") + " W";
+}
+function fmtN(x, d) { return x.toLocaleString("de-DE", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+function fmtTime(s, noSec) {
+    s = Math.max(0, Math.floor(s));
+    var h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, sec = s % 60;
+    var p = function (x) { return (x < 10 ? "0" : "") + x; };
+    return p(h) + ":" + p(m) + (noSec ? "" : ":" + p(sec));
+}
+function fmtDur(s) {
+    if (s < 120) return Math.round(s) + " s";
+    if (s < 7200) return fmtN(s / 60, s < 600 ? 1 : 0) + " min";
+    return fmtN(s / 3600, 1) + " h";
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
+
+/* ── Regler: Haus & Manager ────────────────────────────── */
+function bindSlider(id, get, set, fmt) {
+    var el = $(id), out = $(id + "-v");
+    el.value = get();
+    var upd = function () { if (out) out.textContent = fmt(Number(el.value)); };
+    upd();
+    el.addEventListener("input", function () { set(Number(el.value)); upd(); save(); });
+}
+bindSlider("pv", function () { return S.scene.pv; }, function (v) { S.scene.pv = v; }, fmtW);
+bindSlider("load", function () { return S.scene.load; }, function (v) { S.scene.load = v; }, fmtW);
+bindSlider("wb", function () { return S.scene.wallbox; }, function (v) { S.scene.wallbox = v; }, function (v) { return v ? fmtW(v) : "aus"; });
+bindSlider("noise", function () { return S.scene.noise; }, function (v) { S.scene.noise = v; }, function (v) { return v ? "± " + v + " W" : "aus"; });
+function spikeLabel() { $("spike-v").textContent = fmtW(S.scene.spikePower) + " · " + (S.scene.spikeDuration >= 60 ? fmtN(S.scene.spikeDuration / 60, 1) + " min" : S.scene.spikeDuration + " s"); }
+$("spikeP").value = S.scene.spikePower; $("spikeD").value = S.scene.spikeDuration; spikeLabel();
+$("spikeP").addEventListener("input", function (e) { S.scene.spikePower = Number(e.target.value); spikeLabel(); save(); });
+$("spikeD").addEventListener("input", function (e) { S.scene.spikeDuration = Number(e.target.value); spikeLabel(); save(); });
+$("spikeBtn").addEventListener("click", function () { sim.spike(); });
+$("clouds").checked = S.scene.clouds;
+$("clouds").addEventListener("change", function (e) { S.scene.clouds = e.target.checked; save(); });
+
+$("modeSel").value = String(S.mode);
+function modeUi() {
+    $("manualBox").hidden = S.mode !== 1;
+    $("mode-h").innerHTML = MODE_HINTS[S.mode];
+}
+$("modeSel").addEventListener("change", function (e) {
+    S.mode = Number(e.target.value);
+    sim.manager.setOperation(S.mode);
+    sim.config.mode = S.mode;
+    modeUi(); renderStatic(); save();
+});
+bindSlider("man", function () { return S.manualPower; }, function (v) { S.manualPower = v; if (sim) sim.manager.manualpower = v; }, function (v) { return (v > 0 ? "+" : "") + fmtW(v); });
+modeUi();
+
+/* ── Steuerleiste: Pause, Neustart, Zeitraffer ─────────── */
+$("playBtn").addEventListener("click", function () {
+    running = !running;
+    $("playBtn").innerHTML = running ? "&#9208; Pause" : "&#9654; Weiter";
+    lastFrame = null;
+});
+$("resetBtn").addEventListener("click", restart);
+
+// Logarithmischer Regler: Position 0…1000 ↔ Faktor 1…1000
+function speedFromPos(p) {
+    var v = Math.pow(10, 3 * p / 1000);
+    return v < 10 ? Math.round(v * 10) / 10 : v < 100 ? Math.round(v) : Math.round(v / 5) * 5;
+}
+function posFromSpeed(v) { return Math.round(Math.log10(Math.max(1, v)) / 3 * 1000); }
+function speedLabel() { $("speed-v").textContent = (S.speed < 10 && S.speed % 1 ? S.speed.toFixed(1).replace(".", ",") : String(Math.round(S.speed))) + "×"; }
+$("speed").value = posFromSpeed(S.speed); speedLabel();
+$("speed").addEventListener("input", function (e) { S.speed = speedFromPos(Number(e.target.value)); speedLabel(); save(); });
+
+/* ── Gerätekonfiguration ───────────────────────────────── */
+function fuseOptions(idx, devs) {
+    var html = "";
+    Object.keys(Z.FUSE_GROUPS).forEach(function (k) { html += '<option value="' + k + '">' + Z.FUSE_GROUPS[k].label + "</option>"; });
+    devs.forEach(function (d, j) {
+        if (j !== idx && Z.FUSE_GROUPS[d.fuseGroup] && d.fuseGroup !== "unused") {
+            html += '<option value="part:' + d.id + '">Teil der Gruppe von ' + esc(d.name) + "</option>";
+        }
+    });
+    return html;
+}
+function field(i, key, label, min, max, step) {
+    return '<label class="cfg-f"><span class="s-label">' + label + '</span><input type="number" class="tool-input" data-i="' + i + '" data-k="' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + draft[i][key] + '"></label>';
+}
+function limSlider(i, key, label, max) {
+    var v = draft[i][key];
+    return '<div class="slider cfg-lim"><div class="slider-row"><span class="s-label">' + label + '</span><span class="s-value" id="lim-' + key + i + '">' + fmtW(v) + "</span></div>"
+         + '<input type="range" data-i="' + i + '" data-lim="' + key + '" min="100" max="' + max + '" step="50" value="' + v + '" aria-label="' + label + " " + esc(draft[i].name) + '"></div>';
+}
+function renderCfg() {
+    var html = "";
+    draft.forEach(function (d, i) {
+        var t = Z.DEVICE_TYPES[d.type];
+        var types = Object.keys(Z.DEVICE_TYPES).map(function (k) {
+            return '<option value="' + k + '"' + (k === d.type ? " selected" : "") + ">" + Z.DEVICE_TYPES[k].label + "</option>";
+        }).join("");
+        html += '<div class="cfg-dev" style="--dev-c:' + DEV_COLORS[i] + '">'
+            + '<div class="cfg-dev-head"><span><span class="dev-dot" style="background:' + DEV_COLORS[i] + '"></span>' + esc(d.name) + "</span>"
+            + (draft.length > 1 ? '<button class="btn small" data-del="' + i + '" aria-label="' + esc(d.name) + ' entfernen">&times;</button>' : "") + "</div>"
+            + '<div class="cfg-fields">'
+            + '<label class="cfg-f span-2"><span class="s-label">Typ</span><select class="tool-input" data-i="' + i + '" data-k="type">' + types + "</select></label>"
+            + field(i, "kWh", "Kapazit\u00e4t kWh", 0.5, 40, 0.01) + field(i, "startSoc", "Start-SoC %", 0, 100, 1)
+            + field(i, "minSoc", "minSoc %", 0, 60, 1) + field(i, "socSet", "socSet %", 40, 100, 1)
+            + '<label class="cfg-f span-2"><span class="s-label">Fuse Group</span><select class="tool-input" data-i="' + i + '" data-k="fuseGroup">' + fuseOptions(i, draft) + "</select></label>"
+            + "</div>"
+            + limSlider(i, "limDis", "Entladelimit", t.hwDischarge) + limSlider(i, "limCh", "Ladelimit", Math.abs(t.charge))
+            + '<label class="check-row" style="margin:0"><input type="checkbox" data-i="' + i + '" data-known="1"' + (d.known ? " checked" : "") + "> Integration kennt die Limits</label>"
+            + "</div>";
+    });
+    $("cfgDevs").innerHTML = html;
+    draft.forEach(function (d, i) {
+        var sel = $("cfgDevs").querySelector('select[data-k="fuseGroup"][data-i="' + i + '"]');
+        sel.value = d.fuseGroup;
+        if (sel.value !== d.fuseGroup) { d.fuseGroup = "owncircuit"; sel.value = "owncircuit"; }
+    });
+    $("addDev").disabled = draft.length >= MAX_DEV;
+    markDirty();
+}
+// Limits live übernehmen: Formular, gespeicherte Konfiguration und laufende Simulation
+function applyLimitsLive(i) {
+    if (i >= S.devices.length || draft[i].type !== S.devices[i].type) return;   // Gerät noch nicht übernommen
+    ["limDis", "limCh", "known"].forEach(function (k) { S.devices[i][k] = draft[i][k]; });
+    save();
+    if (sim && sim.devices[i]) {
+        var L = engineLimits(S.devices[i]), dev = sim.devices[i], pl = sim.plants[i];
+        dev.setLimits(L.chargeLimit, L.dischargeLimit);
+        pl.hwDischarge = L.hwDischargeLimit; pl.hwCharge = -L.hwChargeLimit;
+        sim.manager.update_fusegroups();
+        sim.addLog("mgr", dev.name + ": Limits Entladen " + L.hwDischargeLimit + " W / Laden " + L.hwChargeLimit + " W" + (S.devices[i].known ? "" : " (Integration rechnet mit " + L.dischargeLimit + " / " + (-L.chargeLimit) + " W)"));
+        renderStatic();
+    }
+    markDirty();
+}
+$("cfgDevs").addEventListener("input", function (e) {
+    var el = e.target, i = Number(el.dataset.i), k = el.dataset.lim;
+    if (!k || isNaN(i)) return;
+    draft[i][k] = Number(el.value);
+    $("lim-" + k + i).textContent = fmtW(draft[i][k]);
+    applyLimitsLive(i);
+});
+function markDirty() {
+    var dirty = JSON.stringify(draft) !== JSON.stringify(S.devices) || JSON.stringify(draftPhys) !== JSON.stringify(S.phys);
+    $("dirtyNote").hidden = !dirty;
+}
+$("cfgDevs").addEventListener("change", function (e) {
+    var el = e.target, i = Number(el.dataset.i), k = el.dataset.k;
+    if (el.dataset.known && !isNaN(i)) { draft[i].known = el.checked; applyLimitsLive(i); return; }
+    if (el.dataset.lim) return;                       // Regler: schon per "input" erledigt
+    if (isNaN(i) || !k) return;
+    var d = draft[i];
+    if (k === "type") {
+        var t = Z.DEVICE_TYPES[el.value];
+        d.type = el.value; d.kWh = t.kWh;
+        d.limDis = Math.min(2400, t.hwDischarge); d.limCh = Math.min(2400, Math.abs(t.charge));
+    } else if (k === "fuseGroup") {
+        d.fuseGroup = el.value;
+    } else {
+        var v = Number(el.value);
+        var min = Number(el.min), max = Number(el.max);
+        if (!isFinite(v)) v = min;
+        v = Math.max(min, Math.min(max, v));
+        d[k] = (k === "kWh") ? Math.round(v * 100) / 100 : Math.round(v);
+        if (d.minSoc >= d.socSet) d.minSoc = Math.max(0, d.socSet - 10);
+    }
+    renderCfg();
+});
+$("cfgDevs").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-del]");
+    if (!b) return;
+    var idx = Number(b.dataset.del), id = draft[idx].id;
+    draft.splice(idx, 1);
+    renumber(id);
+    renderCfg();
+});
+function renumber(removedId) {
+    var map = {};
+    draft.forEach(function (d, i) { map[d.id] = "d" + (i + 1); });
+    draft.forEach(function (d) {
+        if (d.fuseGroup.indexOf("part:") === 0) {
+            var ref = d.fuseGroup.slice(5);
+            d.fuseGroup = (ref === removedId || !map[ref]) ? "owncircuit" : "part:" + map[ref];
+        }
+    });
+    draft.forEach(function (d, i) { if (/^Gerät \d+$/.test(d.name)) d.name = "Gerät " + (i + 1); d.id = "d" + (i + 1); });
+}
+$("addDev").addEventListener("click", function () {
+    if (draft.length >= MAX_DEV) return;
+    var last = draft[draft.length - 1];
+    var nd = clone(last);
+    nd.id = "d" + (draft.length + 1); nd.name = "Gerät " + (draft.length + 1);
+    nd.fuseGroup = "owncircuit"; nd.startSoc = Math.max(nd.minSoc + 5, last.startSoc - 5);
+    draft.push(nd);
+    renderCfg();
+});
+document.querySelectorAll("[data-preset]").forEach(function (b) {
+    b.addEventListener("click", function () { draft = PRESETS[b.dataset.preset](); renderCfg(); });
+});
+function bindPhys(id, key) {
+    var el = $(id);
+    el.value = draftPhys[key];
+    el.addEventListener("change", function () {
+        var v = Number(el.value), min = Number(el.min), max = Number(el.max);
+        if (!isFinite(v)) v = draftPhys[key];
+        draftPhys[key] = Math.max(min, Math.min(max, v));
+        el.value = draftPhys[key];
+        markDirty();
+    });
+}
+bindPhys("ph-tau", "tau"); bindPhys("ph-dead", "deadTime"); bindPhys("ph-rt", "rt"); bindPhys("ph-meter", "meterInterval");
+$("applyBtn").addEventListener("click", function () {
+    S.devices = clone(draft); S.phys = clone(draftPhys); save();
+    restart(); markDirty();
+});
+
+/* ── Statische Texte (Kontext, Regeln) ─────────────────── */
+function renderStatic() {
+    var devs = S.devices;
+    $("cx-mode").textContent = MODE_NAMES[S.mode];
+    $("cx-dev").textContent = devs.length + " × " + (function () {
+        var names = devs.map(function (d) { return Z.DEVICE_TYPES[d.type].label.replace("SolarFlow ", "SF "); });
+        return names.every(function (n) { return n === names[0]; }) ? names[0] : "gemischt";
+    })();
+    $("cx-kwh").textContent = fmtN(devs.reduce(function (a, d) { return a + d.kWh; }, 0), 2) + " kWh";
+    $("cx-src").textContent = "Zendure-HA 1.4.4";
+    $("fn-commit").textContent = Z.SOURCE.commit;
+    $("fn-date").textContent = Z.SOURCE.date;
+
+    // Regeln aus dem Code mit den Zahlen der aktuellen Geräte
+    var m = sim.manager, d0 = sim.devices[0], html = "<ul>";
+    var groups = m.fuseGroups.map(function (fg) {
+        return "<b>" + esc(fg.name) + "</b>" + (fg.devices.length > 1 ? " (" + fg.devices.map(function (x) { return esc(x.name); }).join(" + ") + ")" : "") +
+               ": max. " + fmtW(fg.maxpower) + " / " + fmtW(fg.minpower);
+    });
+    var unusedNames = sim.devices.filter(function (d) { return !d.online; }).map(function (d) { return esc(d.name); });
+    var mismatch = sim.devices.filter(function (d, i) { return Math.abs(d.charge_limit) > Math.abs(sim.plants[i].hwCharge) + 1; });
+    if (mismatch.length) {
+        var d1 = mismatch[0], pl1 = sim.plants[sim.devices.indexOf(d1)];
+        html += '<li class="warn-li"><b>Achtung Grenzwerte:</b> die Integration rechnet bei ' + mismatch.map(function (d) { return esc(d.name); }).join(", ")
+             + " mit " + fmtW(Math.abs(d1.charge_limit)) + " Laden, das Gerät schafft aber nur " + fmtW(Math.abs(pl1.hwCharge))
+             + ". Bekommt ein Gerät einen größeren Anteil, wird die Differenz nicht auf andere Geräte verteilt &ndash; sie geht ins Netz. "
+             + "Meldet dein Gerät ein passendes <code>chargeMaxLimit</code>, tritt das nicht auf.</li>";
+    }
+    if (sim.devices.length > 1) {
+        html += "<li><b>Zuschalten beim Entladen:</b> ein ruhendes Ger&auml;t startet, wenn der Sollwert gr&ouml;&szlig;er ist als "
+             + "2&nbsp;&times; &Sigma;&nbsp;<code>discharge_optimal</code> der aktiven Ger&auml;te (je &frac14; des Entladelimits, hier "
+             + fmtW(d0.discharge_optimal * 2) + " bei einem aktiven " + esc(d0.name) + ") &ndash; oder wenn sein Ladestand um mehr als 3&nbsp;% h&ouml;her ist.</li>";
+        html += "<li><b>Abschalten beim Entladen:</b> f&auml;llt der Anteil des Ger&auml;ts mit dem niedrigsten SoC unter 1,5&nbsp;&times; <code>discharge_start</code> ("
+             + fmtW(Math.round(d0.discharge_start * 1.5)) + "), summiert sich das Defizit je Regelzyklus; &uuml;bersteigt es "
+             + fmtW(d0.discharge_optimal) + ", wird das Ger&auml;t auf 0 gesetzt.</li>";
+        var dropBelow = 2 * Math.round(d0.discharge_start * 1.5);
+        html += "<li><b>Hysterese-Band beim Entladen:</b> bei zwei gleichen Ger&auml;ten startet das zweite ab "
+             + fmtW(d0.discharge_optimal * 2) + " Sollwert, abgeschaltet wird erst unter ca. " + fmtW(dropBelow)
+             + " (Anteil je Ger&auml;t &lt; " + fmtW(Math.round(d0.discharge_start * 1.5)) + "). Dazwischen h&auml;ngt es von der Vorgeschichte ab: "
+             + "anfangs l&auml;uft nur ein Ger&auml;t; driftet der SoC um mehr als 3&nbsp;% auseinander, startet die SoC-Regel das zweite &ndash; "
+             + "und dann teilen sich beide die Last dauerhaft. Darunter schaltet der Code zwischen den Ger&auml;ten hin und her.</li>";
+        html += "<li><b>Aufteilung:</b> Entladen gewichtet nach <code>pwr_max &times; SoC</code>, Laden nach <code>pwr_max &times; (100&nbsp;&minus;&nbsp;SoC)</code> &ndash; "
+             + "das volle Ger&auml;t gibt mehr ab, das leere nimmt mehr auf. Kein starres 50/50.</li>";
+        html += "<li><b>Zuschalten beim Laden:</b> ab einem &Uuml;berschuss &uuml;ber 2&nbsp;&times; &Sigma;&nbsp;|<code>charge_optimal</code>| ("
+             + fmtW(Math.abs(d0.charge_optimal) * 2) + " bei einem aktiven Ger&auml;t) oder bei mehr als 3&nbsp;% SoC-Unterschied.</li>";
+        html += "<li><b>Abschalten beim Laden:</b> das Gegenst&uuml;ck zur Entlade-Logik greift im Code nie (Vorzeichen: <code>pwr_low</code> &ge; 0, "
+             + "<code>charge_optimal</code> &lt; 0). Einmal ladende Ger&auml;te laden weiter, bis der &Uuml;berschuss wegf&auml;llt.</li>";
+    } else {
+        html += "<li>Mit nur einem Ger&auml;t gibt es keine Aufteilung &ndash; f&uuml;ge ein zweites hinzu, um das Zu- und Abschalten zu sehen.</li>";
+    }
+    html += "<li><b>Takt:</b> neuer Sollwert fr&uuml;hestens alle 2,2&nbsp;s nach gro&szlig;er &Auml;nderung, sonst alle 4&nbsp;s &ndash; aber nur, wenn der Z&auml;hler einen ge&auml;nderten Wert meldet (Ausrei&szlig;erpr&uuml;fung &uuml;ber die Standardabweichung der letzten 8 Werte).</li>";
+    html += "<li><b>Lade-Hysterese:</b> beim Wechsel von Entladen auf Laden wartet der Code 2&nbsp;s &ndash; lag der letzte Ladebeginn weniger als 5&nbsp;min zur&uuml;ck, 60&nbsp;s.</li>";
+    html += "<li><b>Lade-Gutschrift:</b> beim Laden rechnet der Code nur die im Akku ankommende Leistung (<code>batteryInput</code>) gegen. Dadurch bleibt etwa (1&nbsp;&minus;&nbsp;&eta;) der Ladeleistung als Einspeisung am Z&auml;hler stehen.</li>";
+    html += "<li><b>Schaltvorg&auml;nge:</b> gez&auml;hlt wie in der Integration &ndash; jedes Mal, wenn ein Akku in Ruhe geht (<code>packState</code> &rarr; 0). Richtungswechsel Laden&nbsp;&harr;&nbsp;Entladen werden zus&auml;tzlich separat gez&auml;hlt.</li>";
+    html += "<li><b>Fuse Groups:</b> " + groups.join("; ") + (unusedNames.length ? "; <b>ohne Smart-Betrieb:</b> " + unusedNames.join(", ") : "") + ".</li>";
+    html += "</ul>";
+    $("rules").innerHTML = html;
+}
+
+/* ── Gerätekarten ──────────────────────────────────────── */
+function buildDevCards() {
+    var html = "";
+    sim.devices.forEach(function (d, i) {
+        html += '<div class="dev-card" style="--dev-c:' + DEV_COLORS[i] + '">' +
+            '<div class="dev-head"><span class="dev-name">' + esc(d.name) + " &middot; " + esc(Z.DEVICE_TYPES[S.devices[i].type].label) + '</span><span class="badge" id="dv-b' + i + '"></span></div>' +
+            '<div class="dev-power" id="dv-p' + i + '"></div>' +
+            '<div class="powerbar" title="links Laden, rechts Entladen"><i id="dv-bar' + i + '"></i></div>' +
+            '<div class="socbar"><i id="dv-socb' + i + '"></i><span id="dv-soct' + i + '"></span></div>' +
+            '<dl class="dev-facts">' +
+            "<dt title=\"Zuletzt gesendeter Befehl an das Gerät\">Befehl</dt><dd id=\"dv-cmd" + i + "\"></dd>" +
+            "<dt title=\"pwr_max aus der Fuse Group: Höchstwert, den der Manager diesem Gerät zuteilt\">pwr_max</dt><dd id=\"dv-max" + i + "\"></dd>" +
+            "<dt title=\"AC-Energie seit Neustart: aufgenommen / abgegeben\">Energie rein/raus</dt><dd id=\"dv-e" + i + "\"></dd>" +
+            "<dt title=\"Gezählt wie in der Integration: Akku geht in Ruhe (packState → 0)\">Schaltvorgänge</dt><dd id=\"dv-sw" + i + "\"></dd>" +
+            "<dt title=\"Wechsel zwischen Laden und Entladen\">Richtungswechsel</dt><dd id=\"dv-fl" + i + "\"></dd>" +
+            "</dl></div>";
+    });
+    $("devGrid").innerHTML = html;
+}
+
+function renderLive() {
+    var m = sim.manager, totalP = 0, totalKwh = 0, stored = 0;
+    $("simTime").textContent = fmtTime(sim.t);
+
+    sim.devices.forEach(function (d, i) {
+        var pl = sim.plants[i], p = pl.p;
+        totalP += p; totalKwh += pl.kWh; stored += pl.soc / 100 * pl.kWh;
+        var badge = $("dv-b" + i), txt, cls;
+        if (!d.online) { txt = "Ohne Fuse Group"; cls = "b-off"; }
+        else if (p > 1) { txt = "Entladen"; cls = "b-dis"; }
+        else if (p < -1) { txt = "Laden"; cls = "b-ch"; }
+        else { txt = pl.soc >= pl.socSet - 0.5 ? "Voll" : pl.soc <= pl.minSoc + 0.5 ? "Leer" : "Bereit"; cls = ""; }
+        badge.textContent = txt; badge.className = "badge " + cls;
+        $("dv-p" + i).innerHTML = (p > 1 ? "+" : p < -1 ? "−" : "") + fmtW(Math.abs(p)) + " <small>" + (p > 1 ? "ins Haus" : p < -1 ? "aus dem Netz" : "") + "</small>";
+        var bar = $("dv-bar" + i), span = Math.max(pl.hwDischarge, -pl.hwCharge), frac = Math.min(1, Math.abs(p) / span) * 50;
+        bar.style.background = p >= 0 ? "var(--series-b)" : "var(--pos)";
+        bar.style.left = (p >= 0 ? 50 : 50 - frac) + "%";
+        bar.style.width = frac + "%";
+        $("dv-socb" + i).style.width = Math.max(0, Math.min(100, pl.soc)) + "%";
+        $("dv-soct" + i).textContent = fmtN(pl.soc, 1) + " %  ·  " + fmtN(pl.soc / 100 * pl.kWh, 2) + " / " + fmtN(pl.kWh, 2) + " kWh";
+        var c = pl.cmdTarget || pl.cmd;
+        $("dv-cmd" + i).textContent = (c.acMode === 1 ? "laden " + fmtW(c.inputLimit) : c.outputLimit > 0 ? "entladen " + fmtW(c.outputLimit) : "0 W");
+        $("dv-max" + i).textContent = d.online ? fmtW(d.pwr_max) : "–";
+        $("dv-e" + i).textContent = fmtN(pl.eIn / 1000, 2) + " / " + fmtN(pl.eOut / 1000, 2) + " kWh";
+        $("dv-sw" + i).textContent = pl.switchCount;
+        $("dv-fl" + i).textContent = pl.flipCount;
+    });
+
+    var g = sim.gridPower();
+    $("ro-p1").textContent = (g > 0.5 ? "+" : g < -0.5 ? "−" : "") + fmtW(Math.abs(g));
+    $("ro-p1").style.color = Math.abs(g) < 30 ? "var(--pos)" : g > 0 ? "var(--neg)" : "var(--series-b)";
+    // Kennzahlen: Wert immer einzeilig, Unterzeile immer genau zwei feste Zeilen
+    // (setSub) – so ändert sich die Kachelhöhe nie, egal welcher Zustand gerade gilt.
+    setSub("ro-p1-s", Math.abs(g) < 30 ? "ausgeregelt" : g > 0 ? "Netzbezug" : "Einspeisung", "Zählerwert " + fmtW(sim.p1));
+    $("ro-batt").textContent = (totalP > 0.5 ? "+" : totalP < -0.5 ? "−" : "") + fmtW(Math.abs(totalP));
+    $("ro-batt").style.color = totalP > 0.5 ? "var(--series-b)" : totalP < -0.5 ? "var(--pos)" : "var(--text)";
+    var nAct = sim.plants.filter(function (p) { return Math.abs(p.p) > 1; }).length;
+    setSub("ro-batt-s", totalP > 0.5 ? "entladen ins Haus" : totalP < -0.5 ? "laden" : "keine Leistung", nAct + "/" + sim.plants.length + " Geräte aktiv");
+    $("ro-soc").textContent = fmtN(totalKwh ? stored / totalKwh * 100 : 0, 1) + " %";
+    setSub("ro-soc-s", fmtN(stored, 2) + " kWh", "von " + fmtN(totalKwh, 2) + " kWh");
+    var st = ["Ruhe", "Laden", "Entladen", "Aus"][m.operationstate] || "–";
+    var waiting = m.charge_time !== Infinity && m.charge_time > sim.t;
+    $("ro-mgr").textContent = waiting ? "Wartet" : st;
+    $("ro-mgr").style.color = waiting ? "var(--series-b)" : "var(--text)";
+    setSub("ro-mgr-s", "Sollwert " + fmtW(m.lastSetpoint),
+        waiting ? "Laden in " + Math.ceil(m.charge_time - sim.t) + " s" : m.runs + " Regelzyklen");
+
+    // Auswertung seit Neustart
+    var st2 = sim.stats, swTot = 0, flTot = 0;
+    sim.plants.forEach(function (p) { swTot += p.switchCount; flTot += p.flipCount; });
+    var perH = sim.t > 600 ? " · " + fmtN(swTot / (sim.t / 3600), 1) + "/h" : "";
+    $("extras").innerHTML =
+        extra("Zeit mit ≥ 2 Geräten aktiv", sim.devices.length > 1 ? (st2.any > 0 ? fmtN(st2.both / st2.any * 100, 0) + " %" : "–") : "–") +
+        extra("Netzbezug", fmtN(st2.eImport / 1000, 2) + " kWh") +
+        extra("Einspeisung", fmtN(st2.eExport / 1000, 2) + " kWh") +
+        extra("Schaltvorgänge gesamt", swTot + perH) +
+        extra("Richtungswechsel", flTot) +
+        extra("Regelzyklen pro Minute", sim.t > 10 ? fmtN(m.runs / (sim.t / 60), 1) : "–");
+
+    if (!logFrozen) renderLog();
+}
+function setSub(id, l1, l2) {                     // Unterzeile: genau zwei Zeilen, nie mehr
+    var el = $(id), html = "<span>" + esc(l1) + "</span><span>" + (l2 ? esc(l2) : "&nbsp;") + "</span>";
+    if (el.innerHTML !== html) el.innerHTML = html;
+}
+function extra(l, v) { return '<div class="extra"><div class="e-label">' + l + '</div><div class="e-value">' + v + "</div></div>"; }
+
+/* ── Protokoll ─────────────────────────────────────────── */
+var lastLogLen = -1, lastLogT = -1;
+function renderLog() {
+    var box = $("logBox");
+    if (!box.offsetParent) return;                         // eingeklappt → nichts tun
+    var lines = sim.logLines;
+    var tail = lines.length ? lines[lines.length - 1].t : 0;
+    if (lines.length === lastLogLen && tail === lastLogT) return;
+    lastLogLen = lines.length; lastLogT = tail;
+    var showCmd = $("logCmd").checked, showDev = $("logDev").checked, out = [];
+    for (var i = Math.max(0, lines.length - 160); i < lines.length; i++) {
+        var l = lines[i];
+        if (l.kind === "cmd" && !showCmd) continue;
+        if (l.kind === "dev" && !showDev) continue;
+        out.push('<span class="l-t">' + fmtTime(l.t) + "." + Math.floor((l.t % 1) * 10) + '</span>  <span class="l-' + l.kind + '">' + esc(l.msg) + "</span>");
+    }
+    var atBottom = box.scrollTop + box.clientHeight >= box.scrollHeight - 30;
+    box.innerHTML = out.join("\n");
+    if (atBottom) box.scrollTop = box.scrollHeight;
+}
+$("logFreeze").addEventListener("click", function () {
+    logFrozen = !logFrozen;
+    $("logFreeze").textContent = logFrozen ? "Fortsetzen" : "Anhalten";
+    if (!logFrozen) { lastLogLen = -1; renderLog(); }
+});
+["logCmd", "logDev"].forEach(function (id) { $(id).addEventListener("change", function () { lastLogLen = -1; renderLog(); }); });
+
+/* ══════════════ Diagramm: Gesamthistorie mit Zoom ══════════════
+   Ansichten: "all"  = gesamter Verlauf seit Neustart (wächst mit)
+              "live" = fester Ausschnitt, rechter Rand = jetzt
+              "range"= vom Nutzer gewählter Ausschnitt (bleibt stehen)
+   Bedienung: im Diagramm ziehen = Bereich wählen und hineinzoomen,
+              Übersichtsleiste: Fenster ziehen/aufziehen, Doppelklick = alles,
+              Strg/⌘ + Mausrad = zoomen, Buttons − / + / Alles / Live. */
+var chartView = "power";
+var view = { mode: "all", a: 0, b: 900 };
+var W = 760, H = 330, PAD = { l: 52, r: 12, t: 12, b: 28 };
+var EVROW = 9;                                         // Höhe je Geräte-Zeile im Ereignisband
+var MIN_SPAN = 20;                                     // s, kleinster Ausschnitt
+var chartGeom = null, dragSel = null;
+
+document.querySelectorAll("#chartTabs .tab").forEach(function (b) {
+    b.addEventListener("click", function () {
+        chartView = b.dataset.view;
+        document.querySelectorAll("#chartTabs .tab").forEach(function (x) { x.classList.toggle("active", x === b); });
+        renderChart();
+    });
+});
+
+function tEnd() { var t = sim.series.t; return t.length ? t[t.length - 1] : 0; }
+function curRange() {
+    var e = Math.max(tEnd(), 1);
+    if (view.mode === "all") return [0, Math.max(e, 60)];
+    if (view.mode === "live") { var w = Number($("liveSel").value); return [Math.max(0, e - w), Math.max(e, w)]; }
+    return [view.a, view.b];
+}
+function setRange(a, b) {
+    var e = Math.max(tEnd(), MIN_SPAN);
+    var span = Math.max(MIN_SPAN, Math.min(b - a, e));
+    if (a < 0) a = 0;
+    if (a + span > e) a = e - span;
+    view.mode = "range"; view.a = Math.max(0, a); view.b = view.a + span;
+    renderChart();
+}
+function zoomBy(f, center) {
+    var r = curRange(), c = center != null ? center : (r[0] + r[1]) / 2;
+    var na = c - (c - r[0]) * f, nb = c + (r[1] - c) * f;
+    if (nb - na >= tEnd() && f > 1) { view.mode = "all"; renderChart(); return; }
+    setRange(na, nb);
+}
+$("zoomIn").addEventListener("click", function () { zoomBy(0.5); });
+$("zoomOut").addEventListener("click", function () { zoomBy(2); });
+$("viewAll").addEventListener("click", function () { view.mode = "all"; renderChart(); });
+$("viewLive").addEventListener("click", function () { view.mode = "live"; renderChart(); });
+$("liveSel").addEventListener("change", function () { view.mode = "live"; renderChart(); });
+
+function lowerBound(arr, x) { var lo = 0, hi = arr.length; while (lo < hi) { var m = (lo + hi) >> 1; if (arr[m] < x) lo = m + 1; else hi = m; } return lo; }
+function niceStep(range) {
+    var raw = range / 5, mag = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / mag;
+    return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * mag;
+}
+var TSTEPS = [5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 10800, 21600, 43200, 86400];
+function timeStep(span) { for (var i = 0; i < TSTEPS.length; i++) if (span / TSTEPS[i] <= 7) return TSTEPS[i]; return 86400; }
+
+// Linie mit Min/Max je Pixelspalte (Spitzen bleiben sichtbar)
+function polyline(ts, data, i0, i1, X, Y, cols) {
+    var n = i1 - i0, pts = [];
+    if (n <= 0) return "";
+    var perCol = n / cols;
+    if (perCol <= 1.5) {
+        for (var i = i0; i < i1; i++) pts.push(X(ts[i]).toFixed(1) + "," + Y(data[i]).toFixed(1));
+    } else {
+        for (var c = 0; c < cols; c++) {
+            var a = i0 + Math.floor(c * perCol), b = Math.min(i1, i0 + Math.floor((c + 1) * perCol));
+            if (b <= a) continue;
+            var mn = Infinity, mx = -Infinity, imn = a, imx = a;
+            for (var k = a; k < b; k++) { var v = data[k]; if (v < mn) { mn = v; imn = k; } if (v > mx) { mx = v; imx = k; } }
+            var f = imn < imx ? imn : imx, s = imn < imx ? imx : imn;
+            pts.push(X(ts[f]).toFixed(1) + "," + Y(data[f]).toFixed(1));
+            if (s !== f) pts.push(X(ts[s]).toFixed(1) + "," + Y(data[s]).toFixed(1));
+        }
+    }
+    return pts.join(" ");
+}
+
+function seriesDefs() {
+    var s = sim.series, out = [];
+    if (chartView === "power") {
+        out.push({ key: "p1", name: "Netz (P1)", color: "var(--flow-grid)", data: s.p1, width: 2 });
+        out.push({ key: "load", name: "Last + Wallbox", color: "var(--flow-load)", data: s.load, width: 1.4, dash: "6 4" });
+        out.push({ key: "pv", name: "PV", color: "var(--flow-pv)", data: s.pv, width: 1.6, dash: "6 4" });
+        out.push({ key: "sp", name: "Sollwert Manager", color: "var(--flow-setpoint)", data: s.setpoint, width: 1.2, dash: "2 3" });
+        sim.devices.forEach(function (d, i) { out.push({ key: "d" + i, name: d.name, color: DEV_COLORS[i], data: s.dev[i], width: 2 }); });
+    } else {
+        sim.devices.forEach(function (d, i) { out.push({ key: "s" + i, name: d.name, color: DEV_COLORS[i], data: s.soc[i], width: 2 }); });
+    }
+    out.forEach(function (L) { L.hidden = S.hidden.indexOf(chartView + ":" + L.key) >= 0; });
+    return out;
+}
+
+function renderChart() {
+    var svg = $("chart"), s = sim.series, n = s.t.length;
+    var defs = seriesDefs();
+    renderLegend(defs);
+    var nDev = sim.devices.length;
+    EVROW = nDev > 4 ? 6 : 9;
+    var bandH = nDev * EVROW + 6;
+    var plotB = H - PAD.b - bandH;                     // Unterkante der Diagrammfläche
+    if (n < 2) { svg.innerHTML = ""; $("ov").innerHTML = ""; setInfo("Simulation läuft an …", "", ""); chartGeom = null; return; }
+
+    var r = curRange(), tA = r[0], tB = r[1];
+    var i0 = Math.max(0, lowerBound(s.t, tA) - 1), i1 = Math.min(n, lowerBound(s.t, tB) + 1);
+    var lines = defs.filter(function (L) { return !L.hidden; });
+
+    var lo = Infinity, hi = -Infinity;
+    lines.forEach(function (L) { for (var i = i0; i < i1; i++) { var v = L.data[i]; if (v < lo) lo = v; if (v > hi) hi = v; } });
+    if (!isFinite(lo)) { lo = 0; hi = 1; }
+    if (chartView === "soc") { lo = Math.max(0, Math.floor((lo - 5) / 10) * 10); hi = Math.min(100, Math.ceil((hi + 5) / 10) * 10); }
+    else { lo = Math.min(lo, 0); hi = Math.max(hi, 0); var padv = Math.max(200, (hi - lo) * 0.08); lo -= padv; hi += padv; }
+    if (hi - lo < 1) hi = lo + 1;
+    var step = niceStep(hi - lo);
+    lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+
+    var pw = W - PAD.l - PAD.r, ph = plotB - PAD.t;
+    var X = function (t) { return PAD.l + (t - tA) / Math.max(1e-9, tB - tA) * pw; };
+    var Y = function (v) { return PAD.t + (hi - v) / (hi - lo) * ph; };
+    var out = '<defs><clipPath id="plotClip"><rect x="' + PAD.l + '" y="' + PAD.t + '" width="' + pw + '" height="' + ph + '"/></clipPath></defs>';
+
+    for (var v = lo; v <= hi + 1e-9; v += step) {
+        var y = Y(v).toFixed(1);
+        out += '<line x1="' + PAD.l + '" x2="' + (W - PAD.r) + '" y1="' + y + '" y2="' + y + '" stroke="var(--line)" stroke-width="' + (Math.abs(v) < 1e-9 ? 1.5 : 1) + '"/>';
+        var lab = chartView === "soc" ? Math.round(v) + " %" : (Math.abs(step) >= 1000 ? fmtN(v / 1000, step % 1000 ? 1 : 0) + " kW" : Math.round(v) + " W");
+        out += '<text x="' + (PAD.l - 6) + '" y="' + (Number(y) + 4) + '" text-anchor="end" font-size="11" fill="var(--faint)" font-family="var(--mono)">' + lab + "</text>";
+    }
+    var span = tB - tA, tstep = timeStep(span);
+    for (var tt = Math.ceil(tA / tstep) * tstep; tt <= tB + 1e-9; tt += tstep) {
+        var x = X(tt).toFixed(1);
+        out += '<line x1="' + x + '" x2="' + x + '" y1="' + PAD.t + '" y2="' + (plotB + bandH) + '" stroke="var(--line)" stroke-dasharray="2 4"/>';
+        out += '<text x="' + x + '" y="' + (H - 9) + '" text-anchor="middle" font-size="11" fill="var(--faint)" font-family="var(--mono)">' + fmtTime(tt, tstep >= 60) + "</text>";
+    }
+    var cols = Math.ceil(pw);
+    out += '<g clip-path="url(#plotClip)">';
+    lines.forEach(function (L) {
+        out += '<polyline fill="none" stroke="' + L.color + '" stroke-width="' + L.width + '" stroke-linejoin="round"' + (L.dash ? ' stroke-dasharray="' + L.dash + '"' : "") + ' points="' + polyline(s.t, L.data, i0, i1, X, Y, cols) + '"/>';
+    });
+    out += "</g>";
+
+    // Ereignisband: je Gerät eine Zeile; Strich = Schaltvorgang (Akku geht in Ruhe),
+    // Raute = Richtungswechsel. Mehrere Ereignisse je Pixel werden zusammengefasst.
+    var ev = sim.events, e0 = lowerBound(evTimes(), tA), counts = [], flips = [];
+    for (var d = 0; d < nDev; d++) { counts.push(0); flips.push(0); }
+    var swCols = [], flCols = [];
+    for (d = 0; d < nDev; d++) { swCols.push({}); flCols.push({}); }
+    for (var k = e0; k < ev.length && ev[k].t <= tB; k++) {
+        var E = ev[k];
+        if (E.kind === "idle") { counts[E.dev]++; swCols[E.dev][Math.round(X(E.t))] = (swCols[E.dev][Math.round(X(E.t))] || 0) + 1; }
+        else if (E.kind === "flip") { flips[E.dev]++; flCols[E.dev][Math.round(X(E.t))] = 1; }
+    }
+    out += '<rect x="' + PAD.l + '" y="' + (plotB + 3) + '" width="' + pw + '" height="' + (bandH - 6) + '" fill="var(--bg)" opacity=".6"/>';
+    for (d = 0; d < nDev; d++) {
+        var y0 = plotB + 4 + d * EVROW, col = DEV_COLORS[d];
+        Object.keys(swCols[d]).forEach(function (px) {
+            out += '<line x1="' + px + '" x2="' + px + '" y1="' + y0 + '" y2="' + (y0 + EVROW - 2) + '" stroke="' + col + '" stroke-width="' + (swCols[d][px] > 1 ? 2 : 1.2) + '"/>';
+        });
+        Object.keys(flCols[d]).forEach(function (px) {
+            var cy = y0 + (EVROW - 2) / 2;
+            out += '<path d="M' + px + " " + (cy - 3.5) + " l3.5 3.5 l-3.5 3.5 l-3.5 -3.5z\" fill=\"var(--text)\" stroke=\"var(--bg)\" stroke-width=\".8\"/>";
+        });
+    }
+    out += '<text x="' + (PAD.l - 6) + '" y="' + (plotB + 4 + nDev * EVROW / 2 + 3) + '" text-anchor="end" font-size="9.5" fill="var(--faint)">Schalt.</text>';
+
+    // Auswahlrechteck beim Ziehen
+    if (dragSel) {
+        var xa = Math.min(dragSel.x0, dragSel.x1), xb = Math.max(dragSel.x0, dragSel.x1);
+        out += '<rect x="' + xa + '" y="' + PAD.t + '" width="' + (xb - xa) + '" height="' + (plotB + bandH - PAD.t) + '" fill="var(--accent-weak)" stroke="var(--accent)" stroke-dasharray="3 3"/>';
+    }
+    out += '<line id="xhair" x1="0" x2="0" y1="' + PAD.t + '" y2="' + (plotB + bandH) + '" stroke="var(--muted)" stroke-width="1" visibility="hidden"/>';
+    svg.innerHTML = out;
+    chartGeom = { tA: tA, tB: tB, i0: i0, i1: i1, lines: lines, X: X, pw: pw };
+
+    // Info zum Ausschnitt
+    var swSum = counts.reduce(function (a, b) { return a + b; }, 0), flSum = flips.reduce(function (a, b) { return a + b; }, 0);
+    var mode = view.mode === "all" ? "Gesamter Verlauf" : view.mode === "live" ? "Live" : "Ausschnitt";
+    var per = nDev > 1 ? "je Gerät: " + counts.map(function (c, i) { return esc(sim.devices[i].name.replace("Gerät ", "G")) + " " + c; }).join(" · ") : "";
+    // drei feste, einzeilige Zeilen – die Höhe ändert sich nie
+    setInfo("<b>" + mode + "</b> " + fmtTime(tA) + "–" + fmtTime(Math.min(tB, tEnd())) + " (" + fmtDur(Math.min(tB, tEnd()) - tA) + ")"
+            + (sim.sampleEvery > 1 ? " · Auflösung " + sim.sampleEvery + " s" : ""),
+        swSum + " Schaltvorgänge · " + flSum + " Richtungswechsel", per);
+
+    renderOverview(tA, tB);
+    $("chartNote").innerHTML = (chartView === "power"
+        ? "Geräteleistung positiv = Entladen ins Haus, negativ = Laden. Netz positiv = Bezug, negativ = Einspeisung."
+        : "Ladestand je Gerät – gleichlaufende Kurven bedeuten gleichmäßige Nutzung.")
+        + "<br>Zoomen: im Diagramm einen Bereich aufziehen, in der Übersicht darunter das Fenster verschieben oder neu aufziehen, Strg/⌘ + Mausrad. Doppelklick = alles. Legende antippen blendet Linien aus.";
+}
+var _evT = null, _evLen = -1;
+function setInfo(l1, l2, l3) {                     // Info-Zeile über dem Diagramm: immer drei Zeilen
+    var html = "<span>" + l1 + "</span><span>" + (l2 || "&nbsp;") + "</span><span>" + (l3 || "&nbsp;") + "</span>";
+    if ($("viewInfo").innerHTML !== html) $("viewInfo").innerHTML = html;
+}
+function evTimes() {                                  // Zeitstempel der Ereignisse (gecacht)
+    if (_evLen !== sim.events.length || !_evT) {
+        _evT = sim.events.map(function (e) { return e.t; }); _evLen = sim.events.length;
+    }
+    return _evT;
+}
+
+function renderLegend(defs) {
+    $("legend").innerHTML = defs.map(function (L) {
+        return '<button class="leg-btn' + (L.hidden ? " off" : "") + '" data-key="' + L.key + '" aria-pressed="' + (!L.hidden) + '"><i style="background:' + L.color + '"></i>' + esc(L.name) + "</button>";
+    }).join("") + '<span><i style="background:var(--text);width:8px;height:8px;transform:rotate(45deg);border-radius:1px"></i>Richtungswechsel</span>';
+}
+$("legend").addEventListener("click", function (e) {
+    var b = e.target.closest(".leg-btn");
+    if (!b) return;
+    var k = chartView + ":" + b.dataset.key, ix = S.hidden.indexOf(k);
+    if (ix >= 0) S.hidden.splice(ix, 1); else S.hidden.push(k);
+    save(); renderChart();
+});
+
+/* Übersichtsleiste: gesamter Verlauf, darauf das aktuelle Fenster */
+var OVH = 54, OVP = { l: 52, r: 12 };
+function renderOverview(tA, tB) {
+    var s = sim.series, n = s.t.length, e = Math.max(tEnd(), 60);
+    var pw = W - OVP.l - OVP.r;
+    var X = function (t) { return OVP.l + t / e * pw; };
+    var data = chartView === "power" ? s.p1 : s.soc[0];
+    var lo = Infinity, hi = -Infinity, defsDev = chartView === "power" ? s.dev : s.soc;
+    defsDev.forEach(function (arr) { for (var i = 0; i < n; i++) { if (arr[i] < lo) lo = arr[i]; if (arr[i] > hi) hi = arr[i]; } });
+    if (chartView === "soc") { lo = 0; hi = 100; }
+    if (!isFinite(lo) || hi - lo < 1) { lo = -1; hi = 1; }
+    var Y = function (v) { return 4 + (hi - v) / (hi - lo) * (OVH - 8); };
+    var out = '<rect x="' + OVP.l + '" y="1" width="' + pw + '" height="' + (OVH - 2) + '" fill="var(--bg)" stroke="var(--line)" rx="4"/>';
+    defsDev.forEach(function (arr, i) {
+        out += '<polyline fill="none" stroke="' + DEV_COLORS[i] + '" stroke-width="1" opacity=".75" points="' + polyline(s.t, arr, 0, n, X, Y, Math.ceil(pw / 2)) + '"/>';
+    });
+    if (chartView === "power" && lo < 0 && hi > 0) out += '<line x1="' + OVP.l + '" x2="' + (W - OVP.r) + '" y1="' + Y(0) + '" y2="' + Y(0) + '" stroke="var(--line)"/>';
+    var xa = X(Math.max(0, tA)), xb = X(Math.min(e, tB));
+    out += '<rect x="' + OVP.l + '" y="1" width="' + Math.max(0, xa - OVP.l) + '" height="' + (OVH - 2) + '" fill="var(--bg)" opacity=".6"/>';
+    out += '<rect x="' + xb + '" y="1" width="' + Math.max(0, W - OVP.r - xb) + '" height="' + (OVH - 2) + '" fill="var(--bg)" opacity=".6"/>';
+    out += '<rect class="ov-win" x="' + xa + '" y="1" width="' + Math.max(3, xb - xa) + '" height="' + (OVH - 2) + '" fill="var(--accent-weak)" stroke="var(--accent)" stroke-width="1.5" rx="3"/>';
+    out += '<text x="' + (OVP.l - 6) + '" y="' + (OVH / 2 + 4) + '" text-anchor="end" font-size="10" fill="var(--faint)">Übersicht</text>';
+    $("ov").innerHTML = out;
+}
+
+/* Pointer-Helfer: Bildschirm → SVG-x */
+function svgX(svg, clientX) { var r = svg.getBoundingClientRect(); return (clientX - r.left) / r.width * W; }
+
+// Hauptdiagramm: Bereich aufziehen → hineinzoomen; Doppelklick → alles
+(function () {
+    var svg = $("chart");
+    svg.addEventListener("pointerdown", function (e) {
+        if (!chartGeom || e.button > 0) return;
+        var x = svgX(svg, e.clientX);
+        if (x < PAD.l || x > W - PAD.r) return;
+        dragSel = { x0: x, x1: x, id: e.pointerId };
+        svg.setPointerCapture(e.pointerId);
+    });
+    svg.addEventListener("pointermove", function (e) {
+        if (!dragSel || e.pointerId !== dragSel.id) return;
+        dragSel.x1 = Math.max(PAD.l, Math.min(W - PAD.r, svgX(svg, e.clientX)));
+        if (Math.abs(dragSel.x1 - dragSel.x0) > 3) renderChart();
+    });
+    function end(e) {
+        if (!dragSel || e.pointerId !== dragSel.id) return;
+        var a = Math.min(dragSel.x0, dragSel.x1), b = Math.max(dragSel.x0, dragSel.x1), g = chartGeom;
+        dragSel = null;
+        if (b - a > 6 && g) {
+            var ta = g.tA + (a - PAD.l) / g.pw * (g.tB - g.tA), tb = g.tA + (b - PAD.l) / g.pw * (g.tB - g.tA);
+            setRange(ta, tb);
+        } else renderChart();
+    }
+    svg.addEventListener("pointerup", end);
+    svg.addEventListener("pointercancel", function () { dragSel = null; renderChart(); });
+    svg.addEventListener("dblclick", function () { view.mode = "all"; renderChart(); });
+    svg.addEventListener("wheel", function (e) {
+        if (!(e.ctrlKey || e.metaKey) || !chartGeom) return;
+        e.preventDefault();
+        var x = svgX(svg, e.clientX), g = chartGeom;
+        var c = g.tA + (x - PAD.l) / g.pw * (g.tB - g.tA);
+        zoomBy(e.deltaY > 0 ? 1.4 : 1 / 1.4, c);
+    }, { passive: false });
+})();
+
+// Übersicht: Fenster verschieben oder neuen Bereich aufziehen
+(function () {
+    var svg = $("ov"), drag = null;
+    function tAt(clientX) {
+        var e = Math.max(tEnd(), 60), x = svgX(svg, clientX);
+        return Math.max(0, Math.min(e, (x - OVP.l) / (W - OVP.l - OVP.r) * e));
+    }
+    svg.addEventListener("pointerdown", function (e) {
+        if (sim.series.t.length < 2) return;
+        var r = curRange(), t = tAt(e.clientX);
+        svg.setPointerCapture(e.pointerId);
+        if (t >= r[0] && t <= r[1] && view.mode !== "all") drag = { kind: "move", t0: t, a: r[0], b: r[1], moved: false };
+        else drag = { kind: "brush", t0: t, t1: t, moved: false };
+    });
+    svg.addEventListener("pointermove", function (e) {
+        if (!drag) return;
+        var t = tAt(e.clientX);
+        if (drag.kind === "move") {
+            var d = t - drag.t0;
+            if (Math.abs(d) > 0) { drag.moved = true; setRange(drag.a + d, drag.b + d); }
+        } else {
+            drag.t1 = t; drag.moved = true;
+            var a = Math.min(drag.t0, drag.t1), b = Math.max(drag.t0, drag.t1);
+            if (b - a > MIN_SPAN) setRange(a, b);
+        }
+    });
+    function end(e) {
+        if (!drag) return;
+        if (!drag.moved) {                                  // Tippen: Fenster dorthin zentrieren
+            var r = curRange(), w = view.mode === "all" ? Math.max(MIN_SPAN, (r[1] - r[0]) / 8) : r[1] - r[0], t = tAt(e.clientX);
+            setRange(t - w / 2, t + w / 2);
+        }
+        drag = null;
+    }
+    svg.addEventListener("pointerup", end);
+    svg.addEventListener("pointercancel", function () { drag = null; });
+    svg.addEventListener("dblclick", function () { view.mode = "all"; renderChart(); });
+})();
+
+// Tooltip mit Werten und Ereignissen an der Mausposition
+(function hover() {
+    var wrap = $("chart").parentNode, tip = $("tip");
+    function hide() { tip.style.opacity = 0; var xh = document.getElementById("xhair"); if (xh) xh.setAttribute("visibility", "hidden"); }
+    wrap.addEventListener("mouseleave", hide);
+    wrap.addEventListener("mousemove", function (e) {
+        var g = chartGeom;
+        if (!g || dragSel) { hide(); return; }
+        var r = $("chart").getBoundingClientRect(), sx = (e.clientX - r.left) / r.width * W;
+        if (sx < PAD.l || sx > W - PAD.r) { hide(); return; }
+        var t = g.tA + (sx - PAD.l) / g.pw * (g.tB - g.tA);
+        var s = sim.series, idx = Math.min(s.t.length - 1, lowerBound(s.t, t));
+        if (idx > 0 && Math.abs(s.t[idx - 1] - t) < Math.abs(s.t[idx] - t)) idx--;
+        var html = '<div class="t-title">' + fmtTime(s.t[idx]) + "</div>";
+        g.lines.forEach(function (L) {
+            var v = L.data[idx];
+            html += '<div><span style="color:' + L.color + '">●</span> ' + esc(L.name) + ": " + (chartView === "soc" ? fmtN(v, 1) + " %" : fmtW(v)) + "</div>";
+        });
+        // Ereignisse innerhalb ±3 Pixel
+        var tol = 3 / g.pw * (g.tB - g.tA), et = evTimes(), k = lowerBound(et, t - tol), evs = [];
+        for (; k < et.length && et[k] <= t + tol; k++) {
+            var E = sim.events[k];
+            if (E.kind === "idle" || E.kind === "flip") evs.push(esc(sim.devices[E.dev].name) + ": " + (E.kind === "idle" ? "Schaltvorgang (Ruhe)" : "Richtungswechsel") + " " + fmtTime(E.t));
+        }
+        if (evs.length) html += '<div style="margin-top:4px;color:var(--muted)">' + evs.slice(0, 6).join("<br>") + (evs.length > 6 ? "<br>…" : "") + "</div>";
+        tip.innerHTML = html;
+        tip.style.opacity = 1;
+        var px = (e.clientX - r.left), py = (e.clientY - r.top);
+        tip.style.left = Math.max(90, Math.min(r.width - 90, px)) + "px";
+        tip.style.top = Math.max(70, py) + "px";
+        var xh = document.getElementById("xhair");
+        if (xh) { var xx = g.X(s.t[idx]).toFixed(1); xh.setAttribute("x1", xx); xh.setAttribute("x2", xx); xh.setAttribute("visibility", "visible"); }
+    });
+})();
+
+/* ══════════════ Energiefluss-Diagramm ══════════════
+   Knoten: PV (oben), Netz (links), Haus und Wallbox (rechts), Speicher (unten).
+   Jede Verbindung läuft über einen Knotenpunkt in der Mitte. Die Aufteilung
+   der Flüsse folgt dem HA-Energie-Dashboard: PV versorgt zuerst das Haus,
+   dann die Speicher, der Rest geht ins Netz; Speicher versorgen zuerst das
+   Haus, dann andere Speicher, der Rest geht ins Netz; den Rest deckt das Netz. */
+var HUB = { x: 380, y: 168 };
+var flow = null;
+
+// Zwei Layouts: Querformat (breite Fenster) und Hochformat (Handy). Bei vielen
+// Speichern im Hochformat werden sie auf zwei Reihen verteilt.
+function flowLayout(nDev) {
+    var narrow = $("flow").parentNode.clientWidth < 560;
+    var nodes, i, r, rows, perRow, x, y;
+    if (!narrow) {
+        $("flow").setAttribute("viewBox", "0 0 760 340");
+        HUB = { x: 380, y: 168 };
+        nodes = [
+            { id: "pv",   label: "PV",      color: "var(--flow-pv)",   x: 380, y: 46,  r: 30, icon: "\u2600" },
+            { id: "grid", label: "Netz",    color: "var(--flow-grid)", x: 96,  y: 168, r: 30, icon: "\u26A1" },
+            { id: "home", label: "Haus",    color: "var(--flow-load)", x: 664, y: 118, r: 30, icon: "\u2302" },
+            { id: "car",  label: "Wallbox", color: "var(--flow-car)",  x: 664, y: 226, r: 24, icon: "\u25A3" }
+        ];
+        r = nDev <= 2 ? 30 : nDev <= 4 ? 26 : 21;
+        var span = nDev <= 2 ? 200 : nDev <= 4 ? 420 : 560;
+        for (i = 0; i < nDev; i++) {
+            x = nDev === 1 ? 380 : 380 - span / 2 + span * i / (nDev - 1);
+            nodes.push({ id: "b" + i, dev: i, color: DEV_COLORS[i], x: x, y: 282, r: r });
+        }
+    } else {
+        rows = nDev > 4 ? 2 : 1; perRow = Math.ceil(nDev / rows);
+        var H = rows === 2 ? 470 : 390;
+        $("flow").setAttribute("viewBox", "0 0 360 " + H);
+        HUB = { x: 180, y: 170 };
+        nodes = [
+            { id: "pv",   label: "PV",      color: "var(--flow-pv)",   x: 180, y: 42,  r: 26, icon: "\u2600" },
+            { id: "grid", label: "Netz",    color: "var(--flow-grid)", x: 48,  y: 170, r: 26, icon: "\u26A1" },
+            { id: "home", label: "Haus",    color: "var(--flow-load)", x: 312, y: 128, r: 26, icon: "\u2302" },
+            { id: "car",  label: "Wallbox", color: "var(--flow-car)",  x: 312, y: 222, r: 21, icon: "\u25A3" }
+        ];
+        r = perRow <= 2 ? 26 : perRow <= 3 ? 23 : 20;
+        for (i = 0; i < nDev; i++) {
+            var row = Math.floor(i / perRow), k = i % perRow, cnt = Math.min(perRow, nDev - row * perRow);
+            var sp = cnt <= 2 ? 150 : 260;
+            x = cnt === 1 ? 180 : 180 - sp / 2 + sp * k / (cnt - 1);
+            y = 300 + row * 86;
+            nodes.push({ id: "b" + i, dev: i, color: DEV_COLORS[i], x: x, y: y, r: r });
+        }
+    }
+    nodes.forEach(function (n) { if (n.dev != null) n.label = sim.devices[n.dev].name.replace("Ger\u00e4t ", "G"); });
+    flow = flow || {};
+    flow.narrow = narrow;
+    return nodes;
+}
+window.addEventListener("resize", function () {
+    if (!flow || !sim) return;
+    var narrow = $("flow").parentNode.clientWidth < 560;
+    if (narrow !== flow.narrow) buildFlow();
+});
+
+function buildFlow() {
+    var svg = $("flow"), nodes = flowLayout(sim.devices.length), out = "";
+    out += '<circle cx="' + HUB.x + '" cy="' + HUB.y + '" r="5" fill="var(--line)"/>';
+    nodes.forEach(function (n) {
+        var dx = HUB.x - n.x, dy = HUB.y - n.y, len = Math.sqrt(dx * dx + dy * dy);
+        n.sx = n.x + dx / len * (n.r + 4); n.sy = n.y + dy / len * (n.r + 4);
+        n.len = len - n.r - 4;
+        out += '<line x1="' + n.sx.toFixed(1) + '" y1="' + n.sy.toFixed(1) + '" x2="' + HUB.x + '" y2="' + HUB.y + '" stroke="var(--line)" stroke-width="2"/>';
+        out += '<line id="fl-' + n.id + '" x1="' + n.sx.toFixed(1) + '" y1="' + n.sy.toFixed(1) + '" x2="' + HUB.x + '" y2="' + HUB.y
+             + '" stroke="' + n.color + '" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 14" opacity="0"/>';
+    });
+    nodes.forEach(function (n) {
+        out += '<g id="fn-' + n.id + '">';
+        out += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="var(--panel-2)" stroke="var(--line)" stroke-width="3"/>';
+        if (n.dev != null) {                                 // Ladestand-Ring
+            var c = 2 * Math.PI * n.r;
+            out += '<circle id="fs-' + n.id + '" cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="none" stroke="' + n.color + '" stroke-width="3.5"'
+                 + ' stroke-dasharray="0 ' + c.toFixed(1) + '" transform="rotate(-90 ' + n.x + " " + n.y + ')"/>';
+            out += '<text x="' + n.x + '" y="' + (n.y + 4) + '" text-anchor="middle" font-size="' + (n.r > 24 ? 12 : 10) + '" font-weight="700" fill="' + n.color + '" font-family="var(--mono)" id="fsoc-' + n.id + '"></text>';
+            out += '<text x="' + n.x + '" y="' + (n.y + n.r + 14) + '" text-anchor="middle" font-size="11" fill="var(--muted)">' + esc(n.label) + "</text>";
+            out += '<text x="' + n.x + '" y="' + (n.y + n.r + 27) + '" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--text)" id="fv-' + n.id + '"></text>';
+        } else {
+            out += '<circle cx="' + n.x + '" cy="' + n.y + '" r="' + n.r + '" fill="none" stroke="' + n.color + '" stroke-width="3" opacity=".9"/>';
+            out += '<text x="' + n.x + '" y="' + (n.y + 6) + '" text-anchor="middle" font-size="' + (n.r > 26 ? 20 : 16) + '" fill="' + n.color + '">' + n.icon + "</text>";
+            var below = n.id !== "pv", ty = below ? n.y + n.r + 15 : n.y - n.r - 22;
+            var tx = n.id === "pv" ? n.x + n.r + 12 : n.x, anchor = n.id === "pv" ? "start" : "middle";
+            if (n.id === "pv") ty = n.y - 4;
+            out += '<text x="' + tx + '" y="' + ty + '" text-anchor="' + anchor + '" font-size="11" fill="var(--muted)">' + n.label + "</text>";
+            out += '<text x="' + tx + '" y="' + (ty + 14) + '" text-anchor="' + anchor + '" font-size="12" font-weight="700" font-family="var(--mono)" fill="var(--text)" id="fv-' + n.id + '"></text>';
+        }
+        out += "</g>";
+    });
+    svg.innerHTML = out;
+    flow = { nodes: nodes, offset: {}, el: {}, narrow: flow ? flow.narrow : false };
+    nodes.forEach(function (n) {
+        flow.offset[n.id] = 0;
+        flow.el[n.id] = { line: $("fl-" + n.id), val: $("fv-" + n.id), ring: $("fs-" + n.id), soc: $("fsoc-" + n.id), g: $("fn-" + n.id) };
+    });
+}
+
+// Flüsse berechnen (W). Positiv = Knoten liefert in den Knotenpunkt.
+function flowValues() {
+    var inp = sim.inputs(), batt = sim.plants.map(function (p) { return p.p; });
+    var grid = sim.gridPower();
+    var v = { pv: inp.pv, grid: grid, home: -inp.load, car: -inp.wallbox };
+    batt.forEach(function (p, i) { v["b" + i] = p; });
+    // Paarweise Aufteilung für die Kopfzeile (wie im HA-Energie-Dashboard)
+    var L = inp.load + inp.wallbox, PV = inp.pv;
+    var D = batt.reduce(function (a, p) { return a + Math.max(0, p); }, 0);
+    var C = batt.reduce(function (a, p) { return a + Math.max(0, -p); }, 0);
+    var pvHome = Math.min(PV, L), remHome = L - pvHome, remPV = PV - pvHome;
+    var battHome = Math.min(D, remHome); remHome -= battHome; var remD = D - battHome;
+    var pvBatt = Math.min(remPV, C); remPV -= pvBatt; var remC = C - pvBatt;
+    var battBatt = Math.min(remD, remC); remD -= battBatt; remC -= battBatt;
+    v.pairs = { pvHome: pvHome, pvBatt: pvBatt, pvGrid: remPV, battHome: battHome, battBatt: battBatt,
+                battGrid: remD, gridHome: remHome, gridBatt: remC };
+    return v;
+}
+
+function updateFlow(realDt, withText) {
+    if (!flow) return;
+    var v = flowValues();
+    flow.nodes.forEach(function (n) {
+        var f = v[n.id] || 0, a = Math.abs(f), E = flow.el[n.id];
+        var on = a > 5;
+        if (on) {
+            var speed = 25 + 70 * Math.sqrt(Math.min(1, a / 2400));          // px/s
+            flow.offset[n.id] += (f > 0 ? -1 : 1) * speed * realDt;        // Quelle: zum Knotenpunkt, Senke: zum Knoten
+            E.line.setAttribute("stroke-dashoffset", flow.offset[n.id].toFixed(1));
+            E.line.setAttribute("stroke-width", (2.5 + 5 * Math.sqrt(Math.min(1, a / 4000))).toFixed(1));
+            E.line.setAttribute("opacity", "1");
+        } else E.line.setAttribute("opacity", "0");
+        if (withText) {
+            if (n.dev != null) {
+                var pl = sim.plants[n.dev], c = 2 * Math.PI * n.r, soc = Math.max(0, Math.min(100, pl.soc));
+                E.ring.setAttribute("stroke-dasharray", (c * soc / 100).toFixed(1) + " " + c.toFixed(1));
+                E.soc.textContent = Math.round(soc) + "%";
+                E.val.textContent = on ? (f > 0 ? "\u2191 " : "\u2193 ") + fmtW(a) : "Ruhe";
+                E.val.setAttribute("fill", on ? (f > 0 ? "var(--text)" : "var(--pos)") : "var(--faint)");
+            } else {
+                var txt = on ? fmtW(a) : "\u2013";
+                if (n.id === "grid" && on) txt = (f > 0 ? "Bezug " : "Einspeisung ") + fmtW(a);
+                E.val.textContent = txt;
+            }
+            E.g.setAttribute("opacity", n.id === "car" && !(S.scene.wallbox > 0) ? ".35" : "1");
+        }
+    });
+    if (withText) {
+        var P = v.pairs, parts = [];
+        function add(w, t) { if (w > 5) parts.push(t + " " + fmtW(w)); }
+        add(P.pvHome, "PV\u2192Haus"); add(P.pvBatt, "PV\u2192Speicher"); add(P.pvGrid, "PV\u2192Netz");
+        add(P.battHome, "Speicher\u2192Haus"); add(P.battBatt, "Speicher\u2192Speicher"); add(P.battGrid, "Speicher\u2192Netz");
+        add(P.gridHome, "Netz\u2192Haus"); add(P.gridBatt, "Netz\u2192Speicher");
+        var t = parts.join(" \u00b7 ") || "kein Energiefluss";
+        if ($("flowSub").textContent !== t) $("flowSub").textContent = t;
+    }
+}
+
+/* ── Hauptschleife ─────────────────────────────────────── */
+var lastFrame = null, lastUi = 0, lastChart = 0, lastFlow = null;
+function frame(now) {
+    if (running) {
+        if (lastFrame !== null) {
+            var realDt = Math.min(0.25, (now - lastFrame) / 1000);   // nach Tab-Wechsel nicht nachholen
+            sim.advance(realDt * S.speed);
+        }
+        lastFrame = now;
+    }
+    var flowDt = lastFlow === null ? 0 : Math.min(0.1, (now - lastFlow) / 1000); lastFlow = now;
+    var textDue = now - lastUi > 100;
+    updateFlow(running ? flowDt : 0, textDue);
+    if (textDue) { renderLive(); lastUi = now; }
+    var chartEvery = !running ? 1000 : view.mode === "range" ? 1000 : 300;
+    if (!dragSel && now - lastChart > chartEvery) { renderChart(); lastChart = now; }
+    requestAnimationFrame(frame);
+}
+
+renderCfg();
+restart();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

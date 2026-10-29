@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>etechnik3rs Welt</title>
+<meta name="description" content="etechnik3rs Welt – Themenwelt rund um Elektromobilität, Energie & Wärme, Modellflug, Elektronik und eigene Patente.">
+<meta name="theme-color" content="#0a0e13">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/site.css">
+<style>
+
+/* ── Seiten-spezifisch: index.html ────────────────────────── */
+
+/* Hero-Sektion (volle Höhe) */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 30px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.hero.visible { opacity: 1; transform: translateY(0); }
+
+/* Weicher Lichtschein hinter dem Titel */
+.hero-glow {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    width: min(720px, 90vw);
+    height: 420px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(74,158,255,0.16), transparent 70%);
+    filter: blur(10px);
+    pointer-events: none;
+    z-index: 0;
+}
+.hero > *:not(.hero-glow) { position: relative; z-index: 1; }
+.hero-kicker {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+.hero-chips {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 38px;
+}
+.hero-chips a {
+    padding: 10px 18px;
+    border: 1px solid #24303a;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.02);
+    color: #b7c2cc;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+}
+.hero-chips a:hover {
+    border-color: var(--accent);
+    color: #fff;
+    background: rgba(74,158,255,0.10);
+}
+
+/* Themen-Sektionen */
+section {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 90px 30px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease, filter 0.4s ease;
+}
+section.visible { opacity: 1; transform: translateY(0); }
+
+/* Trennlinie oben an jeder Sektion */
+section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* Typografie */
+h1 {
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #ffffff 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+}
+h2 {
+    font-size: clamp(16px, 2.5vw, 24px);
+    font-weight: 300;
+    color: #666;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+}
+.statement {
+    font-size: clamp(16px, 2.5vw, 22px);
+    letter-spacing: 5px;
+    font-weight: 300;
+    color: #4a4a4a;
+}
+
+/* Themen-Kopf */
+.topic-title {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #f0f0f0;
+}
+.topic-tagline {
+    font-size: clamp(13px, 1.8vw, 16px);
+    color: #777;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 34px;
+}
+.topic-desc {
+    max-width: 620px;
+    margin: 26px auto 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* Bild-Figur */
+figure.media {
+    margin: 0 auto;
+    max-width: min(560px, 88vw);
+}
+figure.media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid #222;
+    border-radius: 10px;
+    background: #0f0f0f;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+figure.media img:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 26px rgba(74, 158, 255, 0.14);
+    filter: brightness(1.04);
+}
+figure.media figcaption {
+    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--faint);
+}
+
+/* Zwei Bilder nebeneinander (Thermografie) */
+.media-row {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+.media-row figure.media { max-width: min(280px, 80vw); }
+
+/* Bild-Platzhalter (für Themen ohne Bild) */
+.img-placeholder {
+    width: min(420px, 84vw);
+    height: 230px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #0f0f0f 0%, #161616 100%);
+    color: #333;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+.img-placeholder .icon { font-size: 32px; opacity: 0.35; }
+
+/* Button-Link zur Unterseite */
+.topic-link {
+    display: inline-block;
+    margin-top: 26px;
+    padding: 11px 22px;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.topic-link:hover {
+    background: var(--accent);
+    color: #0a0a0a;
+    box-shadow: 0 0 22px rgba(74, 158, 255, 0.30);
+}
+
+/* Patent-Grid */
+.patent-grid {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+.patent-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #888;
+    transition: transform 0.3s ease;
+}
+.patent-card:hover { transform: translateY(-4px); }
+.patent-card img {
+    width: min(340px, 80vw);
+    height: auto;
+    border: 1px solid #222;
+    border-radius: 8px;
+    background: #fff;
+    padding: 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+.patent-card:hover img {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(74, 158, 255, 0.15);
+    filter: brightness(1.05);
+}
+.patent-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #555;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+.patent-card:hover .patent-label { color: var(--accent); }
+
+/* Themen-Überblick (Kachelraster) */
+.overview {
+    min-height: auto;
+    padding: 90px 30px 70px;
+}
+.overview-head { margin-bottom: 34px; }
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 920px;
+}
+.topic-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+    padding: 22px 20px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.015);
+    text-decoration: none;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.topic-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+    background: rgba(74, 158, 255, 0.06);
+    box-shadow: 0 12px 30px rgba(74, 158, 255, 0.12);
+}
+.topic-card .ic {
+    width: 30px; height: 30px;
+    color: var(--accent);
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.topic-card .tc-name { color: #f0f0f0; font-weight: 600; font-size: 16px; }
+.topic-card .tc-tag { color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+/* Kontakt-Sektion */
+button.topic-link { background: transparent; font-family: inherit; cursor: pointer; }
+.contact-note {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--faint);
+    min-height: 1.2em;
+}
+
+/* Formeln im Hintergrund */
+.formula {
+    position: absolute;
+    opacity: 0.05;
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-family: "Times New Roman", "Cambria Math", serif;
+    font-style: italic;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+}
+.formula.tl { top: 12%;  left: 8%;  animation-delay: 0s;   }
+.formula.br { bottom: 12%; right: 8%;  animation-delay: -4s; }
+.formula.tr { top: 12%;  right: 8%; animation-delay: -2s; }
+.formula.bl { bottom: 12%; left: 8%;  animation-delay: -6s; }
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+
+/* Scroll-Indikator */
+.scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #333;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: pulse 2.5s ease-in-out infinite;
+}
+.scroll-hint .arrow { font-size: 18px; }
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 0.8; }
+}
+
+/* Impressum & Footer */
+.impressum {
+    text-align: center;
+    padding: 30px 20px 10px 20px;
+    color: #333;
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 1.8;
+}
+.impressum a {
+    color: #555;
+    text-decoration: none;
+    border-bottom: 1px solid #333;
+    transition: color 0.3s ease;
+}
+.impressum a:hover { color: var(--accent); }
+footer {
+    text-align: center;
+    padding: 10px 20px 40px 20px;
+    color: #333;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 600px) {
+    .patent-grid { gap: 24px; }
+    .patent-card img { padding: 8px; }
+    section { padding: 70px 22px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Diffuse Leiterplatten-Textur im Hintergrund -->
+<div class="tech-bg" aria-hidden="true"></div>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">&#9776;</button>
+<div class="nav-backdrop"></div>
+
+<nav class="sidebar" id="sidebar" aria-label="Hauptnavigation">
+    <div class="sidebar-inner">
+        <a class="brand" href="index.html">
+            <span class="brand-name">etechnik3rs Welt</span>
+            <span class="brand-role">Erfinder &middot; Ingenieur</span>
+        </a>
+        <ul class="nav-list">
+            <li><a href="#start" data-nav>Start</a></li>
+            <li><a href="#themen" data-nav>Themen im &Uuml;berblick</a></li>
+
+            <li class="nav-group">Elektromobilit&auml;t</li>
+            <li><a href="#elektrofahrzeuge" data-nav>Elektrofahrzeuge</a></li>
+            <li><a href="#laden" data-nav>Laden &amp; Ladeinfrastruktur</a></li>
+            <li><a href="#nachtfahrt" data-nav>Langstrecke: Nachtfahrt</a></li>
+            <li><a href="#batterie" data-nav>Batteriediagnose</a></li>
+            <li><a href="#kostenrechner" data-nav>Kostenvergleich Elektroauto</a></li>
+
+            <li class="nav-group">Energie &amp; W&auml;rme</li>
+            <li><a href="#waermepumpen" data-nav>W&auml;rmepumpen</a></li>
+            <li><a href="#photovoltaik" data-nav>Photovoltaik &amp; Speicher</a></li>
+            <li><a href="zendure-simulation.html">Speicher-Simulation Zendure</a></li>
+            <li><a href="#thermografie" data-nav>Thermografie</a></li>
+
+            <li class="nav-group">Smart Home &amp; Automation</li>
+            <li><a href="#homeassistant" data-nav>Home Assistant</a></li>
+            <li><a href="#homematic" data-nav>Homematic</a></li>
+
+            <li class="nav-group">Werkstatt &amp; Making</li>
+            <li><a href="#druck3d" data-nav>3D-Druck</a></li>
+            <li><a href="#drohnen" data-nav>Modellflug &amp; Drohnen</a></li>
+            <li><a href="#elektronik" data-nav>Elektronik &amp; Embedded</a></li>
+
+            <li class="nav-group">Erfindungen</li>
+            <li><a href="#erfindungen" data-nav>Erfindungen &amp; Patente</a></li>
+
+            <li class="nav-group">Kontakt</li>
+            <li><a href="#kontakt" data-nav>Kontakt</a></li>
+        </ul>
+
+        <!-- Fußbereich: Einstellungen / App installieren -->
+        <div class="sidebar-foot">
+            <button class="gear-btn" id="gearBtn" aria-expanded="false" aria-haspopup="true">
+                <span class="gear-ico" aria-hidden="true">&#9881;</span> Einstellungen
+            </button>
+            <div class="gear-menu" id="gearMenu" hidden>
+                <button class="gear-item" id="installBtn" hidden>App installieren</button>
+                <button class="gear-item" id="updateCheck">Nach Updates suchen</button>
+                <div class="gear-version" id="appVersion"></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Update-Hinweis -->
+<div class="update-banner" id="updateBanner" role="alert" aria-live="polite">
+    <span>Neue Version verf&uuml;gbar.</span>
+    <button class="ub-reload" id="ubReload">Neu laden</button>
+    <button class="ub-close" id="ubClose" aria-label="Hinweis schlie&szlig;en">&times;</button>
+</div>
+
+
+<!-- ═══════════════ INHALT ═══════════════ -->
+<div class="page">
+
+    <!-- ── HERO ── -->
+    <div class="hero" id="start">
+        <div class="hero-glow"></div>
+
+        <h1>etechnik3rs Welt</h1>
+        <div class="statement">Erfinder &middot; Bastler &middot; Ingenieur</div>
+
+        <div class="hero-chips">
+            <a href="#elektrofahrzeuge">Elektromobilit&auml;t</a>
+            <a href="#waermepumpen">Energie &amp; W&auml;rme</a>
+            <a href="elektroauto-kostenvergleich.html">Kostenrechner Elektroauto</a>
+        </div>
+
+        <div class="formula tl">E = mc&sup2;</div>
+        <div class="formula br">P = U &middot; I</div>
+
+        <div class="scroll-hint">
+            <span>Scroll</span>
+            <span class="arrow">&#8595;</span>
+        </div>
+    </div>
+
+
+    <!-- ── ICON-SPRITE (einmalig, versteckt) ── -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><path d="M3 11h18v6H3z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></symbol>
+        <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 5 13h6l-1 9 9-12h-6z"/></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+        <symbol id="i-battery" viewBox="0 0 24 24"><rect x="3" y="8" width="15" height="9" rx="1.5"/><path d="M21 11v3"/><path d="M7 12.5h5"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 20v-6"/><path d="M12 20V8"/><path d="M17 20v-9"/></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></symbol>
+        <symbol id="i-heat" viewBox="0 0 24 24"><path d="M14 14.5V5a2 2 0 0 0-4 0v9.5a4 4 0 1 0 4 0z"/><path d="M12 13.5V9"/></symbol>
+        <symbol id="i-waves" viewBox="0 0 24 24"><path d="M3 8c3 0 3 2.5 6 2.5S12 8 15 8s3 2.5 6 2.5"/><path d="M3 14c3 0 3 2.5 6 2.5S12 14 15 14s3 2.5 6 2.5"/></symbol>
+        <symbol id="i-house" viewBox="0 0 24 24"><path d="M4 11 12 5l8 6"/><path d="M6 10v9h12v-9"/></symbol>
+        <symbol id="i-house-signal" viewBox="0 0 24 24"><path d="M4 12 12 6l8 6"/><path d="M6.5 11v8h11v-8"/><circle cx="12" cy="15.5" r="1.1" fill="currentColor" stroke="none"/><path d="M9.7 14a3.2 3.2 0 0 1 4.6 0"/></symbol>
+        <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21 4 16.5v-9z"/><path d="M4 7.5 12 12l8-4.5"/><path d="M12 12v9"/></symbol>
+        <symbol id="i-drone" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="18" r="2.4"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M8 8l2 2M16 8l-2 2M8 16l2-2M16 16l-2-2"/></symbol>
+        <symbol id="i-chip" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 4v3M14 4v3M10 17v3M14 17v3M4 10h3M4 14h3M17 10h3M17 14h3"/></symbol>
+        <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.8 10.7c.8.7 1.3 1.6 1.3 2.3h5c0-.7.5-1.6 1.3-2.3A6 6 0 0 0 12 3z"/></symbol>
+    </svg>
+
+
+    <!-- ── THEMEN IM ÜBERBLICK ── -->
+    <section id="themen" class="overview">
+        <div class="overview-head">
+            <div class="topic-title">Themen im &Uuml;berblick</div>
+            <div class="topic-tagline">Ein Streifzug durch meine Welt</div>
+        </div>
+        <div class="topic-grid">
+            <a class="topic-card" href="#elektrofahrzeuge"><svg class="ic"><use href="#i-car"/></svg><span class="tc-name">Elektrofahrzeuge</span><span class="tc-tag">Hochvolt, Verbrauch &amp; Rekuperation</span></a>
+            <a class="topic-card" href="#laden"><svg class="ic"><use href="#i-bolt"/></svg><span class="tc-name">Laden &amp; Ladeinfrastruktur</span><span class="tc-tag">CCS, HPC &amp; Ladekurven</span></a>
+            <a class="topic-card" href="elektroauto-nachtfahrt.html"><svg class="ic"><use href="#i-moon"/></svg><span class="tc-name">Langstrecke: Nachtfahrt</span><span class="tc-tag">Ladepause als Kraftpause</span></a>
+            <a class="topic-card" href="#batterie"><svg class="ic"><use href="#i-battery"/></svg><span class="tc-name">Batteriediagnose</span><span class="tc-tag">SoC, Zelltemperatur &amp; BMS</span></a>
+            <a class="topic-card" href="elektroauto-kostenvergleich.html"><svg class="ic"><use href="#i-chart"/></svg><span class="tc-name">Kostenvergleich Elektroauto</span><span class="tc-tag">Interaktiver Rechner</span></a>
+            <a class="topic-card" href="#waermepumpen"><svg class="ic"><use href="#i-heat"/></svg><span class="tc-name">W&auml;rmepumpen</span><span class="tc-tag">Arbeitszahl &amp; Effizienz</span></a>
+            <a class="topic-card" href="#photovoltaik"><svg class="ic"><use href="#i-sun"/></svg><span class="tc-name">Photovoltaik &amp; Speicher</span><span class="tc-tag">Ertrag, Eigenverbrauch, Autarkie</span></a>
+            <a class="topic-card" href="#thermografie"><svg class="ic"><use href="#i-waves"/></svg><span class="tc-name">Thermografie</span><span class="tc-tag">W&auml;rmebild &amp; Diagnose</span></a>
+            <a class="topic-card" href="#homeassistant"><svg class="ic"><use href="#i-house"/></svg><span class="tc-name">Home Assistant</span><span class="tc-tag">Smart Home &amp; Automation</span></a>
+            <a class="topic-card" href="#homematic"><svg class="ic"><use href="#i-house-signal"/></svg><span class="tc-name">Homematic</span><span class="tc-tag">Sensorik &amp; Aktorik</span></a>
+            <a class="topic-card" href="#druck3d"><svg class="ic"><use href="#i-cube"/></svg><span class="tc-name">3D-Druck</span><span class="tc-tag">Konstruktion &amp; Fertigung</span></a>
+            <a class="topic-card" href="#drohnen"><svg class="ic"><use href="#i-drone"/></svg><span class="tc-name">Modellflug &amp; Drohnen</span><span class="tc-tag">Aerodynamik &amp; Eigenbau</span></a>
+            <a class="topic-card" href="#elektronik"><svg class="ic"><use href="#i-chip"/></svg><span class="tc-name">Elektronik &amp; Embedded</span><span class="tc-tag">Mikrocontroller &amp; Steuerger&auml;te</span></a>
+            <a class="topic-card" href="#erfindungen"><svg class="ic"><use href="#i-bulb"/></svg><span class="tc-name">Erfindungen &amp; Patente</span><span class="tc-tag">Aus Ideen werden Schutzrechte</span></a>
+        </div>
+    </section>
+
+
+    <!-- ── ELEKTROFAHRZEUGE ── -->
+    <section id="elektrofahrzeuge" class="topic-section">
+        <div class="topic-title">Elektrofahrzeuge</div>
+        <div class="topic-tagline">Hochvolt &middot; Leistungselektronik &middot; Rekuperation</div>
+        <figure class="media">
+            <img src="img/bev_01.jpg" alt="Kombiinstrument eines Volkswagen ID.3 Pro mit Momentanverbrauch 19,1 kWh/100 km" loading="lazy">
+            <figcaption>Volkswagen ID.3 Pro (58&nbsp;kWh) auf Langstreckenfahrt &ndash; Bordcomputer mit 19,1&nbsp;kWh/100&nbsp;km</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Der reale Verbrauch entscheidet &uuml;ber Reichweite und Kosten. Hier geht es um
+            Fahrprofile, Rekuperation und darum, was ein Elektroauto im Alltag wirklich zieht.
+        </p>
+        <div class="formula br">E = &frac12;mv&sup2;</div>
+    </section>
+
+
+    <!-- ── LADEN & LADEINFRASTRUKTUR ── -->
+    <section id="laden" class="topic-section">
+        <div class="topic-title">Laden &amp; Ladeinfrastruktur</div>
+        <div class="topic-tagline">CCS &middot; HPC &middot; Ladekurve</div>
+        <figure class="media">
+            <img src="img/PXL_20240322_222939640~2.jpg" alt="Volkswagen ID.3 an einer CCS-Schnellladesäule mit 125,9 kW Ladeleistung" loading="lazy">
+            <figcaption>Volkswagen ID.3 am CCS-Schnelllader &ndash; 125,9&nbsp;kW Ladeleistung bei 13&nbsp;% Ladestand</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Von der heimischen Wallbox bis zur High-Power-Charging-S&auml;ule: Ladeleistung,
+            Ladekurve und Preise pro kWh bestimmen, wie schnell und wie g&uuml;nstig Strom
+            in die Batterie kommt.
+        </p>
+        <div class="formula tl">Q = I &middot; t</div>
+    </section>
+
+
+    <!-- ── LANGSTRECKE: NACHTFAHRT (Verweis auf den Ratgeber) ── -->
+    <section id="nachtfahrt" class="topic-section">
+        <div class="topic-title">Langstrecke: Nachtfahrt mit dem Elektroauto</div>
+        <div class="topic-tagline">Ladepause &middot; Kaffee-Nap &middot; Sicher ankommen</div>
+        <p class="topic-desc">
+            Ein Schnellladestopp dauert ohnehin 15 bis 30&nbsp;Minuten &ndash; genau richtig f&uuml;r einen
+            gezielten Kurzschlaf. Wie aus der Wartezeit echte Erholung wird: Kaffee-Nap, Sitzposition,
+            Schlafumgebung im E-Auto, Fahrstrategie f&uuml;r die Nacht und eine Packliste.
+        </p>
+        <a class="topic-link" href="elektroauto-nachtfahrt.html">Zu den Tipps f&uuml;r die Nachtfahrt &#8594;</a>
+        <div class="formula tl">t<sub>Nap</sub> &le; 20&nbsp;min</div>
+    </section>
+
+
+    <!-- ── BATTERIEDIAGNOSE ── -->
+    <section id="batterie" class="topic-section">
+        <div class="topic-title">Batteriediagnose</div>
+        <div class="topic-tagline">SoC &middot; Zelltemperatur &middot; BMS</div>
+        <figure class="media">
+            <img src="img/bev_02.png" alt="Live-Diagnose der Hochvoltbatterie: SoC, Spannung, Strom, Zelltemperaturen" loading="lazy">
+            <figcaption>Live-Auslese des BMS &ndash; Ladezustand, Spannung, Strom und Zelltemperaturen</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Ein Blick unter die Haube der Hochvoltbatterie: reale Zellspannungen,
+            Temperaturfenster und dynamische Lade-/Entladegrenzen &ndash; ausgelesen direkt
+            aus dem Batteriemanagementsystem.
+        </p>
+        <div class="formula br">U = R &middot; I</div>
+    </section>
+
+
+    <!-- ── KOSTENVERGLEICH ELEKTROAUTO (Verweis auf den Rechner) ── -->
+    <section id="kostenrechner" class="topic-section">
+        <div class="topic-title">Kostenvergleich: Verbrenner vs. Elektroauto</div>
+        <div class="topic-tagline">Interaktiv &middot; Echte Spritpreise &middot; Ladekosten</div>
+        <p class="topic-desc">
+            Was h&auml;tte mich das Benzin gekostet &ndash; und was ein Elektroauto im gleichen
+            Zeitraum? Ein interaktiver Rechner mit echten Super-E10-Monatspreisen und
+            einstellbaren Ladekosten (Photovoltaik, Netz und unterwegs).
+        </p>
+        <a class="topic-link" href="elektroauto-kostenvergleich.html">Zum interaktiven Rechner &#8594;</a>
+        <div class="formula br">&euro; = f(t)</div>
+    </section>
+
+
+    <!-- ── WÄRMEPUMPEN ── -->
+    <section id="waermepumpen" class="topic-section">
+        <div class="topic-title">W&auml;rmepumpen</div>
+        <div class="topic-tagline">Carnot-Prozess &middot; Invertertechnik &middot; Wirkungsgrad</div>
+        <figure class="media">
+            <img src="img/FLIR_20230604_055916_117.jpg" alt="Wärmebild der Heizungsanlage: Pumpen und Rohrleitungen bei 35,4 °C" loading="lazy">
+            <figcaption>W&auml;rmebild der Heizzentrale &ndash; Vorlauf, Pumpen und Rohrf&uuml;hrung sichtbar gemacht</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Effizienz beginnt an der Anlage: Vorlauftemperaturen, Hydraulik und Regelung
+            entscheiden &uuml;ber die Arbeitszahl. Die W&auml;rmebildkamera macht Verluste und
+            Betriebszust&auml;nde direkt sichtbar.
+        </p>
+        <div class="formula br">COP = Q<sub>H</sub> / W</div>
+    </section>
+
+
+    <!-- ── PHOTOVOLTAIK & SPEICHER ── -->
+    <section id="photovoltaik" class="topic-section">
+        <div class="topic-title">Photovoltaik &amp; Speicher</div>
+        <div class="topic-tagline">Ertrag &middot; Eigenverbrauch &middot; Autarkie</div>
+        <div class="img-placeholder">
+            <span class="icon">&#9728;</span>
+            <span>Bild folgt</span>
+        </div>
+        <p class="topic-desc">
+            Sonnenertrag, Eigenverbrauch und Batteriespeicher &ndash; wie viel Autarkie ist
+            realistisch? Dieses Thema wird hier Schritt f&uuml;r Schritt ausgebaut.
+        </p>
+        <p class="topic-desc">
+            Neu: Wie verteilt die Home-Assistant-Integration Zendure-HA die Leistung, wenn mehrere
+            SolarFlow-Speicher parallel laufen? Die Live-Simulation nutzt den portierten Original-Regelcode.
+        </p>
+        <a class="topic-link" href="zendure-simulation.html">Zur Speicher-Simulation &#8594;</a>
+        <div class="formula tl">P = &eta; &middot; A &middot; G</div>
+    </section>
+
+
+    <!-- ── THERMOGRAFIE ── -->
+    <section id="thermografie" class="topic-section">
+        <div class="topic-title">Thermografie</div>
+        <div class="topic-tagline">W&auml;rmebild &middot; Emissionsgrad &middot; Diagnose</div>
+        <figure class="media">
+            <img src="img/FLIR_20241201_032158_669.jpg" alt="Wärmebild einer Pfanne auf dem Kochfeld mit Spotmessung 200,3 °C" loading="lazy">
+            <figcaption>W&auml;rmebild eines Kochfelds &ndash; Spotmessung 200,3 &deg;C</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Die W&auml;rmebildkamera macht sichtbar, was das Auge nicht sieht: Temperaturen,
+            W&auml;rmebr&uuml;cken und Betriebszust&auml;nde. Ein Werkzeug, das mir quer durch viele
+            Themen hilft &ndash; vom Kochfeld bis zur Anlagendiagnose.
+        </p>
+        <div class="formula tr">P = &epsilon;&sigma;AT&#8308;</div>
+    </section>
+
+
+    <!-- ── HOME ASSISTANT ── -->
+    <section id="homeassistant" class="topic-section">
+        <div class="topic-title">Home Assistant</div>
+        <div class="topic-tagline">Smart Home &middot; Automationen &middot; Dashboards</div>
+        <div class="img-placeholder">
+            <span class="icon">&#127968;</span>
+            <span>Bild folgt</span>
+        </div>
+        <p class="topic-desc">
+            Die Schaltzentrale im Haus: Home Assistant f&uuml;hrt Photovoltaik, Wallbox,
+            W&auml;rmepumpe und Sensorik zusammen &ndash; mit eigenen Automationen und
+            Energie-Dashboards. Hier wird sichtbar, wie die Themen ineinandergreifen.
+        </p>
+        <div class="formula br">wenn &rarr; dann</div>
+    </section>
+
+
+    <!-- ── HOMEMATIC ── -->
+    <section id="homematic" class="topic-section">
+        <div class="topic-title">Homematic</div>
+        <div class="topic-tagline">Sensorik &middot; Aktorik &middot; Funk</div>
+        <div class="img-placeholder">
+            <span class="icon">&#128225;</span>
+            <span>Bild folgt</span>
+        </div>
+        <p class="topic-desc">
+            Temperatur, T&uuml;r- und Fensterkontakte, Heizungssteuerung: Homematic liefert
+            die Sensoren und Aktoren im Hintergrund &ndash; eingebunden und ausgewertet in
+            Home Assistant.
+        </p>
+        <div class="formula tl">RSSI &middot; 868 MHz</div>
+    </section>
+
+
+    <!-- ── 3D-DRUCK ── -->
+    <section id="druck3d" class="topic-section">
+        <div class="topic-title">3D-Druck</div>
+        <div class="topic-tagline">Konstruktion &middot; Slicing &middot; Fertigung</div>
+        <figure class="media">
+            <img src="img/3ddruck_01.jpg" alt="3D-Drucker mit Druckkopf über der Bauplatte, Bauraum 256 × 256 × 256 mm" loading="lazy">
+            <figcaption>Bauraum 256 &times; 256 &times; 256 mm &ndash; Druckkopf &uuml;ber der Bauplatte</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Vom CAD-Modell zum fertigen Teil: Halterungen, Geh&auml;use und Prototypen f&uuml;r
+            die eigenen Projekte &ndash; passgenau konstruiert, gesliced und gedruckt.
+        </p>
+        <div class="formula br">&Delta;z = 0,2 mm</div>
+    </section>
+
+
+    <!-- ── MODELLFLUG & DROHNEN ── -->
+    <section id="drohnen" class="topic-section">
+        <div class="topic-title">Modellflug &amp; Drohnen</div>
+        <div class="topic-tagline">Aerodynamik &middot; Steuerung &middot; Eigenbau</div>
+        <figure class="media">
+            <img src="img/DrohnenRecht-Banner_Copter2.png" alt="Eigenbau-Multicopter mit Kamera im Flug über Feldern und Ortschaft" loading="lazy">
+            <figcaption>Eigenbau-Multicopter im Flug &ndash; Luftbild &uuml;ber Feld und Ortschaft</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Vom Eigenbau-Multicopter bis zu Steuerung und Luftbild: Aerodynamik, Antrieb
+            und die rechtlichen Rahmenbedingungen des Drohnenfliegens.
+        </p>
+        <div class="formula tl">F<sub>a</sub> = &frac12;&rho;v&sup2;A&middot;c<sub>a</sub></div>
+    </section>
+
+
+    <!-- ── ELEKTRONIK & EMBEDDED ── -->
+    <section id="elektronik" class="topic-section">
+        <div class="topic-title">Elektronik &amp; Embedded</div>
+        <div class="topic-tagline">Mikrocontroller &middot; Steuerger&auml;te &middot; Eigenentwicklung</div>
+        <figure class="media">
+            <img src="img/elektronik.JPG" alt="Entwicklungsboard mit Infineon-TriCore-Mikrocontroller und Debug-Schnittstelle" loading="lazy">
+            <figcaption>Infineon-TriCore-Entwicklungsboard &ndash; Steuerger&auml;te-Technik zum Anfassen</figcaption>
+        </figure>
+        <p class="topic-desc">
+            Wo Software auf Hardware trifft: Mikrocontroller, Sensorik und Steuerger&auml;te
+            &ndash; von der Schaltung bis zur eingebetteten Firmware.
+        </p>
+        <div class="formula br">V = I &middot; R</div>
+    </section>
+
+
+    <!-- ── ERFINDUNGEN & PATENTE ── -->
+    <section id="erfindungen" class="topic-section">
+        <div class="topic-title">Erfindungen &amp; Patente</div>
+        <div class="topic-tagline">Fahrerassistenz &middot; Sensorik &middot; Funktionskonzepte</div>
+
+        <div class="patent-grid">
+            <div class="patent-card">
+                <img src="img/patent_01.png" alt="Zeichnung aus einer Patentschrift">
+            </div>
+            <div class="patent-card">
+                <img src="img/patent_02.png" alt="Zeichnung aus einer Patentschrift">
+            </div>
+        </div>
+
+        <p class="topic-desc">
+            Aus Ideen werden Schutzrechte: erteilte Patente rund um Fahrerassistenz,
+            Sensorik und Funktionskonzepte.
+        </p>
+
+        <div class="formula tl">&Sigma;F = 0</div>
+        <div class="formula br">&nabla; &times; E = &minus;&part;B/&part;t</div>
+    </section>
+
+
+    <!-- ── KONTAKT ── -->
+    <section id="kontakt" class="topic-section">
+        <div class="topic-title">Kontakt</div>
+        <div class="topic-tagline">Fragen &middot; Austausch &middot; Ideen</div>
+        <p class="topic-desc">
+            Interesse an einem Thema, eine Frage oder einfach Lust auf Austausch?
+            Eine direkte Kontaktm&ouml;glichkeit folgt hier in K&uuml;rze.
+        </p>
+        <button class="topic-link" id="contactBtn" type="button" aria-describedby="contactNote">
+            Kontakt aufnehmen
+        </button>
+        <div class="contact-note" id="contactNote" role="status"></div>
+        <div class="formula br">&int; Idee d&tau;</div>
+    </section>
+
+
+    <!-- ── FOOTER ── -->
+    <!-- HINWEIS: Impressum nach § 5 DDG (Name, Anschrift, Kontakt) noch ergänzen. -->
+    <footer>
+        &copy; 2026 Bastian
+    </footer>
+
+</div><!-- /.page -->
+
+
+<!-- Gemeinsame Logik: Navigation, Scrollspy, Update-Banner, PWA -->
+<script src="js/app.js"></script>
+
+<!-- Seiten-spezifisch: Sektionen beim Scrollen einblenden -->
+<script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+}, { threshold: 0.12 });
+document.querySelectorAll('section, .hero').forEach(el => observer.observe(el));
+
+// Kontakt-Button: Mail-Adresse folgt noch – vorerst nur ein Hinweis
+const contactBtn = document.getElementById('contactBtn');
+const contactNote = document.getElementById('contactNote');
+if (contactBtn) {
+    contactBtn.addEventListener('click', () => {
+        contactNote.textContent = 'Die direkte Kontaktmöglichkeit wird gerade eingerichtet – bitte bald wiederkommen.';
+    });
+}
+</script>
+
+</body>
+</html>

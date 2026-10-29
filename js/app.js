@@ -1,0 +1,195 @@
+/* ============================================================
+   app.js — Gemeinsame Logik für alle Seiten
+   Navigation (mobil), Scrollspy, Update-Banner, PWA-Installation.
+   Wird von jeder Seite eingebunden.
+   ============================================================ */
+(function () {
+    "use strict";
+
+    var APP_VERSION = "2026.10.29e";
+    var $ = function (id) { return document.getElementById(id); };
+
+    /* ── Immer oben starten (keine Wiederherstellung alter Scrollposition) ──
+       Ausnahme: ein echter Anker (#abschnitt) in der URL wird respektiert. */
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (!location.hash) {
+        window.scrollTo(0, 0);
+    } else {
+        // Anker sofort (ohne lange Smooth-Animation) anspringen und nach
+        // spätem Layout (Bilder) noch einmal exakt nachjustieren.
+        window.addEventListener("load", function () {
+            var el;
+            try { el = document.querySelector(location.hash); }
+            catch (e) { return; }
+            if (!el) return;
+            var html = document.documentElement;
+            var stop = false;
+            function jump() {
+                if (stop) return;
+                var prev = html.style.scrollBehavior;
+                html.style.scrollBehavior = "auto";
+                el.scrollIntoView();
+                html.style.scrollBehavior = prev;
+            }
+            jump();
+            // Nachladende Bilder verschieben das Layout – kurz nachjustieren,
+            // aber sofort aufhören, sobald der Nutzer selbst scrollt.
+            function halt() { stop = true; }
+            window.addEventListener("wheel", halt, { once: true, passive: true });
+            window.addEventListener("touchstart", halt, { once: true, passive: true });
+            window.addEventListener("keydown", halt, { once: true });
+            var imgs = document.images;
+            for (var i = 0; i < imgs.length; i++) {
+                if (!imgs[i].complete) imgs[i].addEventListener("load", jump, { once: true });
+            }
+            setTimeout(function () { stop = true; }, 2500);
+        });
+    }
+
+    /* ── Globale Signalpulse hinter dem Inhalt einfügen ────── */
+    (function injectPulses() {
+        var NS = "http://www.w3.org/2000/svg";
+        var traces = [
+            "M-60 180 H360 V520 H760 V960",
+            "M1260 120 H820 V380 H520",
+            "M120 960 V620 H430 V300 H780",
+            "M1260 680 H980 V430"
+        ];
+        var svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "tech-pulses");
+        svg.setAttribute("viewBox", "0 0 1200 900");
+        svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+        svg.setAttribute("aria-hidden", "true");
+        function path(cls, d) {
+            var p = document.createElementNS(NS, "path");
+            p.setAttribute("class", cls);
+            p.setAttribute("d", d);
+            svg.appendChild(p);
+        }
+        traces.forEach(function (d) { path("trace", d); });
+        traces.forEach(function (d, i) { path("pulse p" + (i + 1), d); });
+        document.body.insertBefore(svg, document.body.firstChild);
+    })();
+
+    /* ── Mobiles Navigationsmenü ───────────────────────────── */
+    var toggle   = document.querySelector(".nav-toggle");
+    var backdrop = document.querySelector(".nav-backdrop");
+    function closeNav() {
+        document.body.classList.remove("nav-open");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+    }
+    if (toggle) {
+        toggle.addEventListener("click", function () {
+            var open = document.body.classList.toggle("nav-open");
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+    }
+    if (backdrop) backdrop.addEventListener("click", closeNav);
+    document.querySelectorAll(".sidebar a").forEach(function (a) {
+        a.addEventListener("click", closeNav);
+    });
+
+    /* ── Scrollspy (nur auf Seiten mit Abschnitten) ────────── */
+    var navLinks = Array.prototype.slice.call(
+        document.querySelectorAll('.nav-list a[data-nav]'));
+    if (navLinks.length && "IntersectionObserver" in window) {
+        var spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                var id = entry.target.id;
+                navLinks.forEach(function (l) {
+                    l.classList.toggle("active", l.getAttribute("href") === "#" + id);
+                });
+            });
+        }, { rootMargin: "-40% 0px -40% 0px" });
+        document.querySelectorAll(".page [id]").forEach(function (el) { spy.observe(el); });
+    }
+
+    /* ── Zahnrad-Menü ──────────────────────────────────────── */
+    var gearBtn  = $("gearBtn");
+    var gearMenu = $("gearMenu");
+    if (gearBtn && gearMenu) {
+        gearBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            var open = gearMenu.hasAttribute("hidden");
+            if (open) { gearMenu.removeAttribute("hidden"); }
+            else { gearMenu.setAttribute("hidden", ""); }
+            gearBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+        document.addEventListener("click", function (e) {
+            if (!gearMenu.contains(e.target) && e.target !== gearBtn) {
+                gearMenu.setAttribute("hidden", "");
+                gearBtn.setAttribute("aria-expanded", "false");
+            }
+        });
+    }
+    var appVersion = $("appVersion");
+    if (appVersion) appVersion.textContent = "Version " + APP_VERSION;
+
+    /* ── PWA-Installation ("App installieren") ─────────────── */
+    var installBtn = $("installBtn");
+    var deferredPrompt = null;
+    window.addEventListener("beforeinstallprompt", function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installBtn) installBtn.removeAttribute("hidden");
+    });
+    if (installBtn) {
+        installBtn.addEventListener("click", function () {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.finally(function () {
+                deferredPrompt = null;
+                installBtn.setAttribute("hidden", "");
+            });
+        });
+    }
+    window.addEventListener("appinstalled", function () {
+        if (installBtn) installBtn.setAttribute("hidden", "");
+    });
+
+    /* ── Service Worker + Update-Erkennung ─────────────────── */
+    var banner   = $("updateBanner");
+    var ubReload = $("ubReload");
+    var ubClose  = $("ubClose");
+    var updateCheck = $("updateCheck");
+
+    function showUpdateBanner(worker) {
+        if (!banner) return;
+        banner.classList.add("show");
+        if (ubReload) ubReload.onclick = function () {
+            if (worker) worker.postMessage({ type: "SKIP_WAITING" });
+            else location.reload();
+        };
+    }
+    if (ubClose && banner) {
+        ubClose.addEventListener("click", function () { banner.classList.remove("show"); });
+    }
+
+    if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
+        navigator.serviceWorker.register("sw.js").then(function (reg) {
+            if (reg.waiting && navigator.serviceWorker.controller) showUpdateBanner(reg.waiting);
+            reg.addEventListener("updatefound", function () {
+                var nw = reg.installing;
+                if (!nw) return;
+                nw.addEventListener("statechange", function () {
+                    if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                        showUpdateBanner(nw);
+                    }
+                });
+            });
+            if (updateCheck) updateCheck.addEventListener("click", function () {
+                reg.update();
+            });
+            // Beim Fokussieren des Tabs nach Updates schauen
+            window.addEventListener("focus", function () { reg.update(); });
+        }).catch(function () { /* Registrierung fehlgeschlagen – ignorieren */ });
+
+        var reloaded = false;
+        navigator.serviceWorker.addEventListener("controllerchange", function () {
+            if (reloaded) return;
+            reloaded = true;
+            location.reload();
+        });
+    }
+})();

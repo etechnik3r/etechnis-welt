@@ -1,0 +1,534 @@
+/* ============================================================
+   tools.css — Wiederverwendbare Bausteine für Rechner & Tools
+   Baut ausschließlich auf den Tokens aus site.css auf. Jede neue
+   Rechner-Unterseite bindet site.css + tools.css ein und erhält
+   damit automatisch das gleiche Look & Feel.
+   ============================================================ */
+
+.tool { max-width: 900px; margin: 0 auto; padding: 26px 18px 56px; }
+
+/* Zurück-Link */
+.backlink {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+}
+.backlink:hover { color: var(--accent); }
+
+/* Kopf */
+.tool-kicker {
+    font-size: var(--fs-xs);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+.tool-title {
+    font-size: clamp(24px, 4vw, 30px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+}
+.tool-sub { font-size: var(--fs-sm); color: var(--muted); margin-top: 8px; line-height: 1.55; }
+
+/* Kontext-Leiste: Zeitraum & Laufleistung immer sichtbar */
+.context-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 2px; }
+.cx {
+    display: flex; flex-direction: column; gap: 2px;
+    background: var(--accent-weak);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--r-sm);
+    padding: 8px 14px;
+}
+.cx-k { font-size: var(--fs-xs); letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.cx-v { font-family: var(--mono); font-size: var(--fs-base); font-weight: 700; color: var(--text); }
+
+/* Kennzahlen (Readouts) */
+.readouts { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0; }
+.readout {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    flex: 1 1 160px;
+}
+.readout .r-label {
+    font-size: var(--fs-xs);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+.readout .r-value {
+    font-family: var(--mono);
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1;
+}
+.readout .r-sub { font-size: var(--fs-sm); color: var(--faint); margin-top: 7px; }
+
+/* Panel (z. B. Diagramm) */
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 16px;
+    margin-bottom: 22px;
+}
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.tab {
+    background: var(--panel-2);
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 7px 15px;
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    cursor: pointer;
+}
+.tab.active { background: var(--accent); color: #06101c; border-color: var(--accent); }
+
+/* Diagramm + Tooltip */
+.chart-wrap { position: relative; }
+.chart-wrap svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+.legend span { font-size: var(--fs-sm); color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.tip {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 8px 12px;
+    font-size: var(--fs-sm);
+    transform: translate(-50%, -110%);
+    white-space: nowrap;
+    z-index: 5;
+    transition: opacity 0.08s ease;
+}
+.tip .t-title { color: var(--text); font-weight: 600; margin-bottom: 4px; }
+
+.readout .r-car { font-size: var(--fs-xs); color: var(--faint); margin: -4px 0 8px; font-family: var(--mono); }
+
+/* Regler-Karten – auf dem Desktop zwei gleich breite Spalten (keine leere
+   dritte Spalte mehr); volle Breite über .span-2 */
+.controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; align-items: start; }
+.span-2 { grid-column: 1 / -1; }
+@media (max-width: 620px) { .controls { grid-template-columns: 1fr; } }
+.ctrl-card {
+    min-width: 0;          /* breite Inhalte (Tabellen) scrollen statt das Raster zu sprengen */
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 18px 20px;
+}
+.ctrl-head {
+    font-size: var(--fs-sm);
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+.slider { margin-bottom: 18px; }
+.slider-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.slider-row .s-label { font-size: var(--fs-sm); color: var(--muted); }
+.slider-row .s-value { font-family: var(--mono); font-size: var(--fs-base); color: var(--text); font-weight: 600; }
+.slider input[type=range] { width: 100%; height: 4px; cursor: pointer; accent-color: var(--accent); }
+.slider .s-hint { font-size: var(--fs-xs); color: var(--faint); margin-top: 4px; }
+
+/* Eingabefelder (Auswahl & Zahlen) – einheitliches Aussehen */
+.tool-input {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    font-family: var(--mono);
+    font-size: var(--fs-base);
+    font-weight: 600;
+}
+select.tool-input { cursor: pointer; }
+.tool-input:focus-visible { outline: 2px solid var(--series-a); outline-offset: 2px; }
+
+/* Betrachtungszeitraum */
+.period-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+.period-field { flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px; }
+.period-field .s-label { font-size: var(--fs-sm); color: var(--muted); }
+.period-card .s-hint { font-size: var(--fs-xs); color: var(--faint); margin-top: 12px; }
+
+/* Kfz-Steuer-Feld in den Fahrzeugkarten */
+.field-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.field-row .s-label { font-size: var(--fs-sm); color: var(--muted); }
+.field-row .s-hint { font-size: var(--fs-xs); color: var(--faint); }
+
+/* THG-Prämie & Inspektion – Jahres-/km-Felder (ein-/ausklappbar) */
+.thg-details summary, .ins-details summary { cursor: pointer; font-size: var(--fs-sm); color: var(--accent); user-select: none; padding: 6px 0; }
+.thg-details[open] summary, .ins-details[open] summary { margin-bottom: 12px; }
+.ins-details { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+.thg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-top: 4px; }
+.thg-field { display: flex; flex-direction: column; gap: 5px; }
+.thg-field .s-label { font-size: var(--fs-sm); color: var(--muted); }
+.thg-field input { text-align: right; }
+.thg-field.thg-inactive { opacity: 0.5; }
+.thg-field .thg-note { font-size: 10px; color: var(--faint); }
+
+/* Gegenüberstellung (Aufschlüsselung der Kosten) */
+.breakdown {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 6px 4px;
+    margin-bottom: 22px;
+    overflow-x: auto;
+}
+.bd-row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 10px;
+    align-items: baseline;
+    padding: 11px 18px;
+    min-width: 340px;
+}
+.bd-row + .bd-row { border-top: 1px solid var(--line); }
+.bd-head { color: var(--muted); font-size: var(--fs-xs); letter-spacing: 1px; text-transform: uppercase; }
+.bd-head .bd-v, .bd-head .bd-e { font-weight: 700; }
+.bd-label { color: var(--muted); font-size: var(--fs-sm); }
+.bd-v, .bd-e { text-align: right; font-family: var(--mono); font-weight: 600; }
+.bd-sum { background: var(--panel-2); }
+.bd-sum .bd-label { color: var(--text); font-weight: 700; }
+.bd-sum .bd-v, .bd-sum .bd-e { font-size: var(--fs-md); }
+
+/* Diagramm-Erläuterung */
+.chart-note { font-size: var(--fs-xs); color: var(--faint); margin-top: 10px; text-align: center; line-height: 1.5; }
+
+/* Faktenblatt (Statusbild) */
+.factsheet {
+    position: relative;
+    margin: 30px 0 8px;
+    padding: 2px;
+    border-radius: var(--r-lg);
+    background: linear-gradient(135deg, var(--series-b), var(--series-a) 55%, var(--pos));
+}
+.fs-inner { background: var(--panel); border-radius: calc(var(--r-lg) - 2px); padding: 18px 18px 15px; }
+.fs-head { margin-bottom: 13px; }
+.fs-badge {
+    display: inline-block; font-size: var(--fs-xs); letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 4px;
+}
+.fs-title { font-size: var(--fs-lg); font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
+
+/* Hero: das Ergebnis groß herausgestellt (Wow-Effekt) */
+.fs-hero {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    background: linear-gradient(135deg, rgba(111,207,115,0.16), rgba(74,158,255,0.10));
+    border: 1px solid rgba(111,207,115,0.38);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    box-shadow: 0 10px 26px -14px rgba(111,207,115,0.6);
+}
+.fs-hero-label { font-size: var(--fs-xs); letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+.fs-hero-value { font-family: var(--mono); font-size: clamp(30px, 8vw, 40px); font-weight: 800; line-height: 1.05; color: var(--pos); margin: 3px 0; }
+.fs-hero-sub { font-size: var(--fs-sm); color: var(--muted); }
+.fs-hero-badge {
+    flex: 0 0 auto; text-align: center; align-self: stretch;
+    display: flex; flex-direction: column; justify-content: center;
+    background: var(--pos); color: #06210a; border-radius: var(--r-sm);
+    padding: 8px 12px; min-width: 78px;
+}
+.fs-hero-pct { font-family: var(--mono); font-size: var(--fs-lg); font-weight: 800; line-height: 1; }
+.fs-hero-pct-l { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; margin-top: 2px; }
+
+.fs-context { font-size: var(--fs-sm); color: var(--muted); margin: 11px 2px 14px; line-height: 1.5; }
+
+/* Kostenaufstellung – immer zwei Spalten, auch auf dem Handy.
+   minmax(0,1fr) verhindert, dass die Spalten den Container sprengen. */
+.fs-cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; }
+.fs-col { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 13px; min-width: 0; }
+.fs-col.fs-v { border-left: 3px solid var(--series-b); }
+.fs-col.fs-e { border-left: 3px solid var(--series-a); }
+.fs-cname { font-size: var(--fs-sm); font-weight: 700; color: var(--text); margin-bottom: 9px; }
+.fs-line { display: flex; justify-content: space-between; gap: 8px; font-size: var(--fs-sm); margin: 4px 0; }
+.fs-line .fs-k { color: var(--muted); }
+.fs-line .fs-val { font-family: var(--mono); color: var(--text); white-space: nowrap; }
+.fs-total { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font-weight: 700; }
+.fs-total .fs-val { font-family: var(--mono); font-size: var(--fs-base); white-space: nowrap; }
+.fs-foot { font-size: var(--fs-xs); color: var(--faint); margin-top: 13px; line-height: 1.55; }
+
+/* sehr schmale Screens: Spaltenschrift kleiner, damit beide Spalten voll passen */
+@media (max-width: 430px) {
+    .fs-line, .fs-cname, .fs-total { font-size: var(--fs-xs); }
+    .fs-col { padding: 10px 9px; }
+    .fs-line .fs-val, .fs-total .fs-val { font-size: var(--fs-xs); }
+    .fs-hero { padding: 12px 14px; }
+    .fs-hero-badge { min-width: 66px; padding: 8px 8px; }
+}
+
+.sub-divider {
+    margin: 6px 0 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.5px;
+    color: var(--muted);
+}
+
+/* Zusatz-Kennzahlen */
+.extras { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
+.extra {
+    flex: 1 1 130px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+}
+.extra .e-label { color: var(--muted); font-size: var(--fs-xs); margin-bottom: 4px; }
+.extra .e-value { font-family: var(--mono); font-size: var(--fs-md); font-weight: 600; }
+
+/* Tabelle */
+.table-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 4px 0;
+}
+.table-box summary { cursor: pointer; padding: 14px 20px; font-size: var(--fs-sm); color: var(--muted); user-select: none; }
+.table-scroll { overflow-x: auto; padding: 0 12px 12px; }
+table.data { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); font-family: var(--mono); }
+table.data th {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 500;
+    color: var(--muted);
+    text-align: right;
+}
+table.data th:first-child { text-align: left; }
+table.data td { padding: 6px 10px; text-align: right; color: var(--text); }
+table.data td:first-child { text-align: left; color: var(--muted); }
+
+.footnote { font-size: var(--fs-xs); color: var(--faint); margin-top: 16px; line-height: 1.6; }
+
+@media (max-width: 900px) { .tool { padding-top: 72px; } }
+
+/* ── Ratgeber / Artikel (Fließtext-Seiten) ─────────────────── */
+.guide { margin-top: 22px; }
+.guide-lead { font-size: var(--fs-base); color: var(--text); line-height: 1.7; margin: 18px 0 22px; }
+.guide .panel h2 {
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+.guide .g-num { font-family: var(--mono); color: var(--accent); font-size: var(--fs-sm); }
+.guide h3 { font-size: var(--fs-sm); color: var(--accent-2); margin: 14px 0 6px; font-weight: 700; }
+.guide p, .guide li { font-size: var(--fs-sm); color: var(--muted); line-height: 1.65; }
+.guide p + p { margin-top: 8px; }
+.guide b { color: var(--text); }
+.guide ol, .guide ul { padding-left: 20px; }
+.guide li + li { margin-top: 6px; }
+.guide li::marker { color: var(--accent); }
+.guide .warn {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--series-b);
+    background: var(--panel-2);
+    border-radius: var(--r-sm);
+}
+.packlist { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0 !important; }
+.packlist li {
+    margin: 0 !important;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--text);
+}
+.guide .bottomline { border-color: var(--accent); }
+
+/* ── Fußnoten & Quellenverzeichnis (wissenschaftliche Zitierweise) ── */
+sup.fn { font-size: 0.7em; line-height: 0; margin-left: 1px; font-family: var(--mono); }
+sup.fn a { color: var(--accent); text-decoration: none; padding: 0 1px; }
+sup.fn a:hover { text-decoration: underline; }
+.sources h2 { margin-bottom: 8px; }
+.guide .src-note { font-size: var(--fs-xs); color: var(--faint); margin-bottom: 12px; }
+.src-list { padding-left: 28px !important; }
+.guide .src-list li { font-size: var(--fs-xs); line-height: 1.6; scroll-margin-top: 24px; }
+.guide .src-list li + li { margin-top: 8px; }
+.guide .src-list li::marker { font-family: var(--mono); }
+.src-url { color: var(--accent); word-break: break-all; text-decoration: none; }
+.src-url:hover { text-decoration: underline; }
+.src-back { color: var(--faint); text-decoration: none; margin-left: 4px; }
+.src-back:hover { color: var(--accent); }
+.src-list li:target { background: var(--accent-weak); border-radius: var(--r-sm); outline: 4px solid var(--accent-weak); }
+sup.fn a:target { background: var(--accent-weak); border-radius: 3px; }
+
+/* ── Simulationen: Steuerleiste, Knöpfe, Gerätekarten, Protokoll ──
+   Erstmals genutzt von zendure-simulation.html, aber allgemein gehalten
+   (für weitere Live-Simulationen wiederverwendbar). */
+.tool.tool-wide { max-width: 1080px; }
+
+.sim-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: 10px 12px; margin: 18px 0 0;
+}
+.sim-bar .tabs { margin: 0; }
+.sim-clock { margin-left: auto; font-family: var(--mono); font-size: var(--fs-sm); color: var(--muted); }
+.sim-clock b { color: var(--text); }
+
+.btn {
+    background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--line); border-radius: var(--r-sm);
+    padding: 7px 14px; font: inherit; font-size: var(--fs-sm); font-weight: 600;
+    cursor: pointer; line-height: 1.3;
+}
+.btn:hover { border-color: var(--accent); }
+.btn:focus-visible, .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.primary { background: var(--accent); color: #06101c; border-color: var(--accent); }
+.btn.small { padding: 4px 10px; font-size: var(--fs-xs); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.check-row { display: flex; align-items: center; gap: 10px; font-size: var(--fs-sm); color: var(--muted); margin-bottom: 14px; cursor: pointer; }
+.check-row input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+
+/* Gerätekarten (Live-Zustand je Gerät) */
+.dev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 22px; }
+.dev-card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-top: 3px solid var(--dev-c, var(--accent));
+    border-radius: var(--r-md); padding: 14px 16px; min-width: 0;
+}
+.dev-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.dev-name { font-weight: 700; font-size: var(--fs-sm); color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.badge {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap;
+}
+.badge.b-dis { color: var(--series-b); border-color: var(--series-b); }
+.badge.b-ch  { color: var(--pos); border-color: var(--pos); }
+.badge.b-off { color: var(--faint); }
+.dev-power { font-family: var(--mono); font-size: 26px; font-weight: 700; line-height: 1.1; }
+.dev-power small { font-size: var(--fs-sm); color: var(--muted); font-weight: 600; }
+
+/* Mittig geteilter Leistungsbalken: links Laden, rechts Entladen */
+.powerbar { position: relative; height: 8px; background: var(--bg); border-radius: 4px; margin: 8px 0 12px; overflow: hidden; }
+.powerbar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--faint); }
+.powerbar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; transition: left .15s linear, width .15s linear; }
+.socbar { height: 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; position: relative; }
+.socbar i { display: block; height: 100%; background: var(--dev-c, var(--accent)); opacity: .55; transition: width .3s linear; }
+.socbar span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 700; }
+.dev-facts { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin-top: 10px; font-size: var(--fs-xs); }
+.dev-facts dt { color: var(--faint); }
+.dev-facts dd { color: var(--muted); font-family: var(--mono); text-align: right; }
+
+/* Konfigurationstabelle (Geräte) */
+.cfg-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+.cfg-table th { font-size: var(--fs-xs); color: var(--muted); text-align: left; font-weight: 600; padding: 0 6px 8px; letter-spacing: .4px; }
+.cfg-table td { padding: 4px 6px; vertical-align: top; }
+.cfg-table .tool-input { padding: 6px 8px; font-size: var(--fs-sm); }
+.cfg-table .dev-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.cfg-scroll { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+.dirty-note { font-size: var(--fs-xs); color: var(--series-b); }
+.cfg-hint { font-size: var(--fs-xs); color: var(--faint); margin-top: 8px; line-height: 1.55; }
+
+/* Zeitraffer-Regler in der Steuerleiste */
+.speed-ctl { display: flex; align-items: center; gap: 10px; flex: 1 1 220px; min-width: 200px; }
+.speed-ctl .s-label { font-size: var(--fs-sm); color: var(--muted); }
+.speed-ctl input[type=range] { flex: 1; accent-color: var(--accent); cursor: pointer; }
+.speed-v { font-family: var(--mono); font-weight: 700; min-width: 58px; text-align: right; }
+
+/* Zoombares Verlaufsdiagramm mit Übersichtsleiste */
+.chart-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 8px; }
+.chart-tools .tool-input { width: auto; padding: 4px 8px; font-size: var(--fs-xs); }
+.view-info { font-size: var(--fs-xs); color: var(--muted); margin: 0 0 6px; font-family: var(--mono); line-height: 1.5; }
+.view-info b { color: var(--text); font-family: var(--font); }
+.view-info > span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-main { touch-action: pan-y; cursor: crosshair; user-select: none; -webkit-user-select: none; }
+.chart-ov { width: 100%; height: 54px; display: block; margin-top: 6px; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.chart-ov:active { cursor: grabbing; }
+.legend .leg-btn {
+    background: none; border: 1px solid transparent; border-radius: var(--r-sm);
+    color: var(--muted); font: inherit; font-size: var(--fs-sm); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; padding: 2px 6px;
+}
+.legend .leg-btn:hover { border-color: var(--line); }
+.legend .leg-btn.off { opacity: .4; text-decoration: line-through; }
+.legend .leg-btn:focus-visible { outline: 2px solid var(--accent); }
+.cfg-table th.th-group { text-align: center; color: var(--text); border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+.guide li.warn-li { color: var(--text); }
+.guide li.warn-li::marker { color: var(--series-b); }
+
+/* Gerätekonfiguration als Karten (mit Limit-Reglern) */
+.cfg-devs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.cfg-dev {
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-left: 3px solid var(--dev-c, var(--accent));
+    border-radius: var(--r-md); padding: 12px 14px; min-width: 0;
+}
+.cfg-dev-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: var(--fs-sm); }
+.cfg-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; margin-bottom: 12px; }
+.cfg-f { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cfg-f .s-label { font-size: var(--fs-xs); color: var(--muted); }
+.cfg-f .tool-input { padding: 6px 8px; font-size: var(--fs-sm); }
+.cfg-lim { margin-bottom: 12px; }
+.cfg-dev .dev-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+/* Kennzahlen mit festem Raster: Kacheln ändern ihre Höhe nicht, wenn sich der
+   Text ändert (wichtig bei Live-Werten). Wert einzeilig, Unterzeile genau zwei Zeilen. */
+.readouts.readouts-fixed { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 760px) { .readouts.readouts-fixed { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.readouts-fixed .readout { min-width: 0; }
+.readouts-fixed .r-label,
+.readouts-fixed .r-value { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.readouts-fixed .r-value { line-height: 1.15; }
+.readouts-fixed .r-sub { line-height: 1.45; min-height: 2.9em; }
+.readouts-fixed .r-sub > span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 430px) { .readouts-fixed .r-value { font-size: 22px; } }
+
+/* Live-Werte in Gerätekarten und Auswertung: einzeilig, damit nichts springt */
+.dev-facts { grid-template-columns: minmax(0, 1fr) auto; }
+.dev-facts dt { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dev-facts dd { white-space: nowrap; }
+.dev-power { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.extra .e-value { white-space: nowrap; }
+
+/* Energiefluss-Diagramm */
+.flow-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
+.flow-title { font-size: var(--fs-sm); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
+.flow-sub { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 1.5em; }
+.flow-svg { width: 100%; height: auto; display: block; max-height: 380px; }
+
+/* Ereignisprotokoll */
+.log-box {
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.55;
+    background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-sm);
+    padding: 8px 10px; max-height: 320px; overflow: auto; white-space: pre; color: var(--muted);
+}
+.log-box .l-t { color: var(--faint); }
+.log-box .l-p1 { color: var(--text); }
+.log-box .l-mgr { color: var(--accent-2); }
+.log-box .l-cmd { color: var(--series-b); }
+
+/* ── Druckansicht: heller, ohne Navigation, Links ausgeschrieben ── */
+@media print {
+    :root { --text: #000; --muted: #222; --faint: #444; --accent: #000; --accent-2: #000; --panel: #fff; --panel-2: #fff; --line: #bbb; }
+    body { background: #fff !important; color: #000; }
+    .sidebar, .nav-toggle, .nav-backdrop, .update-banner, .tech-bg, .tech-pulses, .backlink, .src-back { display: none !important; }
+    .page { margin: 0 !important; }
+    .tool { max-width: none; padding: 0; }
+    .panel { break-inside: avoid; border-color: #bbb; }
+    .sources { break-inside: auto; }
+    .src-url { word-break: break-all; }
+}
