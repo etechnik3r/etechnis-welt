@@ -78,6 +78,8 @@ h2{font-size:22px;margin-bottom:14px}
 .facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
 .fact{font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:3px 9px;color:var(--text)}
 .fact span{color:var(--faint);margin-right:4px}
+.fact.near{border-color:rgba(111,207,115,.45)}
+.fact.far{color:var(--muted)}
 .addr{font-size:13px;color:var(--faint)}
 .addr a{color:var(--muted);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .played{position:absolute;top:-11px;right:12px;font-size:12px;font-weight:700;background:var(--accent);color:#06101c;border-radius:999px;padding:3px 10px;letter-spacing:.02em}
@@ -110,7 +112,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
     <p class="lead">Wir spielen selten, also sollen die besten R&auml;ume zuerst dran sein: mehrere R&auml;ume, liebevolle Kulisse, echter Wow-Effekt. Hier ist alles von L&uuml;neburg bis Magdeburg und von Bielefeld bis Wolfsburg, sortiert nach dem, was unabh&auml;ngige Tester und Spieler sagen.</p>
     <div class="meta">
       <span class="pill">&#128101; f&uuml;r uns vier</span>
-      <span class="pill">&#128663; Fahrzeit ab Hannover-Mitte, gesch&auml;tzt</span>
+      <span class="pill">&#128663; Fahrzeiten f&uuml;r BaMe und LuBi, gesch&auml;tzt</span>
       <span class="pill">&#128197; Stand November 2026</span>
     </div>
   </div>
@@ -123,13 +125,14 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
   <div class="reco">
     <div class="reco-card main">
       <h3>&#127942; Ausflugstag nach Bad Salzuflen</h3>
-      <p>Die <strong>Salzufler Unterwelt</strong> hat gleich zwei R&auml;ume, die international zu den besten &uuml;berhaupt gez&auml;hlt werden: <strong>Brandon Darkmoor</strong> und <strong>The Hidden Chamber</strong>. Beide an einem Tag spielen, dazwischen essen gehen, rund eine Stunde Fahrt.</p>
+      <p>Die <strong>Salzufler Unterwelt</strong> hat gleich zwei R&auml;ume, die international zu den besten &uuml;berhaupt gez&auml;hlt werden: <strong>Brandon Darkmoor</strong> und <strong>The Hidden Chamber</strong>. Beide an einem Tag spielen, dazwischen essen gehen.</p>
+      <p>Mit gut anderthalb Stunden Anfahrt f&uuml;r beide Paare (BaMe ca. 1:45 h, LuBi ca. 1:30 h) lohnt sich das nur als ganzer Tag, daf&uuml;r aber richtig.</p>
       <p>Wer noch Lust hat: <strong>Das Geheimnis der magischen Spur</strong> in Bad Oeynhausen liegt fast auf dem Weg.</p>
     </div>
     <div class="reco-card">
-      <h3>&#128205; Direkt in Hannover</h3>
-      <p>Die sicherste Wahl ist <strong>Zauberschule &ndash; Der geheime Auftrag</strong> bei ROOM am Weidendamm. Bester bewerteter Raum in der Stadt.</p>
-      <p>Kurzer Ausflug: <strong>Das geheime Elixier</strong> in Braunschweig, ca. 45 Minuten, ebenfalls ein internationaler Top-Raum.</p>
+      <h3>&#129309; Treffpunkt in der Mitte: Hannover</h3>
+      <p>Hannover liegt f&uuml;r beide etwa gleich weit (BaMe ca. 1:05 h, LuBi ca. 55 min). Die sicherste Wahl dort ist <strong>Zauberschule &ndash; Der geheime Auftrag</strong> bei ROOM am Weidendamm, der beste Raum in der Stadt.</p>
+      <p><strong>Das geheime Elixier</strong> in Braunschweig ist ebenfalls ein internationaler Top-Raum, liegt aber ungleich: f&uuml;r BaMe eine halbe Stunde, f&uuml;r LuBi gut anderthalb.</p>
     </div>
   </div>
 </section>
@@ -150,7 +153,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
   <div class="filters" role="group" aria-label="Filter">
     <button class="chip" data-f="all" aria-pressed="true">Alle</button>
     <button class="chip" data-f="best" aria-pressed="false">Nur &#127942; und &#128994;</button>
-    <button class="chip" data-f="hannover" aria-pressed="false">Nur in Hannover</button>
+    <button class="chip" data-f="near" aria-pressed="false">F&uuml;r beide bis ca. 1 h</button>
   </div>
   <div id="list"></div>
   <noscript><p class="empty">F&uuml;r die Liste bitte JavaScript aktivieren.</p></noscript>
@@ -159,7 +162,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
 
 <section id="extra">
   <h2>Ausflugstipps etwas weiter weg</h2>
-  <p class="note" style="margin:-6px 0 16px">Rund 1,5 Stunden Fahrt, aber international hoch gehandelt. Gut f&uuml;r einen Tagesausflug.</p>
+  <p class="note" style="margin:-6px 0 16px">Weiter weg, aber international hoch gehandelt. Gut f&uuml;r einen Tagesausflug: Wernigerode liegt n&auml;her an BaMe, Hamburg n&auml;her an LuBi.</p>
   <div class="grid" id="extraList"></div>
 </section>
 
@@ -174,7 +177,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
     <li><a href="https://escapers.de/" target="_blank" rel="noopener">escapers.de</a></li>
     <li><a href="https://terpeca.com/" target="_blank" rel="noopener">terpeca.com</a></li>
   </ul>
-  <p class="note">Preise und Fahrzeiten sind Richtwerte. Vor dem Buchen bitte beim Anbieter pr&uuml;fen.</p>
+  <p class="note">Fahrzeiten mit dem Auto ohne Stau, gesch&auml;tzt. Gr&uuml;n umrandet hei&szlig;t h&ouml;chstens eine Stunde. Preise sind Richtwerte. Vor dem Buchen bitte beim Anbieter pr&uuml;fen.</p>
 </section>
 
 </main>
@@ -187,34 +190,34 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
 (function(){
   "use strict";
   var P = {
-    sal:  {n:"Salzufler Unterwelt", u:"https://www.salzufler-unterwelt.de/", a:"Bahnhofstraße 41, 32105 Bad Salzuflen", t:"~1 h"},
-    hgBS: {n:"Hidden Games Braunschweig", u:"https://www.hidden.games/", a:"Sophienstraße 40, 38118 Braunschweig", t:"~45 min"},
-    hgBS2:{n:"Hidden Games Braunschweig", u:"https://www.hidden.games/", a:"Bruchtorwall 6, 38100 Braunschweig", t:"~45 min"},
-    hgH:  {n:"Hidden Games Hannover", u:"https://www.hidden.games/", a:"Lavesstraße 80, 30159 Hannover", t:"in Hannover"},
-    fun:  {n:"funXperience", a:"Königstraße 45, 32547 Bad Oeynhausen", t:"~50 min"},
-    room: {n:"ROOM – Running Out Of Minutes", u:"https://roomhannover.de/", a:"Weidendamm 2, 30167 Hannover", t:"in Hannover"},
-    xit:  {n:"X-it-Adventures", u:"https://www.x-it-adventures.de/", a:"Naheweg 61, 33689 Bielefeld", t:"~1:15 h"},
-    egb:  {n:"EscapeGame Bielefeld", a:"Apfelstraße 245, 33611 Bielefeld", t:"~1:10 h"},
-    tc:   {n:"TeamCrack", a:"Kesselbrink 5, 33602 Bielefeld", t:"~1:10 h"},
-    ter:  {n:"The Escape Room", u:"https://www.the-escape-room.de/", a:"Röselerstraße 1a, 30159 Hannover", t:"in Hannover"},
-    ehan: {n:"Escape Hannover", a:"Goseriede 4, 30159 Hannover", t:"in Hannover"},
-    reh:  {n:"Room Escape Hannover", a:"Kanalstraße 7, 30159 Hannover", t:"in Hannover"},
-    etr:  {n:"Escape tRaum", a:"Hauptstraße 41, 38446 Wolfsburg", t:"~1 h"},
-    terH: {n:"The Escape Room Hildesheim", a:"Speicherstraße 9, 31134 Hildesheim", t:"~35 min"},
-    salz: {n:"Salzlösung", a:"Bessemerstraße 8, 21339 Lüneburg", t:"~1:15 h"},
-    evBS: {n:"EscapeVenture Braunschweig", a:"Hamburger Str. 268, 38114 Braunschweig", t:"~45 min"},
-    evMD: {n:"EscapeVenture Magdeburg", a:"Leipziger Str. 45D, 39120 Magdeburg", t:"~1:30 h"},
-    meL:  {n:"Mission Exit", a:"Lübecker Str. 53–63, Geb. 12, 39124 Magdeburg", t:"~1:30 h"},
-    meM:  {n:"Mission Exit", a:"Maxim-Gorki-Str. 23, 39108 Magdeburg (bzw. Lübecker Str. 53–63)", t:"~1:30 h"},
-    ecW:  {n:"Escape City Wolfsburg", a:"Lessingstraße 72, 38440 Wolfsburg", t:"~1 h"},
-    adv:  {n:"AdventureRooms Magdeburg", a:"Liebknechtstraße 97, 39110 Magdeburg", t:"~1:30 h"},
-    eam:  {n:"Escape Arena Magdeburg", a:"Am Elbepark 1, 39326 Hohe Börde", t:"~1:20 h"},
-    rc:   {n:"RätselCafé", a:"Herrenkrug 2, 39114 Magdeburg", t:"~1:30 h"},
-    alv:  {n:"Hof Alvermann", a:"Woltem 29, 29614 Soltau", t:"~50 min"},
-    nien: {n:"Escape Nienburg", a:"Goetheplatz 2, 31582 Nienburg/Weser", t:"~50 min"},
-    trap: {n:"Trapzone", a:"Springhorstsee 1, 30938 Burgwedel", t:"~25 min"},
-    harz: {n:"Harz Escape", a:"Klintgasse 3, 38855 Wernigerode", t:"~1:30 h"},
-    hgHH: {n:"Hidden Games Hamburg", u:"https://www.hidden.games/", a:"Hamburg (genaue Adresse beim Anbieter)", q:"Hidden Games Escape Room Hamburg", t:"~1:30 h"}
+    sal:  {n:"Salzufler Unterwelt", u:"https://www.salzufler-unterwelt.de/", a:"Bahnhofstraße 41, 32105 Bad Salzuflen", b:105, l:90},
+    hgBS: {n:"Hidden Games Braunschweig", u:"https://www.hidden.games/", a:"Sophienstraße 40, 38118 Braunschweig", b:30, l:100},
+    hgBS2:{n:"Hidden Games Braunschweig", u:"https://www.hidden.games/", a:"Bruchtorwall 6, 38100 Braunschweig", b:30, l:100},
+    hgH:  {n:"Hidden Games Hannover", u:"https://www.hidden.games/", a:"Lavesstraße 80, 30159 Hannover", b:65, l:55},
+    fun:  {n:"funXperience", a:"Königstraße 45, 32547 Bad Oeynhausen", b:100, l:80},
+    room: {n:"ROOM – Running Out Of Minutes", u:"https://roomhannover.de/", a:"Weidendamm 2, 30167 Hannover", b:65, l:55},
+    xit:  {n:"X-it-Adventures", u:"https://www.x-it-adventures.de/", a:"Naheweg 61, 33689 Bielefeld", b:120, l:105},
+    egb:  {n:"EscapeGame Bielefeld", a:"Apfelstraße 245, 33611 Bielefeld", b:115, l:100},
+    tc:   {n:"TeamCrack", a:"Kesselbrink 5, 33602 Bielefeld", b:115, l:100},
+    ter:  {n:"The Escape Room", u:"https://www.the-escape-room.de/", a:"Röselerstraße 1a, 30159 Hannover", b:65, l:55},
+    ehan: {n:"Escape Hannover", a:"Goseriede 4, 30159 Hannover", b:65, l:55},
+    reh:  {n:"Room Escape Hannover", a:"Kanalstraße 7, 30159 Hannover", b:65, l:55},
+    etr:  {n:"Escape tRaum", a:"Hauptstraße 41, 38446 Wolfsburg", b:20, l:105},
+    terH: {n:"The Escape Room Hildesheim", a:"Speicherstraße 9, 31134 Hildesheim", b:55, l:70},
+    salz: {n:"Salzlösung", a:"Bessemerstraße 8, 21339 Lüneburg", b:90, l:80},
+    evBS: {n:"EscapeVenture Braunschweig", a:"Hamburger Str. 268, 38114 Braunschweig", b:30, l:95},
+    evMD: {n:"EscapeVenture Magdeburg", a:"Leipziger Str. 45D, 39120 Magdeburg", b:60, l:145},
+    meL:  {n:"Mission Exit", a:"Lübecker Str. 53–63, Geb. 12, 39124 Magdeburg", b:55, l:140},
+    meM:  {n:"Mission Exit", a:"Maxim-Gorki-Str. 23, 39108 Magdeburg (bzw. Lübecker Str. 53–63)", b:60, l:140},
+    ecW:  {n:"Escape City Wolfsburg", a:"Lessingstraße 72, 38440 Wolfsburg", b:15, l:100},
+    adv:  {n:"AdventureRooms Magdeburg", a:"Liebknechtstraße 97, 39110 Magdeburg", b:55, l:140},
+    eam:  {n:"Escape Arena Magdeburg", a:"Am Elbepark 1, 39326 Hohe Börde", b:45, l:130},
+    rc:   {n:"RätselCafé", a:"Herrenkrug 2, 39114 Magdeburg", b:65, l:145},
+    alv:  {n:"Hof Alvermann", a:"Woltem 29, 29614 Soltau", b:85, l:45},
+    nien: {n:"Escape Nienburg", a:"Goetheplatz 2, 31582 Nienburg/Weser", b:100, l:25},
+    trap: {n:"Trapzone", a:"Springhorstsee 1, 30938 Burgwedel", b:55, l:50},
+    harz: {n:"Harz Escape", a:"Klintgasse 3, 38855 Wernigerode", b:65, l:150},
+    hgHH: {n:"Hidden Games Hamburg", u:"https://www.hidden.games/", a:"Hamburg (genaue Adresse beim Anbieter)", q:"Hidden Games Escape Room Hamburg", b:135, l:75}
   };
   var T = {
     top:{l:"&#127942; Absolute Top-Räume", c:"var(--gold)"},
@@ -281,6 +284,8 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
   ];
 
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function dur(m){return m<60?"~"+m+" min":"~"+Math.floor(m/60)+":"+("0"+m%60).slice(-2)+" h";}
+  function drive(who,m){return '<span class="fact'+(m<=60?' near':m>90?' far':'')+'"><span>&#128663; '+who+'</span>'+dur(m)+'</span>';}
   function maps(p){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.q||p.a.replace(/\s*\(.*\)/,""));}
 
   function card(r){
@@ -293,7 +298,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
       '<h4>'+title+'</h4>'+
       '<div class="prov">'+prov+'</div>'+
       '<p class="why">'+esc(r[5])+'</p>'+
-      '<div class="facts"><span class="fact"><span>&#128663;</span>'+esc(p.t)+'</span>'+
+      '<div class="facts">'+drive("BaMe",p.b)+drive("LuBi",p.l)+
       (price?'<span class="fact"><span>&#128176;</span>'+esc(price)+(/p\. P\.|je nach|Preis offen/.test(price)?'':' für 4')+'</span>':'')+
       '</div>'+
       '<div class="addr">&#128205; <a href="'+maps(p)+'" target="_blank" rel="noopener">'+esc(p.a)+'</a></div>'+
@@ -305,14 +310,14 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
     Object.keys(T).forEach(function(k){
       if(f==="best"&&k!=="top"&&k!=="sg")return;
       var rows=R.filter(function(r){
-        return r[0]===k&&(f!=="hannover"||P[r[3]].t==="in Hannover");
+        return r[0]===k&&(f!=="near"||Math.max(P[r[3]].b,P[r[3]].l)<=65);
       });
       if(!rows.length)return;
       html+='<div class="tier-head"><h3>'+T[k].l+'</h3><span class="n">'+rows.length+(rows.length===1?" Eintrag":" Einträge")+'</span></div>'+
             '<div class="grid">'+rows.map(card).join("")+'</div>';
     });
     document.getElementById("list").innerHTML=html||'<p class="empty">Keine Räume für diesen Filter.</p>';
-    document.getElementById("extra").style.display=f==="hannover"?"none":"";
+    document.getElementById("extra").style.display=f==="near"?"none":"";
   }
 
   var chips=document.querySelectorAll(".chip");
