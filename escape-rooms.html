@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Rooms rund um Hannover</title>
+<meta name="description" content="Welche Escape Rooms rund um Hannover lohnen sich wirklich? Übersicht für eine Vierergruppe: Bewertungen, Fahrzeit, Preis und Empfehlung.">
+<meta property="og:title" content="Escape Rooms rund um Hannover – welche lohnen sich?">
+<meta property="og:description" content="Die besten Räume zuerst: Bewertungen, Fahrzeit und Preise für unsere Vierergruppe.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a0e13">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#0a0e13; --panel:#121a22; --panel-2:#172029; --line:#232f3a;
+  --text:#e6edf2; --muted:#93a2ad; --faint:#61707b;
+  --accent:#4a9eff; --accent-2:#7fc0ff; --accent-weak:rgba(74,158,255,.10);
+  --gold:#f2c94c; --green:#6fcf73; --yellow:#e8d15a; --orange:#f0954a; --grey:#8a97a2;
+  --r:14px;
+  --font:"Segoe UI",system-ui,-apple-system,Arial,Helvetica,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;font-size:16px}
+a{color:var(--accent-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+
+/* Kopf */
+header.hero{padding:48px 0 28px;background:
+  radial-gradient(ellipse 80% 120% at 85% -10%,rgba(74,158,255,.22),transparent 60%),
+  radial-gradient(ellipse 60% 90% at 0% 0%,rgba(242,201,76,.10),transparent 60%);
+  border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-2);font-weight:600}
+h1{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:8px 0 12px;font-weight:700}
+.lead{color:var(--muted);font-size:17px;max-width:680px}
+.meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:13px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+
+section{padding:28px 0}
+h2{font-size:22px;margin-bottom:14px}
+
+/* Empfehlung */
+.reco{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.reco{grid-template-columns:1.4fr 1fr}}
+.reco-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.reco-card.main{border-color:rgba(242,201,76,.45);background:linear-gradient(160deg,rgba(242,201,76,.10),var(--panel) 55%)}
+.reco-card h3{font-size:18px;margin-bottom:6px}
+.reco-card p{color:var(--muted)}
+.reco-card p+p{margin-top:8px}
+.reco-card strong{color:var(--text)}
+
+/* Legende */
+.legend{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.lg{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--muted)}
+.lg b{display:block;color:var(--text);font-size:15px;margin-bottom:2px}
+
+/* Filter */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{font:inherit;font-size:14px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-weak);border-color:var(--accent);color:var(--accent-2)}
+
+/* Raumkarten */
+.tier-head{display:flex;align-items:center;gap:10px;margin:26px 0 12px}
+.tier-head h3{font-size:19px}
+.tier-head .n{font-size:13px;color:var(--faint)}
+.grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr}}
+.room{position:relative;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:var(--r);padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px}
+.room.top{background:linear-gradient(170deg,rgba(242,201,76,.08),var(--panel) 45%)}
+.room h4{font-size:17px;line-height:1.3;padding-right:4px}
+.room h4 a{color:var(--text)}
+.room h4 a::after{content:" ↗";color:var(--accent-2);font-size:14px}
+.prov{font-size:14px;color:var(--accent-2);font-weight:600}
+.prov a{color:inherit}
+.why{color:var(--muted);font-size:15px}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.fact{font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:3px 9px;color:var(--text)}
+.fact span{color:var(--faint);margin-right:4px}
+.addr{font-size:13px;color:var(--faint)}
+.addr a{color:var(--muted);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.played{position:absolute;top:-11px;right:12px;font-size:12px;font-weight:700;background:var(--accent);color:#06101c;border-radius:999px;padding:3px 10px;letter-spacing:.02em}
+.room.is-played{opacity:.78}
+.empty{color:var(--faint);font-size:15px;padding:8px 0}
+
+/* Fuß */
+.sources{font-size:14px;color:var(--muted)}
+.sources ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.sources li a{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:13px}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);font-size:13px}
+.note{font-size:14px;color:var(--muted);margin-top:10px}
+
+@media print{
+  body{background:#fff;color:#000}
+  header.hero{background:none}
+  .filters{display:none}
+  .room,.reco-card,.lg{background:#fff!important;color:#000;break-inside:avoid}
+  .why,.lead,.reco-card p{color:#333}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Escape Rooms &middot; Hannover &amp; Umgebung</div>
+    <h1>Welche Escape Rooms lohnen sich wirklich?</h1>
+    <p class="lead">Wir spielen selten, also sollen die besten R&auml;ume zuerst dran sein: mehrere R&auml;ume, liebevolle Kulisse, echter Wow-Effekt. Hier ist alles im Umkreis von etwa einer Stunde um Hannover, sortiert nach dem, was unabh&auml;ngige Tester und Spieler sagen.</p>
+    <div class="meta">
+      <span class="pill">&#128101; f&uuml;r 4 Erwachsene</span>
+      <span class="pill">&#128663; Fahrzeit ab Hannover-Mitte, gesch&auml;tzt</span>
+      <span class="pill">&#128197; Stand November 2026</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="empfehlung">
+  <h2>Unsere Empfehlung</h2>
+  <div class="reco">
+    <div class="reco-card main">
+      <h3>&#127942; Ausflugstag nach Bad Salzuflen</h3>
+      <p>Die <strong>Salzufler Unterwelt</strong> hat gleich zwei R&auml;ume, die international zu den besten &uuml;berhaupt gez&auml;hlt werden: <strong>Brandon Darkmoor</strong> und <strong>The Hidden Chamber</strong>. Beide an einem Tag spielen, dazwischen essen gehen, rund eine Stunde Fahrt.</p>
+      <p>Wer noch Lust hat: <strong>Das Geheimnis der magischen Spur</strong> in Bad Oeynhausen liegt fast auf dem Weg.</p>
+    </div>
+    <div class="reco-card">
+      <h3>&#128205; Direkt in Hannover</h3>
+      <p>Die sicherste Wahl ist <strong>Zauberschule &ndash; Der geheime Auftrag</strong> bei ROOM am Weidendamm. Bester bewerteter Raum in der Stadt.</p>
+      <p>Kurzer Ausflug: <strong>Das geheime Elixier</strong> in Braunschweig, ca. 45 Minuten, ebenfalls ein internationaler Top-Raum.</p>
+    </div>
+  </div>
+</section>
+
+<section id="stufen">
+  <h2>So sind die R&auml;ume eingestuft</h2>
+  <div class="legend">
+    <div class="lg" style="--c:var(--gold)"><b>&#127942; Absoluter Top-Raum</b>Steht im Finale internationaler Bestenlisten und wird einhellig gefeiert.</div>
+    <div class="lg" style="--c:var(--green)"><b>&#128994; Sehr gut</b>F&uuml;r Preise nominiert oder mehrfach sehr gut bewertet (ab 4,5 von 5 bzw. 8 von 10), sehr atmosph&auml;risch.</div>
+    <div class="lg" style="--c:var(--yellow)"><b>&#128993; Gut</b>Rund 4 von 5, gemischte Stimmen oder nur wenige Bewertungen.</div>
+    <div class="lg" style="--c:var(--orange)"><b>&#128992; Fragw&uuml;rdig</b>Gemischte Bewertungen oder Kritik an der Atmosph&auml;re.</div>
+    <div class="lg" style="--c:var(--grey)"><b>&#9898; Keine Daten</b>Keine unabh&auml;ngigen Bewertungen gefunden. Hei&szlig;t nicht, dass der Raum schlecht ist.</div>
+  </div>
+</section>
+
+<section id="raeume">
+  <h2>Alle R&auml;ume</h2>
+  <div class="filters" role="group" aria-label="Filter">
+    <button class="chip" data-f="all" aria-pressed="true">Alle</button>
+    <button class="chip" data-f="best" aria-pressed="false">Nur &#127942; und &#128994;</button>
+    <button class="chip" data-f="hannover" aria-pressed="false">Nur in Hannover</button>
+  </div>
+  <div id="list"></div>
+  <noscript><p class="empty">F&uuml;r die Liste bitte JavaScript aktivieren.</p></noscript>
+</section>
+
+<section class="sources">
+  <h2>Woher die Einsch&auml;tzungen kommen</h2>
+  <p>Bewertet wurde jeder Raum einzeln, nicht der Anbieter. Grundlage sind unabh&auml;ngige Testberichte, Bewertungsportale f&uuml;r Escape Rooms und internationale Bestenlisten. Google-Sterne haben wir bewusst nicht ber&uuml;cksichtigt, weil sie bei Escape Rooms kaum etwas aussagen.</p>
+  <ul>
+    <li><a href="https://escapethereview.co.uk/" target="_blank" rel="noopener">escapethereview.co.uk</a></li>
+    <li><a href="https://escapenavigator.de/" target="_blank" rel="noopener">escapenavigator.de</a></li>
+    <li><a href="https://morty.app/" target="_blank" rel="noopener">morty.app</a></li>
+    <li><a href="https://escape-maniac.com/" target="_blank" rel="noopener">escape-maniac.com</a></li>
+    <li><a href="https://escapers.de/" target="_blank" rel="noopener">escapers.de</a></li>
+    <li><a href="https://terpeca.com/" target="_blank" rel="noopener">terpeca.com</a></li>
+  </ul>
+  <p class="note">Preise und Fahrzeiten sind Richtwerte. Vor dem Buchen bitte beim Anbieter pr&uuml;fen.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Zusammengestellt f&uuml;r unsere Escape-Room-Runde &middot; <a href="index.html">etechnis-welt</a></div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var P = {
+    sal:  {n:"Salzufler Unterwelt", u:"https://www.salzufler-unterwelt.de/", a:"Bahnhofstraße 41, 32105 Bad Salzuflen", t:"~1 h"},
+    hgBS: {n:"Hidden Games Braunschweig", u:"https://www.hidden.games/", a:"Sophienstraße 40, 38118 Braunschweig", t:"~45 min"},
+    hgBS2:{n:"Hidden Games Braunschweig", u:"https://www.hidden.games/", a:"Bruchtorwall 6, 38100 Braunschweig", t:"~45 min"},
+    hgH:  {n:"Hidden Games Hannover", u:"https://www.hidden.games/", a:"Lavesstraße 80, 30159 Hannover", t:"in Hannover"},
+    fun:  {n:"funXperience", a:"Königstraße 45, 32547 Bad Oeynhausen", t:"~50 min"},
+    room: {n:"ROOM – Running Out Of Minutes", u:"https://roomhannover.de/", a:"Weidendamm 2, 30167 Hannover", t:"in Hannover"},
+    xit:  {n:"X-it-Adventures", u:"https://www.x-it-adventures.de/", a:"Naheweg 61, 33689 Bielefeld", t:"~1:15 h"},
+    egb:  {n:"EscapeGame Bielefeld", a:"Apfelstraße 245, 33611 Bielefeld", t:"~1:10 h"},
+    tc:   {n:"TeamCrack", a:"Kesselbrink 5, 33602 Bielefeld", t:"~1:10 h"},
+    ter:  {n:"The Escape Room", u:"https://www.the-escape-room.de/", a:"Röselerstraße 1a, 30159 Hannover", t:"in Hannover"},
+    ehan: {n:"Escape Hannover", a:"Goseriede 4, 30159 Hannover", t:"in Hannover"},
+    reh:  {n:"Room Escape Hannover", a:"Kanalstraße 7, 30159 Hannover", t:"in Hannover"},
+    etr:  {n:"Escape tRaum", a:"Hauptstraße 41, 38446 Wolfsburg", t:"~1 h"},
+    terH: {n:"The Escape Room Hildesheim", a:"Speicherstraße 9, 31134 Hildesheim", t:"~35 min"}
+  };
+  var T = {
+    top:{l:"&#127942; Absolute Top-Räume", c:"var(--gold)"},
+    sg: {l:"&#128994; Sehr gut", c:"var(--green)"},
+    g:  {l:"&#128993; Gut", c:"var(--yellow)"},
+    q:  {l:"&#128992; Fragwürdig", c:"var(--orange)"},
+    nd: {l:"&#9898; Keine Daten", c:"var(--grey)"}
+  };
+  // [Stufe, Raum, Link, Anbieter, Preis für 4, Warum, gespielt]
+  var R = [
+    ["top","Ghosthunter: Brandon Darkmoor","https://www.salzufler-unterwelt.de/en/ghosthunter-brandon-darkmoor/","sal","ab 33 € p. P.","Weltweit unter den besten 200 Räumen. Mehrere Raumabschnitte, viel Technik, leicht gruselig."],
+    ["top","The Hidden Chamber","https://www.salzufler-unterwelt.de/en/hidden-chamber-escape-room/","sal","ab 33 € p. P.","Von Testern mit 9,6 von 10 bewertet, „einer der immersivsten Räume“. Spielt in einem Gewölbekeller."],
+    ["top","Das geheime Elixier","https://www.hidden.games/escape-room-braunschweig/abenteuer/","hgBS","128 €","Stand 2023 im Finale der internationalen Bestenliste."],
+    ["sg","Das Geheimnis der magischen Spur","https://morty.app/attraction/43485/das-geheimnis-der-magischen-spur-the-secret-of-the-magical-trail","fun","?","Zweimal für Preise nominiert, komplett elektronisch, starke Kulisse."],
+    ["sg","Zauberschule – Der geheime Auftrag","https://roomhannover.de/buchen-und-mehr/zauberschule-der-geheime-auftrag/","room","140 €","Bester Raum in Hannover, für Preise nominiert, 8,5 von 10. Spielzeit 75 Minuten."],
+    ["sg","Der Fluch der Mumie","","xit","?","4,8 von 5 bei 15 Bewertungen, sehr stimmungsvolle Grabkammer."],
+    ["sg","Flucht aus Alcatraz – Zellenblock II","","xit","?","8,1 von 10 und 4,9 von 5, sehr detailreich."],
+    ["sg","Das verlassene Waisenhaus","","egb","ab 82 €","4,9 von 5 und 8 von 10, optisch top, eher schwer."],
+    ["sg","Morrah Island","","hgBS","128 €","Spieler urteilen „sehr positiv“."],
+    ["g","Die Werkstatt des Alchemisten","","sal","ab 33 € p. P.","Überwiegend positive Stimmen."],
+    ["g","Das Voodoo Vermächtnis","","fun","?","Für Preise nominiert, 3,5 bis 4,5 von 5. Gruselig, eher leicht."],
+    ["g","Die Legende des Zauberbaums","","fun","?","4,5 von 5, aber nur eine Bewertung."],
+    ["g","Flucht aus Alcatraz – Zellenblock I","","xit","?","4,9 von 5, aber nur wenige Bewertungen."],
+    ["g","Die Kunst des Klauens","","egb","ab 82 €","4,9 von 5 bei 5 Bewertungen, liebevoll gestaltet."],
+    ["g","Sherlock Holmes","https://roomhannover.de/buchen-und-mehr/sherlock-holmes/","room","120 €","3,5 bis 4 von 5. Selbst gebaut, das Team startet getrennt, etwas Lärm von außen."],
+    ["g","Zauberschule – Die magische Prüfung","","room","?","3,5 bis 4 von 5, viel Technik, eher schwer."],
+    ["g","Zurück in die Zukunft","","hgH","?","2,5 bis 4 von 5, die Atmosphäre wird gelobt."],
+    ["g","Hexenjäger / Dragons of Dublin","","hgBS","128 €","Überwiegend positive Stimmen."],
+    ["g","Das Kabinett der Geheimnisse","","tc","?","Spieler geben 4,8 von 5, im Fachtest nur mittelmäßig."],
+    ["q","Murphy's Pub","","hgH","–","2,5 bis 3,5 von 5, Tester 6,4 von 10. Deckt sich mit unserem Eindruck.",1],
+    ["q","Space Odyssey","","hgH","?","6,3 von 10. Sichtbare Holzwände zerstören die Illusion."],
+    ["q","Die Welfenverschwörung","","hgH","?","3 von 5. Der Hinweis-Bildschirm bricht die Atmosphäre."],
+    ["q","Flucht der Piraten","","ter","100–110 €","3 von 5 bzw. 7 von 10."],
+    ["q","Lagerhaus / Reichsbank / Moonraker","","hgBS2","112 €","Gemischte Bewertungen."],
+    ["q","Spieglein, Spieglein an der Wand","","etr","?","Gemischte Bewertungen."],
+    ["nd","Armageddon","","ter","–","Online keine Bewertungen, für uns aber klar ein Wow-Raum.",1],
+    ["nd","Draculas Schloss 2.0, Verfluchtes Hostel, Maniac, Minotaurus Labyrinth","","ter","100–110 €","Kaum Bewertungen. Gleicher Anbieter wie Armageddon, deshalb vielleicht einen Versuch wert."],
+    ["nd","Harrys Zauberschule, Bitcoin-Verschwörung, Mittelalterraum","","ehan","120 €","Keine unabhängigen Tests gefunden."],
+    ["nd","8 Räume, u. a. Jack the Ripper und Fluch der Karibik","","reh","?","Keine unabhängigen Tests gefunden."],
+    ["nd","Haus des Grauens, Herz der Mumie u. a.","","terH","?","Wenige Bewertungen, gemischt bis positiv."]
+  ];
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function maps(a){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(a);}
+
+  function card(r){
+    var p=P[r[3]], played=!!r[6];
+    var title=r[2]?'<a href="'+esc(r[2])+'" target="_blank" rel="noopener">'+esc(r[1])+'</a>':esc(r[1]);
+    var prov=p.u?'<a href="'+esc(p.u)+'" target="_blank" rel="noopener">'+esc(p.n)+'</a>':esc(p.n);
+    var price=r[4]==="?"?"Preis offen":r[4]==="–"?"":r[4];
+    return '<article class="room'+(r[0]==="top"?" top":"")+(played?" is-played":"")+'" style="--c:'+T[r[0]].c+'">'+
+      (played?'<span class="played">&#10003; schon gespielt</span>':'')+
+      '<h4>'+title+'</h4>'+
+      '<div class="prov">'+prov+'</div>'+
+      '<p class="why">'+esc(r[5])+'</p>'+
+      '<div class="facts"><span class="fact"><span>&#128663;</span>'+esc(p.t)+'</span>'+
+      (price?'<span class="fact"><span>&#128176;</span>'+esc(price)+(/p\. P\./.test(price)?'':(price==="Preis offen"?'':' für 4'))+'</span>':'')+
+      '</div>'+
+      '<div class="addr">&#128205; <a href="'+maps(p.a)+'" target="_blank" rel="noopener">'+esc(p.a)+'</a></div>'+
+      '</article>';
+  }
+
+  function render(f){
+    var html="";
+    Object.keys(T).forEach(function(k){
+      if(f==="best"&&k!=="top"&&k!=="sg")return;
+      var rows=R.filter(function(r){
+        return r[0]===k&&(f!=="hannover"||P[r[3]].t==="in Hannover");
+      });
+      if(!rows.length)return;
+      html+='<div class="tier-head"><h3>'+T[k].l+'</h3><span class="n">'+rows.length+(rows.length===1?" Eintrag":" Einträge")+'</span></div>'+
+            '<div class="grid">'+rows.map(card).join("")+'</div>';
+    });
+    document.getElementById("list").innerHTML=html||'<p class="empty">Keine Räume für diesen Filter.</p>';
+  }
+
+  var chips=document.querySelectorAll(".chip");
+  chips.forEach(function(c){
+    c.addEventListener("click",function(){
+      chips.forEach(function(x){x.setAttribute("aria-pressed",x===c?"true":"false");});
+      render(c.getAttribute("data-f"));
+    });
+  });
+  render("all");
+})();
+</script>
+</body>
+</html>
