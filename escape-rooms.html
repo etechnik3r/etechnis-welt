@@ -105,7 +105,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
   <div class="wrap">
     <div class="kicker">Escape Rooms &middot; Hannover &amp; Umgebung</div>
     <h1>Welche Escape Rooms lohnen sich wirklich?</h1>
-    <p class="lead">Wir spielen selten, also sollen die besten R&auml;ume zuerst dran sein: mehrere R&auml;ume, liebevolle Kulisse, echter Wow-Effekt. Hier ist alles im Umkreis von etwa einer Stunde um Hannover, sortiert nach dem, was unabh&auml;ngige Tester und Spieler sagen.</p>
+    <p class="lead">Wir spielen selten, also sollen die besten R&auml;ume zuerst dran sein: mehrere R&auml;ume, liebevolle Kulisse, echter Wow-Effekt. Hier ist alles von L&uuml;neburg bis Magdeburg und von Bielefeld bis Wolfsburg, sortiert nach dem, was unabh&auml;ngige Tester und Spieler sagen.</p>
     <div class="meta">
       <span class="pill">&#128101; f&uuml;r 4 Erwachsene</span>
       <span class="pill">&#128663; Fahrzeit ab Hannover-Mitte, gesch&auml;tzt</span>
@@ -152,6 +152,13 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
   </div>
   <div id="list"></div>
   <noscript><p class="empty">F&uuml;r die Liste bitte JavaScript aktivieren.</p></noscript>
+  <p class="note">Celle und Walsrode haben nur Stadtrallyes per Smartphone, keine Escape Rooms. In Uelzen haben wir nichts gefunden.</p>
+</section>
+
+<section id="extra">
+  <h2>Ausflugstipps etwas weiter weg</h2>
+  <p class="note" style="margin:-6px 0 16px">Rund 1,5 Stunden Fahrt, aber international hoch gehandelt. Gut f&uuml;r einen Tagesausflug.</p>
+  <div class="grid" id="extraList"></div>
 </section>
 
 <section class="sources">
@@ -191,7 +198,21 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
     ehan: {n:"Escape Hannover", a:"Goseriede 4, 30159 Hannover", t:"in Hannover"},
     reh:  {n:"Room Escape Hannover", a:"Kanalstraße 7, 30159 Hannover", t:"in Hannover"},
     etr:  {n:"Escape tRaum", a:"Hauptstraße 41, 38446 Wolfsburg", t:"~1 h"},
-    terH: {n:"The Escape Room Hildesheim", a:"Speicherstraße 9, 31134 Hildesheim", t:"~35 min"}
+    terH: {n:"The Escape Room Hildesheim", a:"Speicherstraße 9, 31134 Hildesheim", t:"~35 min"},
+    salz: {n:"Salzlösung", a:"Bessemerstraße 8, 21339 Lüneburg", t:"~1:15 h"},
+    evBS: {n:"EscapeVenture Braunschweig", a:"Hamburger Str. 268, 38114 Braunschweig", t:"~45 min"},
+    evMD: {n:"EscapeVenture Magdeburg", a:"Leipziger Str. 45D, 39120 Magdeburg", t:"~1:30 h"},
+    meL:  {n:"Mission Exit", a:"Lübecker Str. 53–63, Geb. 12, 39124 Magdeburg", t:"~1:30 h"},
+    meM:  {n:"Mission Exit", a:"Maxim-Gorki-Str. 23, 39108 Magdeburg (bzw. Lübecker Str. 53–63)", t:"~1:30 h"},
+    ecW:  {n:"Escape City Wolfsburg", a:"Lessingstraße 72, 38440 Wolfsburg", t:"~1 h"},
+    adv:  {n:"AdventureRooms Magdeburg", a:"Liebknechtstraße 97, 39110 Magdeburg", t:"~1:30 h"},
+    eam:  {n:"Escape Arena Magdeburg", a:"Am Elbepark 1, 39326 Hohe Börde", t:"~1:20 h"},
+    rc:   {n:"RätselCafé", a:"Herrenkrug 2, 39114 Magdeburg", t:"~1:30 h"},
+    alv:  {n:"Hof Alvermann", a:"Woltem 29, 29614 Soltau", t:"~50 min"},
+    nien: {n:"Escape Nienburg", a:"Goetheplatz 2, 31582 Nienburg/Weser", t:"~50 min"},
+    trap: {n:"Trapzone", a:"Springhorstsee 1, 30938 Burgwedel", t:"~25 min"},
+    harz: {n:"Harz Escape", a:"Klintgasse 3, 38855 Wernigerode", t:"~1:30 h"},
+    hgHH: {n:"Hidden Games Hamburg", u:"https://www.hidden.games/", a:"Hamburg (genaue Adresse beim Anbieter)", q:"Hidden Games Escape Room Hamburg", t:"~1:30 h"}
   };
   var T = {
     top:{l:"&#127942; Absolute Top-Räume", c:"var(--gold)"},
@@ -204,13 +225,13 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
   var R = [
     ["top","Ghosthunter: Brandon Darkmoor","https://www.salzufler-unterwelt.de/en/ghosthunter-brandon-darkmoor/","sal","ab 33 € p. P.","Weltweit unter den besten 200 Räumen. Mehrere Raumabschnitte, viel Technik, leicht gruselig."],
     ["top","The Hidden Chamber","https://www.salzufler-unterwelt.de/en/hidden-chamber-escape-room/","sal","ab 33 € p. P.","Von Testern mit 9,6 von 10 bewertet, „einer der immersivsten Räume“. Spielt in einem Gewölbekeller."],
-    ["top","Das geheime Elixier","https://www.hidden.games/escape-room-braunschweig/abenteuer/","hgBS","128 €","Stand 2023 im Finale der internationalen Bestenliste."],
+    ["top","Das geheime Elixier","https://www.hidden.games/escape-room-braunschweig/abenteuer/","hgBS","128 €","2023 im Finale der internationalen Bestenliste, 2025 erneut nominiert. 4,5 von 5 aus fünf Tests."],
     ["sg","Das Geheimnis der magischen Spur","https://morty.app/attraction/43485/das-geheimnis-der-magischen-spur-the-secret-of-the-magical-trail","fun","?","Zweimal für Preise nominiert, komplett elektronisch, starke Kulisse."],
     ["sg","Zauberschule – Der geheime Auftrag","https://roomhannover.de/buchen-und-mehr/zauberschule-der-geheime-auftrag/","room","140 €","Bester Raum in Hannover, für Preise nominiert, 8,5 von 10. Spielzeit 75 Minuten."],
     ["sg","Der Fluch der Mumie","","xit","?","4,8 von 5 bei 15 Bewertungen, sehr stimmungsvolle Grabkammer."],
     ["sg","Flucht aus Alcatraz – Zellenblock II","","xit","?","8,1 von 10 und 4,9 von 5, sehr detailreich."],
     ["sg","Das verlassene Waisenhaus","","egb","ab 82 €","4,9 von 5 und 8 von 10, optisch top, eher schwer."],
-    ["sg","Morrah Island","","hgBS","128 €","Spieler urteilen „sehr positiv“."],
+    ["sg","Morrah Island","","hgBS","128 €","Tests mit 8,5 und 8,4 von 10. Verlassene Klinik mit echten Schreckmomenten, also nur für Horror-Fans."],
     ["g","Die Werkstatt des Alchemisten","","sal","ab 33 € p. P.","Überwiegend positive Stimmen."],
     ["g","Das Voodoo Vermächtnis","","fun","?","Für Preise nominiert, 3,5 bis 4,5 von 5. Gruselig, eher leicht."],
     ["g","Die Legende des Zauberbaums","","fun","?","4,5 von 5, aber nur eine Bewertung."],
@@ -219,23 +240,46 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
     ["g","Sherlock Holmes","https://roomhannover.de/buchen-und-mehr/sherlock-holmes/","room","120 €","3,5 bis 4 von 5. Selbst gebaut, das Team startet getrennt, etwas Lärm von außen."],
     ["g","Zauberschule – Die magische Prüfung","","room","?","3,5 bis 4 von 5, viel Technik, eher schwer."],
     ["g","Zurück in die Zukunft","","hgH","?","2,5 bis 4 von 5, die Atmosphäre wird gelobt."],
-    ["g","Hexenjäger / Dragons of Dublin","","hgBS","128 €","Überwiegend positive Stimmen."],
+    ["g","Dragons of Dublin","","hgBS","128 €","4 bis 4,5 von 5 aus zwei Tests."],
+    ["g","Club of Experts","","hgBS","?","4 von 5 aus zwei Tests, gelobte Effekte, Braunschweig-Geschichte von 1971."],
+    ["g","Vampyr","","salz","92–176 € je nach Gruppe","4,9 von 5 bei 5 Bewertungen. Dunkle, stimmungsvolle Kulisse, leicht gruselig. Kritik: viele Zahlenschlösser."],
+    ["g","Carrie","","evBS","120 €","Etwa 4 von 5 (Bewertungen aus anderen Städten derselben Kette). Düster und psychologisch, ab 14."],
+    ["g","Der Schatz von Calico Jack","","meL","?","4,5 von 5, aber nur eine Bewertung. Eher familienfreundlich."],
+    ["g","Walking Death","","ecW","?","3 bis 4 von 5 (Bewertungen aus anderen Städten), Kulisse als sehr stimmungsvoll beschrieben."],
     ["g","Das Kabinett der Geheimnisse","","tc","?","Spieler geben 4,8 von 5, im Fachtest nur mittelmäßig."],
     ["q","Murphy's Pub","","hgH","–","2,5 bis 3,5 von 5, Tester 6,4 von 10. Deckt sich mit unserem Eindruck.",1],
     ["q","Space Odyssey","","hgH","?","6,3 von 10. Sichtbare Holzwände zerstören die Illusion."],
     ["q","Die Welfenverschwörung","","hgH","?","3 von 5. Der Hinweis-Bildschirm bricht die Atmosphäre."],
     ["q","Flucht der Piraten","","ter","100–110 €","3 von 5 bzw. 7 von 10."],
-    ["q","Lagerhaus / Reichsbank / Moonraker","","hgBS2","112 €","Gemischte Bewertungen."],
+    ["q","Lagerhaus / Reichsbank / Moonraker","","hgBS2","112 €","Moonraker nur 2 von 5, die anderen ohne Tests."],
     ["q","Spieglein, Spieglein an der Wand","","etr","?","Gemischte Bewertungen."],
+    ["q","Hexenjäger","","hgBS","128 €","Nur eine Bewertung, und die mit 3 von 5."],
+    ["q","Prison Break","","hgBS2","112 €","2,5 von 5."],
+    ["q","Artefacts / Doc Eisenbarth","","evBS","120 €","3 bis 3,5 von 5, „ordentlich, aber nicht aufregend“."],
+    ["q","Artefacts / Doc Eisenbarth / Carrie","","evMD","120 €","Dieselben Räume wie in Braunschweig, 3,5 bis 4 von 5."],
+    ["q","Swiss Original","","adv","?","Etwa 3 von 5, klassischer Kellerraum."],
     ["nd","Armageddon","","ter","–","Online keine Bewertungen, für uns aber klar ein Wow-Raum.",1],
     ["nd","Draculas Schloss 2.0, Verfluchtes Hostel, Maniac, Minotaurus Labyrinth","","ter","100–110 €","Kaum Bewertungen. Gleicher Anbieter wie Armageddon, deshalb vielleicht einen Versuch wert."],
     ["nd","Harrys Zauberschule, Bitcoin-Verschwörung, Mittelalterraum","","ehan","120 €","Keine unabhängigen Tests gefunden."],
     ["nd","8 Räume, u. a. Jack the Ripper und Fluch der Karibik","","reh","?","Keine unabhängigen Tests gefunden."],
-    ["nd","Haus des Grauens, Herz der Mumie u. a.","","terH","?","Wenige Bewertungen, gemischt bis positiv."]
+    ["nd","Haus des Grauens, Herz der Mumie u. a.","","terH","?","Wenige Bewertungen, gemischt bis positiv."],
+    ["nd","Der Salzstreuer, Der Filmriss, Störtebekers Vermächtnis","","salz","92–176 € je nach Gruppe","Keine Bewertungen der einzelnen Räume, der Anbieter ist aber sehr beliebt. Im Salzstreuer spielen echte Schauspieler mit."],
+    ["nd","Evil Mansion, Tutanchamun, Der magische Stein","","ecW","?","Keine Bewertungen gefunden."],
+    ["nd","Im Wunderland","","etr","?","Keine Bewertungen gefunden."],
+    ["nd","Grabkammer des Tutanchamun, Jack the Ripper, Labyrinth des Minotaurus","","eam","?","Keine Bewertungen gefunden."],
+    ["nd","Maya-Tempel, Tresorraum, Erbe des Königs, John Gacy","","meM","?","Keine Bewertungen gefunden."],
+    ["nd","Das Geheimnis, Die Irrwege","","rc","?","Keine Bewertungen, eher ein Rätsel-Café als ein klassischer Escape Room."],
+    ["nd","Escape Room auf dem Hof Alvermann","","alv","?","Keine Bewertungen gefunden."],
+    ["nd","Escape Nienburg","","nien","?","Keine Bewertungen gefunden."],
+    ["nd","Trapzone","","trap","?","Keine Bewertungen gefunden."]
+  ];
+  var X = [
+    ["sg","Das Geheimnis des Uhrmachers","","harz","?","2025 für die internationale Bestenliste nominiert, mit mehr Stimmen als jeder Raum in Hannover. Wernigerode lohnt sich auch so als Ausflug."],
+    ["sg","Neptune's Curse","","hgHH","?","2025 mit sehr vielen Nominierungen auf der internationalen Bestenliste, fast so viele wie Brandon Darkmoor. Wäre ein Ausflug nach Hamburg wert."]
   ];
 
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
-  function maps(a){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(a);}
+  function maps(p){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.q||p.a.replace(/\s*\(.*\)/,""));}
 
   function card(r){
     var p=P[r[3]], played=!!r[6];
@@ -248,9 +292,9 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
       '<div class="prov">'+prov+'</div>'+
       '<p class="why">'+esc(r[5])+'</p>'+
       '<div class="facts"><span class="fact"><span>&#128663;</span>'+esc(p.t)+'</span>'+
-      (price?'<span class="fact"><span>&#128176;</span>'+esc(price)+(/p\. P\./.test(price)?'':(price==="Preis offen"?'':' für 4'))+'</span>':'')+
+      (price?'<span class="fact"><span>&#128176;</span>'+esc(price)+(/p\. P\.|je nach|Preis offen/.test(price)?'':' für 4')+'</span>':'')+
       '</div>'+
-      '<div class="addr">&#128205; <a href="'+maps(p.a)+'" target="_blank" rel="noopener">'+esc(p.a)+'</a></div>'+
+      '<div class="addr">&#128205; <a href="'+maps(p)+'" target="_blank" rel="noopener">'+esc(p.a)+'</a></div>'+
       '</article>';
   }
 
@@ -266,6 +310,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
             '<div class="grid">'+rows.map(card).join("")+'</div>';
     });
     document.getElementById("list").innerHTML=html||'<p class="empty">Keine Räume für diesen Filter.</p>';
+    document.getElementById("extra").style.display=f==="hannover"?"none":"";
   }
 
   var chips=document.querySelectorAll(".chip");
@@ -275,6 +320,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--faint);f
       render(c.getAttribute("data-f"));
     });
   });
+  document.getElementById("extraList").innerHTML=X.map(card).join("");
   render("all");
 })();
 </script>
