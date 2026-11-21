@@ -4,7 +4,7 @@
    geänderten Service Worker, installiert ihn und die Seite zeigt
    das "Neue Version verfügbar"-Banner (siehe js/app.js).
    ============================================================ */
-const CACHE = "ew-cache-v26";
+const CACHE = "ew-cache-v27";
 
 // Kern-Dateien (App-Shell). Relative Pfade, damit es auch unter
 // einem Unterverzeichnis (GitHub Pages) funktioniert.
@@ -41,11 +41,33 @@ self.addEventListener("activate", (event) => {
     );
 });
 
-// Cache-first für gleiche Herkunft; erfolgreiche Antworten nachladen.
+// Seiten (HTML): Network-first – online immer der aktuelle Stand,
+// offline der zuletzt geladene. cache:"no-cache" umgeht den
+// HTTP-Cache von GitHub Pages (max-age 10 min) per Revalidierung.
+// Alles andere (CSS/JS/Bilder): Cache-first; Änderungen daran kommen
+// über die CACHE-Version + Update-Banner.
+function isPage(req) {
+    return req.mode === "navigate" ||
+        (req.headers.get("accept") || "").indexOf("text/html") !== -1;
+}
+
 self.addEventListener("fetch", (event) => {
     const req = event.request;
     const url = new URL(req.url);
     if (req.method !== "GET" || url.origin !== self.location.origin) return;
+
+    if (isPage(req)) {
+        event.respondWith(
+            fetch(req, { cache: "no-cache" }).then((res) => {
+                if (res && res.status === 200 && res.type === "basic") {
+                    const copy = res.clone();
+                    caches.open(CACHE).then((c) => c.put(req, copy));
+                }
+                return res;
+            }).catch(() => caches.match(req).then((hit) => hit || caches.match("index.html")))
+        );
+        return;
+    }
 
     event.respondWith(
         caches.match(req).then((hit) => {

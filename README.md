@@ -54,6 +54,9 @@ die die Themen gruppiert: **Elektromobilität** (inkl. Nachtfahrt-Ratgeber und K
 
 - `manifest.webmanifest` + `sw.js` machen die Seite installierbar und offline
   nutzbar. Installation über das Zahnrad-Menü unten in der Navigation.
+- **Seiten (HTML) kommen network-first:** online immer der aktuelle Stand,
+  offline der zuletzt geladene. Neue oder geänderte Seiten sind damit sofort
+  sichtbar, ohne Update-Banner. CSS/JS/Bilder bleiben cache-first.
 - Der Service Worker erkennt neue Versionen. **Beim Deploy die `CACHE`-Version
   in `sw.js` erhöhen** – Besucher sehen dann automatisch das Banner
   „Neue Version verfügbar – Neu laden".

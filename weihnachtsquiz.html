@@ -854,6 +854,23 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
   document.getElementById("resetBoard").addEventListener("click",function(){if(confirm("Alle Punkte und Teamnamen zurücksetzen?")){state=DEF.map(blank);save();render()}});
   render();
 })();
+
+/* Eigenständige Seite ohne Update-Banner: neuen Service Worker
+   sofort übernehmen und einmal neu laden, damit immer der aktuelle
+   Stand angezeigt wird. */
+(function(){
+  if(!("serviceWorker" in navigator)||location.protocol.indexOf("http")!==0)return;
+  var reloaded=false;
+  navigator.serviceWorker.addEventListener("controllerchange",function(){if(reloaded)return;reloaded=true;location.reload()});
+  navigator.serviceWorker.getRegistration().then(function(reg){
+    if(!reg)return;
+    function skip(w){if(w)w.postMessage({type:"SKIP_WAITING"})}
+    if(reg.waiting)skip(reg.waiting);
+    reg.addEventListener("updatefound",function(){var nw=reg.installing;if(!nw)return;
+      nw.addEventListener("statechange",function(){if(nw.state==="installed")skip(nw)})});
+    reg.update().catch(function(){});
+  });
+})();
 </script>
 </body>
 </html>
