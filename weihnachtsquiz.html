@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weihnachts-Quiz – Konzept für die Weihnachtsfeier</title>
-<meta name="description" content="Konzept für ein Weihnachts-Quiz in vier kurzen Runden zwischen dem Fingerfood: Teameinteilung, Regeln, Moderation, Musterfragen mit Antworten und Punktetafel.">
-<meta property="og:title" content="Weihnachts-Quiz – Konzept">
-<meta property="og:description" content="Vier kurze Quizrunden zwischen dem Fingerfood – für rund 15 Leute, niedrigschwellig und mit Musterfragen.">
+<title>Quiz-Abend für die (verspätete) Weihnachtsfeier – Konzept</title>
+<meta name="description" content="Konzeptentwurf: Quiz in vier kurzen Runden zwischen dem Fingerfood – auf Papier oder digital per Handy. Teams, Moderationsleitfaden, geprüfte Fragen mit Quellen.">
+<meta property="og:title" content="Quiz-Abend für die (verspätete) Weihnachtsfeier">
+<meta property="og:description" content="Vier kurze Quizrunden zwischen dem Fingerfood – Papier oder Handy, mit Drehbuch und geprüften Fragen.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#c8102e">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
@@ -15,6 +15,7 @@
   --red:#c8102e; --red-dark:#9b0b22; --red-weak:#fdecee;
   --green:#00845c; --green-dark:#006446; --green-weak:#e7f4ee;
   --gold:#b88a1b; --gold-weak:#fbf4e2;
+  --blue:#2f6fa6; --blue-weak:#e9f1f8;
   --bg:#f5f7f7; --panel:#ffffff; --panel-2:#f9fafa; --line:#e1e6e7;
   --text:#1d2a2f; --muted:#56666c; --faint:#87959a;
   --r:14px;
@@ -30,27 +31,35 @@ a{color:var(--green-dark)}
 .topbar{background:var(--panel);border-bottom:1px solid var(--line)}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;padding-bottom:10px;font-size:14px}
 .topbar a{color:var(--muted);text-decoration:none}
-.topbar a:hover{color:var(--text)}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--text)}
 .brand svg{width:22px;height:22px}
-header.hero{background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);color:#fff;padding:44px 0 34px;position:relative;overflow:hidden}
+header.hero{background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);color:#fff;padding:40px 0 30px;position:relative;overflow:hidden}
 header.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.07)}
 .kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;opacity:.9}
-h1{font-size:clamp(28px,6vw,42px);line-height:1.15;margin:8px 0 12px;font-weight:700}
-.lead{font-size:17px;max-width:680px;opacity:.95}
+h1{font-size:clamp(27px,6vw,40px);line-height:1.15;margin:8px 0 12px;font-weight:700}
+.lead{font-size:17px;max-width:690px;opacity:.95}
 .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
 .pill{font-size:13px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px}
+.draft{display:inline-block;margin-top:14px;font-size:13px;background:#fff;color:var(--red-dark);border-radius:8px;padding:4px 10px;font-weight:600}
 
-/* Inhaltsnavigation */
-.toc{position:sticky;top:0;z-index:5;background:rgba(245,247,247,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:8px;padding-bottom:8px;scrollbar-width:none}
-.toc a{flex:none;font-size:14px;text-decoration:none;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
-.toc a:hover{border-color:var(--green);color:var(--green-dark)}
+/* Navigation + Umschalter */
+.toc{position:sticky;top:0;z-index:5;background:rgba(245,247,247,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.toc .wrap{display:flex;gap:10px;align-items:center;padding-top:8px;padding-bottom:8px}
+.toc .links{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1}
+.toc .links a{flex:none;font-size:14px;text-decoration:none;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.mode{flex:none;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px}
+.mode button{font:inherit;font-size:14px;font-weight:600;border:0;background:transparent;color:var(--muted);border-radius:999px;padding:5px 12px;cursor:pointer}
+body.m-paper .mode [data-mode=paper],body.m-digital .mode [data-mode=digital]{background:var(--red);color:#fff}
+body.m-paper .d-only,body.m-digital .p-only{display:none!important}
+.modehint{font-size:14px;color:var(--muted);margin-top:10px}
+.modetag{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:1px 8px;margin-right:6px;vertical-align:middle}
+.modetag.p{background:var(--gold-weak);color:#7a5a0a;border:1px solid #ecd9a6}
+.modetag.d{background:var(--blue-weak);color:var(--blue);border:1px solid #c9dcee}
 
-section{padding:30px 0 6px;scroll-margin-top:52px}
+section{padding:30px 0 6px;scroll-margin-top:56px}
 h2{font-size:23px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
 h2 .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:15px;flex:none}
-.sub{color:var(--muted);margin-bottom:16px;max-width:720px}
+.sub{color:var(--muted);margin-bottom:16px;max-width:740px}
 h3{font-size:18px;margin-bottom:6px}
 p+p{margin-top:8px}
 
@@ -63,16 +72,34 @@ p+p{margin-top:8px}
 .card li+li{margin-top:4px}
 .card.green{border-left:4px solid var(--green)}
 .card.red{border-left:4px solid var(--red)}
+.card.blue{border-left:4px solid var(--blue)}
 .card.gold{border-left:4px solid var(--gold);background:linear-gradient(170deg,var(--gold-weak),var(--panel) 60%)}
 .ic{font-size:22px;line-height:1;margin-bottom:6px}
+.pc{list-style:none;padding:0!important}
+.pc li{padding-left:22px;position:relative}
+.pc li.plus::before{content:"＋";position:absolute;left:0;color:var(--green);font-weight:700}
+.pc li.minus::before{content:"－";position:absolute;left:0;color:var(--red);font-weight:700}
 
 /* Hinweiskästen */
 .note{border-radius:12px;padding:12px 14px;font-size:15px;margin-top:12px}
 .note.mod{background:var(--green-weak);border:1px solid #bfe3d2}
-.note.mod b:first-child{color:var(--green-dark)}
 .note.warn{background:var(--gold-weak);border:1px solid #ecd9a6}
-.say{background:var(--panel);border:1px dashed var(--green);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:15px}
-.say::before{content:"🎤 Ansage zum Vorlesen";display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green-dark);margin-bottom:4px}
+.note.info{background:var(--blue-weak);border:1px solid #c9dcee}
+
+/* Drehbuch */
+.scene{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-top:14px;overflow:hidden}
+.scene-head{display:flex;gap:12px;align-items:baseline;padding:12px 16px;background:var(--panel-2);border-bottom:1px solid var(--line)}
+.scene-head .sn{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);flex:none}
+.scene-head h3{margin:0;font-size:17px}
+.scene-head .who{margin-left:auto;font-size:13px;color:var(--muted);flex:none}
+.scene-body{padding:12px 16px 14px}
+.do,.say{border-radius:10px;padding:10px 12px;font-size:15px;margin-top:8px}
+.do{background:var(--panel-2);border:1px solid var(--line)}
+.do::before{content:"✋ Tun";display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.do ol,.do ul{padding-left:20px;color:var(--text)}
+.do li+li{margin-top:3px}
+.say{background:#fff;border:1px dashed var(--green)}
+.say::before{content:"🎤 Sagen";display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green-dark);margin-bottom:3px}
 
 /* Ablauf */
 .timeline{list-style:none;position:relative;padding-left:26px}
@@ -85,11 +112,15 @@ p+p{margin-top:8px}
 .timeline .d{color:var(--muted);font-size:15px}
 
 /* Teams */
-.teams{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:12px}
-.team{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:12px;padding:12px;text-align:center}
-.team .sym{font-size:30px}
+.teams{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:12px}
+.team{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:12px;padding:10px;text-align:center}
+.team .sym{font-size:28px}
 .team b{display:block}
-.team span{font-size:14px;color:var(--muted)}
+.team span{font-size:13px;color:var(--muted)}
+table.dist{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:15px;margin-top:12px}
+table.dist th,table.dist td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left}
+table.dist th{background:var(--panel-2);font-size:13px;color:var(--muted);font-weight:600}
+table.dist td:first-child{font-weight:700;width:90px}
 
 /* Runden */
 .round{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-top:18px;overflow:hidden}
@@ -112,22 +143,42 @@ details.q[open] summary::after{content:"Antwort ▴"}
 .opts{display:block;font-weight:400;color:var(--muted);font-size:15px;margin-top:4px}
 .ans{padding:0 14px 12px 46px;font-size:15px;color:var(--muted)}
 .ans b.a{display:inline-block;color:var(--green-dark);background:var(--green-weak);border-radius:6px;padding:1px 8px;margin-bottom:4px}
+.ans .src{display:block;margin-top:6px;font-size:13px}
+.ans .src::before{content:"✔ geprüft · Quelle: ";color:var(--green-dark);font-weight:600}
+.ans .src.basic::before{content:"✔ Grundwissen";}
 .emoji{font-size:24px;letter-spacing:.08em}
-.reserve summary::before{background:var(--faint)}
+.reserve summary::before{background:var(--faint)!important}
 
 .btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .btn{font:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:10px;padding:8px 14px;border:1px solid var(--green);background:var(--panel);color:var(--green-dark)}
 .btn.primary{background:var(--green);color:#fff}
-.btn:hover{filter:brightness(.96)}
+
+/* Handy-Skizzen */
+.phones{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:thin}
+.phone{flex:none;width:200px;border:8px solid #22292d;border-radius:26px;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.08);overflow:hidden}
+.phone .scr{height:330px;display:flex;flex-direction:column;font-size:12px}
+.phone .bar{background:var(--red);color:#fff;font-weight:700;padding:8px 10px;font-size:12px;display:flex;justify-content:space-between}
+.phone .body{padding:10px;flex:1;display:flex;flex-direction:column;gap:7px}
+.phone .q{font-weight:700;font-size:13px;line-height:1.3}
+.phone .opt{border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.phone .opt.sel{border-color:var(--green);background:var(--green-weak);font-weight:700}
+.phone .opt.ok{border-color:var(--green);background:var(--green);color:#fff;font-weight:700}
+.phone .small{color:var(--muted);font-size:11px}
+.phone .big{font-size:22px;text-align:center}
+.phone .cta{margin-top:auto;background:var(--green);color:#fff;border-radius:8px;text-align:center;padding:7px;font-weight:700}
+.phone .cta.red{background:var(--red)}
+.phone .row{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:4px 0}
+.phone-cap{width:200px;font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
+.phonewrap{flex:none}
 
 /* Punktetafel */
 .board-wrap{overflow-x:auto;margin-top:10px}
-table.board{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:15px;min-width:560px}
+table.board{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:15px;min-width:600px}
 table.board th,table.board td{padding:8px;border-bottom:1px solid var(--line);text-align:center}
 table.board th{background:var(--panel-2);font-size:13px;color:var(--muted);font-weight:600}
 table.board td:first-child,table.board th:first-child{text-align:left}
 table.board input[type=text]{width:100%;min-width:110px;font:inherit;border:1px solid var(--line);border-radius:8px;padding:5px 8px}
-table.board input[type=number]{width:56px;font:inherit;text-align:center;border:1px solid var(--line);border-radius:8px;padding:5px 4px}
+table.board input[type=number]{width:54px;font:inherit;text-align:center;border:1px solid var(--line);border-radius:8px;padding:5px 4px}
 table.board select{font:inherit;border:1px solid var(--line);border-radius:8px;padding:4px}
 table.board td.sum{font-weight:700;font-size:17px}
 table.board tr.lead td.sum{color:var(--red)}
@@ -139,6 +190,18 @@ table.board tr.lead td:first-child::before{content:"⭐ "}
 .dec li b.k{display:inline-block;min-width:34px;color:#fff;background:var(--red);border-radius:6px;text-align:center;margin-right:8px;font-size:14px}
 .dec li strong{color:var(--text)}
 .dec li em{font-style:normal;color:var(--green-dark);font-size:14px}
+.dec li .opt-list{margin:6px 0 0 20px}
+.done{list-style:none;display:grid;gap:6px}
+.done li{padding-left:26px;position:relative;color:var(--muted)}
+.done li::before{content:"✓";position:absolute;left:4px;color:var(--green);font-weight:700}
+.done li strong{color:var(--text)}
+
+.names{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:700px){.names{grid-template-columns:1fr 1fr}}
+.name{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.name b{display:block;font-size:17px;color:var(--red-dark)}
+.name span{font-size:14px;color:var(--muted)}
+.name.fav{border-color:var(--red);box-shadow:0 0 0 2px var(--red-weak)}
 
 .check{list-style:none;columns:1;column-gap:24px}
 @media(min-width:700px){.check{columns:2}}
@@ -149,246 +212,472 @@ table.board tr.lead td:first-child::before{content:"⭐ "}
 footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;color:var(--faint);font-size:13px}
 
 @media print{
-  body{background:#fff;font-size:12pt}
-  .toc,.topbar,.btnrow,#punkte .board-wrap,.noprint{display:none!important}
+  body{background:#fff;font-size:11.5pt}
+  .toc,.topbar,.btnrow,.board-wrap,.noprint{display:none!important}
   header.hero{background:#fff;color:#000;padding:0 0 10px;border-bottom:3px solid var(--red)}
-  .pill{border-color:#999;background:#fff}
-  .round,.card,details.q{break-inside:avoid}
+  .pill,.draft{border:1px solid #999;background:#fff;color:#000}
+  .round,.card,details.q,.scene{break-inside:avoid}
   details.q summary::after{display:none}
   section{padding-top:14px}
 }
 </style>
 </head>
-<body>
+<body class="m-paper">
 
 <div class="topbar"><div class="wrap">
-  <span class="brand"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="20" rx="1.5" fill="#00845c"/><rect x="2" y="9" width="20" height="6" rx="1.5" fill="#00845c"/></svg>Weihnachts-Quiz</span>
+  <span class="brand"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="20" rx="1.5" fill="#00845c"/><rect x="2" y="9" width="20" height="6" rx="1.5" fill="#00845c"/></svg>Quiz-Abend</span>
   <a href="index.html">← etechnis Welt</a>
 </div></div>
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">Konzept · Weihnachtsfeier</div>
-    <h1>Quiz-Night light – vier kurze Runden zwischen dem Fingerfood</h1>
-    <p class="lead">Ein Quiz wie in der Kneipe, nur kleiner: Teams, Themenblöcke, Zwischenstand, Siegerehrung. Jede Runde dauert nur ein paar Minuten, gegessen wird nebenher – und niemand muss allein vor allen antworten.</p>
+    <div class="kicker">Konzeptentwurf · Feier Anfang Januar 2027</div>
+    <h1>Quiz-Night light für die (verspätete) Weihnachtsfeier</h1>
+    <p class="lead">Vier kurze Quizrunden zwischen dem Fingerfood. Gespielt wird in Teams, ein Rätselblatt läuft nebenbei mit, und reihum liest jedes Team einmal vor. So spielen alle mit, auch wer moderiert.</p>
     <div class="meta">
-      <span class="pill">ca. 15 Personen</span>
-      <span class="pill">4 Teams à 3–4</span>
+      <span class="pill">ca. 15 Personen (flexibel)</span>
+      <span class="pill">4–5 Teams</span>
       <span class="pill">4 Runden à 6–8 Min.</span>
-      <span class="pill">Papier &amp; Stift – keine Technik nötig</span>
+      <span class="pill">Papier oder Handy</span>
     </div>
+    <span class="draft">Entwurf – noch nicht final. Offene Punkte stehen ganz unten.</span>
   </div>
 </header>
 
 <nav class="toc" aria-label="Inhalt"><div class="wrap">
-  <a href="#prinzip">Prinzip</a>
-  <a href="#ablauf">Ablauf</a>
-  <a href="#teams">Teams</a>
-  <a href="#regeln">Regeln</a>
-  <a href="#runden">Runden &amp; Fragen</a>
-  <a href="#moderation">Moderation</a>
-  <a href="#material">Material</a>
-  <a href="#punkte">Punktetafel</a>
-  <a href="#entscheiden">Offene Punkte</a>
+  <div class="links">
+    <a href="#varianten">Papier oder Handy</a>
+    <a href="#ablauf">Ablauf</a>
+    <a href="#teams">Teams</a>
+    <a href="#regeln">Regeln</a>
+    <a href="#drehbuch">Drehbuch</a>
+    <a href="#runden">Fragen</a>
+    <a href="#material">Material</a>
+    <a href="#punkte">Punktetafel</a>
+    <a href="#namen">Name</a>
+    <a href="#offen">Offene Punkte</a>
+  </div>
+  <div class="mode" role="group" aria-label="Variante">
+    <button type="button" data-mode="paper">📝 Papier</button>
+    <button type="button" data-mode="digital">📱 Handy</button>
+  </div>
 </div></nav>
 
 <main class="wrap">
 
-<!-- 1 PRINZIP -->
-<section id="prinzip">
-  <h2><span class="num">1</span>Das Prinzip</h2>
-  <p class="sub">Das Quiz ist der rote Faden durch den Abend, nicht das Hauptprogramm. Es soll Gesprächsstoff liefern, die Leute mischen und für ein paar Lacher sorgen.</p>
-  <div class="grid three">
-    <div class="card green"><div class="ic">⏱️</div><h3>Kurz &amp; getaktet</h3><p>Vier Runden zu je <strong>5–6 Fragen</strong>. Eine Runde dauert inklusive Auflösung <strong>6–8 Minuten</strong>, dazwischen wird in Ruhe gegessen.</p></div>
-    <div class="card green"><div class="ic">👥</div><h3>Immer im Team</h3><p>Geantwortet wird <strong>nur als Team</strong>. Wer etwas nicht weiß, fällt nicht auf – wer etwas weiß, ist der Held. Gemischte Teams gleichen Alter und Vorwissen aus.</p></div>
-    <div class="card green"><div class="ic">🎲</div><h3>Jede Runde anders</h3><p>Wechselnde Formate halten es frisch: <strong>Multiple Choice</strong>, <strong>offene Fragen</strong>, <strong>Emoji-Rätsel &amp; Musik</strong>, <strong>Schätzfragen</strong> zum Finale.</p></div>
+<!-- 1 VARIANTEN -->
+<section id="varianten">
+  <h2><span class="num">1</span>Zwei Wege: Papier oder Handy</h2>
+  <p class="sub">Ablauf, Runden und Fragen sind in beiden Varianten gleich. Unterschiedlich ist nur, wie geantwortet und ausgewertet wird. Oben rechts lässt sich die ganze Seite auf eine Variante umschalten. Überall, wo sich etwas unterscheidet, steht dann nur noch der passende Text.</p>
+  <div class="grid two">
+    <div class="card gold">
+      <h3>📝 Papier</h3>
+      <p>Jede Runde steckt in einem eigenen Umschlag mit Fragenkarte und einem verschlossenen Lösungsumschlag. Die Teams schreiben auf Zettel und korrigieren sich anschließend gegenseitig.</p>
+      <ul class="pc" style="margin-top:8px">
+        <li class="plus">Robust: kein Netz, kein Akku, keine Technik</li>
+        <li class="plus">Handys bleiben weg, Googeln fällt kaum ins Gewicht</li>
+        <li class="plus">Vorbereitung ohne Programmierung</li>
+        <li class="minus">Zettel und Stifte am Stehtisch, mehr Material</li>
+        <li class="minus">Punkte müssen gezählt und eingetragen werden</li>
+      </ul>
+    </div>
+    <div class="card blue">
+      <h3>📱 Handy (mit Papier als Notfall-Plan)</h3>
+      <p>Alle öffnen einen Link aus der Gruppe oder per QR-Code und wählen ihr Team. Die Frage erscheint auf jedem Handy, die Teams tippen die Antwort ein, ausgewertet wird automatisch.</p>
+      <ul class="pc" style="margin-top:8px">
+        <li class="plus">Auswertung und Punktestand automatisch</li>
+        <li class="plus">Frage steht auf dem Handy, das hilft bei lautem Raum</li>
+        <li class="plus">Vorleser sieht die Lösung erst nach der Abgabe</li>
+        <li class="minus">Braucht Netz und Akku; ein Probelauf vorher ist Pflicht</li>
+        <li class="minus">Handys liegen auf dem Tisch, Googeln wird leichter</li>
+        <li class="minus">Muss erst gebaut werden (machbar, siehe unten)</li>
+      </ul>
+    </div>
   </div>
-  <div class="note warn"><b>Leitlinie für die Fragen:</b> Mitreden können muss jede und jeder zwischen 20 und 60. Also Allgemeinwissen, Weihnachten, Alltag, Film &amp; Musik quer durch die Jahrzehnte – kein Spezialwissen, keine Fangfragen ohne Auflösung, keine Fragen, bei denen sich jemand blamiert fühlt.</div>
+
+  <div class="d-only">
+    <h3 style="margin-top:22px">So sähe die Handy-Variante aus</h3>
+    <p class="sub" style="margin-bottom:8px">Skizze, noch kein fertiges Design. Eine Webseite auf einem PHP-Webspace, keine App zum Installieren, keine Anmeldung mit Passwort.</p>
+    <div class="phones">
+      <div class="phonewrap"><div class="phone"><div class="scr">
+        <div class="bar"><span>Quiz-Abend</span><span>Start</span></div>
+        <div class="body">
+          <div class="q">Welches Symbol steht auf deinem Los?</div>
+          <div class="opt">🍀 Kleeblatt</div><div class="opt sel">🐷 Glücksschwein</div><div class="opt">🐞 Marienkäfer</div><div class="opt">🍄 Fliegenpilz</div>
+          <div class="cta">Team beitreten</div>
+        </div></div></div><div class="phone-cap">1 · Link öffnen, Team wählen</div></div>
+      <div class="phonewrap"><div class="phone"><div class="scr">
+        <div class="bar"><span>Runde 1 · Frage 2</span><span>⏱ 0:32</span></div>
+        <div class="body">
+          <div class="q">Nach wem ist der Januar benannt?</div>
+          <div class="opt">A · Juno</div><div class="opt sel">B · Janus</div><div class="opt">C · Jupiter</div><div class="opt">D · Julius Caesar</div>
+          <div class="small">Team-Antwort: B · änderbar bis Zeitende</div>
+          <div class="cta">Abgegeben ✓</div>
+        </div></div></div><div class="phone-cap">2 · Frage beantworten</div></div>
+      <div class="phonewrap"><div class="phone"><div class="scr">
+        <div class="bar" style="background:var(--green)"><span>Vorleser · Runde 1</span><span>3/4</span></div>
+        <div class="body">
+          <div class="small">Abgaben: 🍀 ✓ 🐷 ✓ 🐞 ✓ 🍄 …</div>
+          <div class="q">Lösung: B · Janus</div>
+          <div class="small">Zum Vorlesen: Der römische Gott mit zwei Gesichtern – eins schaut zurück, eins nach vorn. Passt zum Jahresanfang.</div>
+          <div class="cta red">Auflösen</div>
+          <div class="cta">Nächste Frage</div>
+        </div></div></div><div class="phone-cap">3 · Vorleser-Ansicht</div></div>
+      <div class="phonewrap"><div class="phone"><div class="scr">
+        <div class="bar"><span>Zwischenstand</span><span>nach R1</span></div>
+        <div class="body">
+          <div class="big">🏆</div>
+          <div class="row"><span>🐷 Glücksschwein</span><b>6</b></div>
+          <div class="row"><span>🍀 Kleeblatt</span><b>5</b></div>
+          <div class="row"><span>🍄 Fliegenpilz</span><b>5</b></div>
+          <div class="row"><span>🐞 Marienkäfer</span><b>3</b></div>
+          <div class="small" style="margin-top:auto">Erscheint erst, wenn die Spielleitung ihn freigibt.</div>
+        </div></div></div><div class="phone-cap">4 · Punktestand</div></div>
+    </div>
+    <div class="grid two" style="margin-top:10px">
+      <div class="card">
+        <h3>Wie es technisch funktioniert</h3>
+        <ul>
+          <li>Eine Webseite in PHP, die Daten liegen in einer kleinen Datei auf dem Webspace (SQLite oder JSON). Eine Datenbank muss niemand einrichten.</li>
+          <li>Die Handys fragen alle 1–2 Sekunden nach dem aktuellen Stand. Das läuft auf jedem normalen Webspace.</li>
+          <li>Jedes Teammitglied sieht die Frage. Antworten kann jede Person aus dem Team; es gilt die zuletzt abgeschickte Antwort, und alle im Team sehen sie sofort.</li>
+          <li>Multiple Choice und Schätzfragen wertet die Seite allein aus. Bei offenen Antworten macht sie einen Vorschlag, der Vorleser bestätigt mit ✓ oder ✗. So ist „Gold“ und „gold“ egal.</li>
+          <li>Gespeichert werden nur Teamnamen und Antworten, nach dem Abend wird alles gelöscht.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Aufwand und Risiken</h3>
+        <ul>
+          <li><strong>Bauen:</strong> etwa ein bis zwei Arbeitssitzungen, danach hochladen auf den Webspace.</li>
+          <li><strong>Probelauf:</strong> eine Woche vorher mit vier Handys einmal komplett durchspielen.</li>
+          <li><strong>Vor Ort:</strong> Handyempfang oder Gäste-WLAN muss da sein; eine Powerbank für die Spielleitung.</li>
+          <li><strong>Notfall:</strong> Das Papier-Set liegt komplett ausgedruckt bereit. Fällt die Technik aus, geht es auf Papier weiter, ohne dass jemand umdenken muss.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <p class="modehint p-only">Tipp: Oben rechts auf <strong>📱 Handy</strong> tippen, dann erscheinen Skizzen und Technik der Handy-Variante.</p>
 </section>
 
 <!-- 2 ABLAUF -->
 <section id="ablauf">
   <h2><span class="num">2</span>Ablauf des Abends</h2>
-  <p class="sub">Beispiel für einen Abend ab 18:30 Uhr – die Uhrzeiten sind nur zur Orientierung und richten sich nach dem Essen. Grundregel: <strong>Quizrunde immer dann, wenn alle etwas auf dem Teller haben</strong> und das Buffet gerade Ruhe hat.</p>
+  <p class="sub">Beispiel ab 18:30 Uhr, die Zeiten richten sich nach dem Essen. Grundregel: <strong>Quizrunde immer dann, wenn alle etwas auf dem Teller haben</strong> und am Buffet gerade Ruhe ist.</p>
   <div class="card">
     <ol class="timeline">
-      <li><span class="t">18:30</span><b>Ankommen &amp; Los ziehen</b><div class="d">Jede Person zieht ein Los mit Symbol → Team steht fest. Getränk holen, Team finden.</div></li>
-      <li><span class="t">18:50</span><b>Begrüßung &amp; Spielregeln (3 Min.)</b><div class="d">Teams geben sich einen weihnachtlichen Namen, Material wird verteilt, Joker erklärt.</div></li>
+      <li><span class="t">18:30</span><b>Ankommen &amp; Los ziehen</b><div class="d">Jede Person zieht ein Los mit Symbol, damit steht das Team fest. <span class="d-only">Gleich danach Link öffnen und Team wählen.</span></div></li>
+      <li><span class="t">18:50</span><b>Begrüßung &amp; Spielregeln (3 Min.)</b><div class="d">Teams geben sich einen Namen<span class="p-only">, Material wird verteilt</span>.</div></li>
       <li class="food"><span class="t">19:00</span><b>Buffet eröffnet – erste Welle Fingerfood</b></li>
-      <li class="q"><span class="t">19:20</span><b>Runde 1: „Oh Tannenbaum“</b><div class="d">Weihnachts-Warm-up, Multiple Choice mit Karten – ohne Schreiben, schnell aufgelöst.</div></li>
-      <li class="food"><span class="t">19:30</span><b>Essen, Reden, Nachschlag</b><div class="d">Punkterichter trägt Runde 1 ein.</div></li>
-      <li class="q"><span class="t">19:55</span><b>Runde 2: „Bunte Tüte“</b><div class="d">Offene Fragen zum Allgemeinwissen, Antwortzettel.</div></li>
-      <li class="food"><span class="t">20:05</span><b>Zweite Welle Fingerfood</b><div class="d">Das Emoji-Rätselblatt für Runde 3 liegt schon auf den Tischen – die Teams knobeln nebenbei.</div></li>
-      <li class="q"><span class="t">20:30</span><b>Runde 3: „Film &amp; Musik“</b><div class="d">Rätselblatt einsammeln, dann Intro-Raten mit kurzen Liedanfängen.</div></li>
+      <li class="q"><span class="t">19:20</span><b>Runde 1: „Neues Jahr, neues Glück“</b><div class="d">Multiple Choice zum Jahresanfang. Danach wird das Rätselblatt verteilt.</div></li>
+      <li class="food"><span class="t">19:30</span><b>Essen, reden, nebenbei das Rätselblatt lösen</b></li>
+      <li class="q"><span class="t">19:55</span><b>Runde 2: „Bunte Tüte“</b><div class="d">Offene Fragen, Allgemeinwissen.</div></li>
+      <li class="food"><span class="t">20:05</span><b>Zweite Welle Fingerfood</b></li>
+      <li class="q"><span class="t">20:30</span><b>Runde 3: „Das war 2026“</b><div class="d">Multiple Choice zum Jahresrückblick. Danach wird das Rätselblatt eingesammelt.</div></li>
       <li class="food"><span class="t">20:45</span><b>Dessert</b></li>
-      <li class="q"><span class="t">21:05</span><b>Runde 4: Finale „Schätzen &amp; Wetten“</b><div class="d">Schätzfragen, ggf. Stechfrage – danach Siegerehrung.</div></li>
+      <li class="q"><span class="t">21:05</span><b>Runde 4: Finale „Schätzen &amp; Wetten“</b><div class="d">Schätzfragen, Auflösung des Rätselblatts, dann die Siegerehrung.</div></li>
     </ol>
   </div>
-  <div class="note mod"><b>Tipp:</b> Vor jeder Runde kurz den <strong>Zwischenstand</strong> verkünden – das baut Spannung auf und holt alle wieder zusammen. Nach Runde 4 vor der Siegerehrung eine Mini-Pause, damit die Punkte sicher stimmen.</div>
 </section>
 
 <!-- 3 TEAMS -->
 <section id="teams">
-  <h2><span class="num">3</span>Teams einteilen</h2>
-  <p class="sub">Bei 15 Personen: <strong>4 Teams (4 · 4 · 4 · 3)</strong>. Klein genug, dass jede Person mitredet, groß genug, dass immer jemand etwas weiß. Und für die Moderation bleiben es überschaubare vier Zettel pro Runde.</p>
-  <div class="grid two">
+  <h2><span class="num">3</span>Teams &amp; Rollen</h2>
+  <p class="sub">Wie viele Teams es werden, muss <strong>nicht vorher feststehen</strong>. Vorbereitet werden 5 Symbole mit je 5 Losen. Vor Ort werden die Leute gezählt, und nur die passenden Lose kommen in die Schale. Passend zum neuen Jahr sind die Symbole Glücksbringer.</p>
+  <div class="teams">
+    <div class="team" style="--c:var(--green)"><div class="sym">🍀</div><b>Kleeblatt</b><span>Team 1</span></div>
+    <div class="team" style="--c:#d9768a"><div class="sym">🐷</div><b>Glücksschwein</b><span>Team 2</span></div>
+    <div class="team" style="--c:var(--red)"><div class="sym">🐞</div><b>Marienkäfer</b><span>Team 3</span></div>
+    <div class="team" style="--c:#c0632b"><div class="sym">🍄</div><b>Fliegenpilz</b><span>Team 4</span></div>
+    <div class="team" style="--c:var(--gold)"><div class="sym">⭐</div><b>Glücksstern</b><span>Team 5 · nur bei Bedarf</span></div>
+  </div>
+  <table class="dist">
+    <thead><tr><th>Personen</th><th>Teams</th><th>Lose in die Schale</th></tr></thead>
+    <tbody>
+      <tr><td>12</td><td>4</td><td>🍀3 · 🐷3 · 🐞3 · 🍄3</td></tr>
+      <tr><td>13</td><td>4</td><td>🍀4 · 🐷3 · 🐞3 · 🍄3</td></tr>
+      <tr><td>14</td><td>4</td><td>🍀4 · 🐷4 · 🐞3 · 🍄3</td></tr>
+      <tr><td>15</td><td>4</td><td>🍀4 · 🐷4 · 🐞4 · 🍄3</td></tr>
+      <tr><td>16</td><td>4</td><td>🍀4 · 🐷4 · 🐞4 · 🍄4</td></tr>
+      <tr><td>17</td><td>4</td><td>🍀5 · 🐷4 · 🐞4 · 🍄4</td></tr>
+      <tr><td>18</td><td>5</td><td>🍀4 · 🐷4 · 🐞4 · 🍄3 · ⭐3</td></tr>
+      <tr><td>19</td><td>5</td><td>🍀4 · 🐷4 · 🐞4 · 🍄4 · ⭐3</td></tr>
+      <tr><td>20</td><td>5</td><td>🍀4 · 🐷4 · 🐞4 · 🍄4 · ⭐4</td></tr>
+    </tbody>
+  </table>
+  <div class="grid two" style="margin-top:12px">
     <div class="card red">
-      <h3>Variante A – Christbaum-Los (empfohlen)</h3>
-      <p>15 Kärtchen mit Symbolen in einer Schale oder einem Nikolausstiefel. Beim Ankommen zieht jede Person eins. Das Kärtchen kommt als Sticker aufs Namensschild – so findet man sich und erkennt die Teams auch später noch.</p>
-      <p><strong>Vorteil:</strong> zufällig, fair, mischt automatisch Abteilungen und Altersgruppen, und ist selbst schon ein kleiner Eisbrecher.</p>
+      <h3>Variante A – reiner Zufall</h3>
+      <p>Alle ziehen beim Ankommen ein Los. Das ist fair, mischt automatisch und bringt gleich Gesprächsstoff. Das Symbol kommt als Sticker aufs Namensschild.</p>
     </div>
     <div class="card red">
       <h3>Variante B – gelenkter Zufall</h3>
-      <p>Wer den Abend organisiert, verteilt die Symbole vorab bewusst: in jedes Team mindestens eine „Quizkanone“, jüngere und ältere Leute gemischt, Leute, die sonst wenig miteinander zu tun haben, zusammen.</p>
-      <p><strong>Vorteil:</strong> ausgeglichene Teams. Nach außen sieht es trotzdem wie ein Los aus – einfach die vorbereiteten Kärtchen an den Platz oder ans Namensschild legen.</p>
+      <p>Die Organisation legt die Lose vorher bewusst an die Plätze: in jedes Team mindestens eine „Quizkanone“, Jung und Alt gemischt, Leute zusammen, die sonst wenig miteinander zu tun haben.</p>
     </div>
   </div>
-  <div class="teams">
-    <div class="team" style="--c:var(--gold)"><div class="sym">⭐</div><b>Team Stern</b><span>4 Lose</span></div>
-    <div class="team" style="--c:var(--green)"><div class="sym">🎄</div><b>Team Tanne</b><span>4 Lose</span></div>
-    <div class="team" style="--c:var(--red)"><div class="sym">🔔</div><b>Team Glocke</b><span>4 Lose</span></div>
-    <div class="team" style="--c:#5b8fb9"><div class="sym">⛄</div><b>Team Schneemann</b><span>3 Lose</span></div>
+  <h3 style="margin-top:20px">Rollen</h3>
+  <div class="grid two">
+    <div class="card green">
+      <h3>🎩 Spielleitung (1 Person, spielt mit)</h3>
+      <p>Begrüßt, erklärt die Regeln, sagt vor jeder Runde den Zwischenstand an, ruft das Vorleser-Team auf und macht die Siegerehrung. Fragen liest sie nicht vor und kennt deshalb keine Antworten vorab. <span class="p-only">Führt außerdem die Punktetafel.</span><span class="d-only">Gibt auf ihrem Handy Runden und Zwischenstände frei.</span></p>
+    </div>
+    <div class="card green">
+      <h3>📖 Vorleser (wechselt jede Runde)</h3>
+      <p>Jede Runde stellt ein anderes Team die Person, die vorliest: Runde 1 🍀, Runde 2 🐷, Runde 3 🐞, Runde 4 🍄. Diese Person spielt in ihrer Runde nicht mit, ihr Team spielt aber ganz normal weiter. Bei 5 Teams löst ⭐ das Rätselblatt auf.</p>
+    </div>
   </div>
-  <div class="note mod"><b>Moderation:</b> In den ersten zwei Minuten gibt sich jedes Team einen weihnachtlichen Namen („Die Glühwürmchen“, „Last Christmas, nächstes Jahr Sieg“ …) und bestimmt eine Person, die schreibt. Der kreativste Name kann einen Bonuspunkt bekommen – das kostet nichts und bringt gleich Stimmung. Kommen mehr oder weniger Leute, einfach Lose weglassen oder ergänzen; ab 18 Personen lieber 5 Teams.</div>
 </section>
 
 <!-- 4 REGELN -->
 <section id="regeln">
   <h2><span class="num">4</span>Regeln &amp; Punkte</h2>
-  <p class="sub">So wenig Regeln wie möglich – alles passt auf eine Ansage von zwei Minuten.</p>
+  <p class="sub">Alle Regeln passen in eine Ansage von zwei Minuten.</p>
   <div class="grid two">
     <div class="card">
       <h3>Punkte</h3>
       <ul>
         <li><strong>1 Punkt</strong> pro richtiger Antwort (Runden 1–3).</li>
-        <li>Musikrunde: <strong>1 Punkt Titel + 1 Punkt Interpret</strong>.</li>
-        <li>Schätzfragen: Team am nächsten dran <strong>2 Punkte</strong>, exakter Treffer <strong>3 Punkte</strong>.</li>
+        <li><strong>Rätselblatt:</strong> 1 Punkt pro erkanntem Film.</li>
+        <li><strong>Schätzfragen:</strong> Das Team, das am nächsten dran ist, bekommt <strong>2 Punkte</strong>, ein exakter Treffer <strong>3 Punkte</strong>.</li>
         <li>Rechtschreibung zählt nicht. Ist klar, was gemeint ist, gibt es den Punkt.</li>
       </ul>
     </div>
     <div class="card gold">
-      <h3>🎁 Der Joker</h3>
-      <p>Jedes Team bekommt <strong>eine Joker-Karte</strong> (z. B. eine goldene Christbaumkugel aus Pappe). Wer sie <strong>vor Beginn einer Runde</strong> abgibt, bekommt in dieser Runde <strong>doppelte Punkte</strong>.</p>
-      <p>Das sorgt für Taktik („Wir sind gut in Musik!“) und hält schwächere Teams bis zum Schluss im Rennen.</p>
+      <h3>🍀 Der Joker</h3>
+      <p>Jedes Team hat <strong>einen Joker</strong>. Wer ihn <strong>vor Beginn einer Runde</strong> einsetzt, bekommt in dieser Runde <strong>doppelte Punkte</strong>. <span class="p-only">Dazu die Joker-Karte bei der Spielleitung abgeben.</span><span class="d-only">Dazu auf dem Handy „Joker setzen“ tippen, das geht nur vor der ersten Frage.</span></p>
     </div>
     <div class="card">
       <h3>Fair Play</h3>
       <ul>
-        <li><strong>Handys bleiben in der Tasche.</strong> Wer googelt, singt beim Finale ein Weihnachtslied vor (oder eine andere kleine Strafe).</li>
-        <li>Die Entscheidung der Moderation ist endgültig – bei Streit lieber großzügig sein.</li>
-        <li>Pro Frage antwortet jedes Team nur einmal.</li>
+        <li><span class="p-only">Handys bleiben in der Tasche.</span><span class="d-only">Das Handy ist nur zum Antworten da.</span> Wer googelt, muss beim Finale den ersten Toast ausbringen.</li>
+        <li>Was der Vorleser entscheidet, gilt. Bei Streit lieber großzügig sein.</li>
       </ul>
     </div>
     <div class="card">
       <h3>Preise</h3>
       <ul>
-        <li><strong>Siegerteam:</strong> Schoko-Weihnachtsmänner, eine Flasche Glühwein oder ein Wanderpokal fürs nächste Jahr.</li>
-        <li><strong>Letzter Platz:</strong> Trostpreis, z. B. die „Goldene Zimtstange“ – sorgt meist für den größten Applaus.</li>
+        <li><strong>Siegerteam:</strong> etwas Kleines zum Teilen (z. B. Pralinen) oder ein Wanderpokal fürs nächste Jahr.</li>
+        <li><strong>Letzter Platz:</strong> ein Trostpreis, z. B. ein Glücksschwein aus Marzipan „fürs nächste Mal“.</li>
       </ul>
     </div>
   </div>
-  <div class="say">„Herzlich willkommen zum ersten Weihnachts-Quiz! Ihr spielt in vier Teams, über den Abend verteilt gibt's vier kurze Runden – immer dann, wenn ihr was zu essen habt. Pro richtiger Antwort ein Punkt, jedes Team hat einen Joker für doppelte Punkte, den ihr vor einer Runde abgeben könnt. Und ganz wichtig: Handys bleiben stecken. Wer googelt, singt beim Finale. Los geht's!“</div>
 </section>
 
-<!-- 5 RUNDEN -->
+<!-- 5 DREHBUCH -->
+<section id="drehbuch">
+  <h2><span class="num">5</span>Drehbuch für Spielleitung und Vorleser</h2>
+  <p class="sub">Das Drehbuch ist so geschrieben, dass man es jemandem in die Hand drücken kann: <strong>✋ Tun</strong> sagt, was zu tun ist, <strong>🎤 Sagen</strong> kann wörtlich vorgelesen werden. Die Texte passen sich der oben gewählten Variante an.</p>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 0</span><h3>Vorbereitung</h3><span class="who">Spielleitung · am Vortag</span></div>
+    <div class="scene-body">
+      <div class="do p-only"><ol>
+        <li>Pro Runde einen Umschlag packen: „Runde X – Fragen“ mit der Vorleser-Karte und darin einen kleineren, zugeklebten Umschlag „Runde X – Lösungen“.</li>
+        <li>Lose (5 Symbole × 5), Sticker, Antwortzettel, A–D-Karten, Joker-Karten, Rätselblätter und Stifte in eine Kiste packen.</li>
+        <li>Klemmbretter oder feste Unterlagen mitnehmen. Auf Stehtischen schreibt es sich schlecht.</li>
+        <li>Ein Glas mit Schokolinsen abzählen. Das ist die Stechfrage, falls es am Ende einen Gleichstand gibt.</li>
+      </ol></div>
+      <div class="do d-only"><ol>
+        <li>Quiz-Link testen. Den QR-Code ausdrucken und den Link in die Gruppe stellen, aber erst am Abend.</li>
+        <li>Auf dem eigenen Handy die Spielleitungs-Seite öffnen und gespeichert halten. Powerbank mitnehmen.</li>
+        <li>Notfall-Set: das Papier-Material einmal komplett ausdrucken (Umschläge, Zettel, A–D-Karten) und mitnehmen.</li>
+        <li>Ein Glas mit Schokolinsen abzählen, als Stechfrage bei Gleichstand.</li>
+      </ol></div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 1</span><h3>Ankommen &amp; Lose</h3><span class="who">Spielleitung</span></div>
+    <div class="scene-body">
+      <div class="do"><ol>
+        <li>Personen zählen und die passenden Lose laut Tabelle in die Schale legen.</li>
+        <li>Jede Person zieht ein Los und klebt den Sticker aufs Namensschild.</li>
+      </ol></div>
+      <div class="say">„Bitte zieht euch ein Los. Das Symbol darauf ist euer Team für heute Abend. Sucht euch euer Kleeblatt, euer Schwein, euren Käfer, ihr werdet euch schon finden.“</div>
+      <div class="say d-only">„Und dann scannt bitte den QR-Code oder öffnet den Link aus der Gruppe und tippt euer Symbol an. Fertig.“</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 2</span><h3>Begrüßung &amp; Regeln</h3><span class="who">Spielleitung · 3 Min.</span></div>
+    <div class="scene-body">
+      <div class="say p-only">„Herzlich willkommen zur Weihnachtsfeier, ein bisschen später als im Kalender, dafür mit Quiz! Über den Abend verteilt gibt's vier kurze Runden, immer dann, wenn ihr etwas zu essen habt. Jede Runde liest jemand aus einem anderen Team vor, so spielen alle mit. Pro richtiger Antwort gibt's einen Punkt. Jedes Team hat einen Joker, den gebt ihr vor einer Runde bei mir ab, dann zählt die Runde doppelt. Nach der ersten Runde bekommt ihr außerdem ein Rätselblatt, das löst ihr nebenbei beim Essen. Handys bleiben in der Tasche. Wer googelt, bringt beim Finale den ersten Toast aus. Jetzt habt ihr zwei Minuten: Gebt euch einen Teamnamen und bestimmt, wer bei euch schreibt.“</div>
+      <div class="say d-only">„Herzlich willkommen zur Weihnachtsfeier, ein bisschen später als im Kalender, dafür mit Quiz! Über den Abend verteilt gibt's vier kurze Runden, immer dann, wenn ihr etwas zu essen habt. Die Fragen kommen auf eure Handys. Jede Runde liest jemand aus einem anderen Team vor, so spielen alle mit. Ihr antwortet als Team, es zählt die zuletzt abgeschickte Antwort. Jedes Team hat einen Joker, den setzt ihr vor einer Runde auf dem Handy, dann zählt die Runde doppelt. Nach der ersten Runde gibt's außerdem ein Rätselblatt auf Papier, das löst ihr nebenbei beim Essen. Das Handy ist nur zum Antworten da. Wer googelt, bringt beim Finale den ersten Toast aus. Jetzt habt ihr zwei Minuten: Gebt euch einen Teamnamen und tippt ihn ein.“</div>
+      <div class="do"><ul>
+        <li><span class="p-only">Pro Team verteilen: Klemmbrett, Stift, Antwortzettel, A–D-Karten, Joker-Karte. Teamnamen auf der Punktetafel notieren.</span><span class="d-only">Auf der Spielleitungs-Seite prüfen, ob alle Teams verbunden sind (grüner Haken).</span></li>
+        <li>Optional: Für den lustigsten Teamnamen gibt's einen Bonuspunkt.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 3</span><h3>Rundenstart (vor jeder Runde)</h3><span class="who">Spielleitung · 1 Min.</span></div>
+    <div class="scene-body">
+      <div class="do"><ol>
+        <li>Mit Glöckchen oder Glas um Aufmerksamkeit bitten.</li>
+        <li>Zwischenstand ansagen (ab Runde 2).</li>
+        <li>Joker einsammeln<span class="d-only"> (die Seite zeigt, wer ihn gesetzt hat)</span>.</li>
+        <li>Vorleser-Team aufrufen, das Team schickt eine Person nach vorn. <span class="p-only">Ihr den Umschlag der Runde geben.</span><span class="d-only">Auf der Spielleitungs-Seite das Vorleser-Team auswählen; auf dessen Handy erscheint die Vorleser-Ansicht.</span></li>
+      </ol></div>
+      <div class="say">„Kurzer Blick auf die Tabelle: [Team] führt mit [X] Punkten, dahinter [Team] mit [Y] … Wer seinen Joker spielen will, macht das jetzt. Vorlesen darf diese Runde Team [Symbol]. Wer von euch kommt nach vorn?“</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 4</span><h3>Eine Runde vorlesen</h3><span class="who">Vorleser · 6–8 Min.</span></div>
+    <div class="scene-body">
+      <div class="do p-only"><ol>
+        <li>Den Umschlag „Fragen“ öffnen. Den kleinen Lösungsumschlag noch <strong>zu</strong> lassen.</li>
+        <li>Die Einleitung der Runde vorlesen (steht auf der Karte).</li>
+        <li>Jede Frage mit Nummer ansagen und <strong>zweimal</strong> vorlesen. Etwa 30–40 Sekunden Zeit lassen, dann weiter. Nicht warten, bis alle fertig sind.</li>
+        <li><strong>Multiple-Choice-Runden (1 und 3):</strong> „3 – 2 – 1 – Karten hoch!“ Alle Teams halten gleichzeitig ihre A–D-Karte hoch. Die Spielleitung notiert auf dem Notizblatt, welches Team welchen Buchstaben zeigt.</li>
+        <li><strong>Runden mit Zetteln (2 und 4):</strong> Nach der letzten Frage „Stifte weg!“ Jedes Team gibt seinen Zettel im Uhrzeigersinn ans Nachbarteam weiter.</li>
+        <li>Nach der letzten Frage den Lösungsumschlag öffnen. Die Antworten der Reihe nach vorlesen, dazu den kurzen Satz zum Vorlesen. Bei Multiple Choice hakt die Spielleitung auf dem Notizblatt ab; bei Zetteln haken die Teams auf dem fremden Zettel ab und schreiben die Summe oben drauf.</li>
+        <li>Alle Zettel zur Spielleitung, fertig. Applaus für dich!</li>
+      </ol></div>
+      <div class="do d-only"><ol>
+        <li>Auf deinem Handy steht „Du liest Runde X vor“. Die Antworten siehst du erst, wenn alle abgegeben haben.</li>
+        <li>Die Einleitung der Runde vorlesen (steht auf dem Handy), dann „Frage 1 freigeben“ tippen.</li>
+        <li>Die Frage erscheint bei allen. Lies sie trotzdem laut und <strong>zweimal</strong> vor, das gibt Stimmung.</li>
+        <li>Unten siehst du, wie viele Teams abgegeben haben. Sind alle durch oder ist die Zeit um, tippst du „Auflösen“.</li>
+        <li>Jetzt erscheinen Lösung und der Satz zum Vorlesen. Beides vorlesen. Bei offenen Antworten zeigt dir die Seite die Team-Antworten mit Vorschlag; tippe ✓ oder ✗.</li>
+        <li>„Nächste Frage“ tippen. Nach der letzten Frage gibst du das Wort zurück an die Spielleitung.</li>
+      </ol></div>
+      <div class="say">„Hallo zusammen, ich lese euch Runde [X] vor: [Titel der Runde]. Es gibt [Anzahl] Fragen, ich lese jede zweimal vor. Los geht's mit Frage 1 …“</div>
+      <div class="note mod"><b>Tipps fürs Vorlesen:</b> Langsam und laut sprechen, lieber eine Frage weniger als eine Runde, die sich zieht. Bei der Auflösung kurz fragen „Wer hatte das?“, das sorgt für Jubel. Niemals einzelne Personen vorführen, immer nur Teams.</div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 5</span><h3>Rätselblatt austeilen &amp; einsammeln</h3><span class="who">Spielleitung</span></div>
+    <div class="scene-body">
+      <div class="say">Nach Runde 1: „Damit euch beim Essen nicht langweilig wird: Hier ist ein Rätselblatt mit Emoji-Rätseln. Gesucht sind Filme, für jeden erkannten gibt's einen Punkt. Ihr habt Zeit bis nach Runde 3.“</div>
+      <div class="do"><ul><li>Nach Runde 3 die Rätselblätter einsammeln<span class="p-only"> und mit den Lösungen gegenprüfen</span>. Aufgelöst wird vor dem Finale.</li></ul></div>
+    </div>
+  </div>
+
+  <div class="scene">
+    <div class="scene-head"><span class="sn">Szene 6</span><h3>Finale &amp; Siegerehrung</h3><span class="who">Spielleitung</span></div>
+    <div class="scene-body">
+      <div class="do"><ol>
+        <li>Runde 4 läuft wie jede Runde, das Vorleser-Team ist 🍄. Bei den Schätzfragen erst alle Tipps vorlesen, dann die echte Zahl. Das ist der spannendste Moment.</li>
+        <li>Das Rätselblatt auflösen (bei 5 Teams macht das ⭐).</li>
+        <li>Zwei Minuten Pause, um die Punkte zu prüfen. Bei Gleichstand kommt die Stechfrage mit dem Schokolinsen-Glas.</li>
+        <li>Siegerehrung <strong>von hinten nach vorn</strong>: letzter Platz zuerst, Sieger zum Schluss.</li>
+      </ol></div>
+      <div class="say">„Das war unser Quiz-Abend! Bevor's an die Preise geht: Applaus für unsere vier Vorleser! … Auf dem letzten Platz, aber mit großem Herzen: [Team]! Ihr bekommt das Glücksschwein fürs nächste Mal. … Und unsere Sieger mit [X] Punkten: [Team]! Herzlichen Glückwunsch und ein gutes neues Jahr euch allen!“</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 RUNDEN -->
 <section id="runden">
-  <h2><span class="num">5</span>Die vier Runden – mit Musterfragen</h2>
-  <p class="sub">Zu jeder Frage gibt es die Antwort und einen kurzen <strong>Satz zum Vorlesen bei der Auflösung</strong> – damit wird aus der Auflösung ein kleiner Unterhaltungsmoment. Antworten aufklappen per Tipp auf die Frage.</p>
+  <h2><span class="num">6</span>Die Runden – Fragen mit Antworten</h2>
+  <p class="sub">Thema ist der <strong>Jahresanfang</strong>, nicht mehr Weihnachten. Dazu kommen ein Jahresrückblick 2026 und viel Allgemeinwissen. Zu jeder Frage gibt es die Antwort, einen <strong>Satz zum Vorlesen</strong> bei der Auflösung und die Quelle, mit der die Antwort geprüft wurde. Zum Aufklappen auf die Frage tippen.</p>
   <div class="btnrow noprint">
     <button class="btn primary" id="toggleAll" type="button">Alle Antworten zeigen</button>
-    <button class="btn" type="button" onclick="window.print()">Drucken / als PDF (Moderationskarten)</button>
+    <button class="btn" type="button" onclick="window.print()">Drucken / als PDF</button>
   </div>
-  <div class="note warn"><b>Faktencheck:</b> Die Fragen stammen aus bekanntem Allgemeinwissen und sind bewusst so gewählt, dass die Antworten eindeutig sind. Einzeln nachrecherchiert habe ich sie noch nicht – vor dem Abend sollte jemand einmal drüberschauen. Lieber eine Frage tauschen als auf der Feier diskutieren.</div>
+  <div class="note warn"><b>Faktencheck:</b> Jede Antwort ist mit einer Quelle geprüft (Stand November 2026). Zwei Fragen hängen an Zahlen, die sich ändern können, und sind markiert. Die sollten kurz vor der Feier noch einmal geprüft werden.</div>
 
   <!-- RUNDE 1 -->
   <div class="round">
     <div class="round-head">
-      <div class="rn">Runde 1 · Warm-up</div>
-      <h3>🎄 „Oh Tannenbaum“ – Weihnachten weltweit</h3>
-      <div class="tags"><span class="tag"><b>Format:</b> Multiple Choice A–D</span><span class="tag"><b>Antwort:</b> Karte hochhalten</span><span class="tag"><b>Dauer:</b> ca. 6 Min.</span></div>
+      <div class="rn">Runde 1 · Warm-up · Vorleser 🍀</div>
+      <h3>🎉 „Neues Jahr, neues Glück“</h3>
+      <div class="tags"><span class="tag"><b>Format:</b> Multiple Choice A–D</span><span class="tag p-only"><b>Antwort:</b> Karte hochhalten</span><span class="tag d-only"><b>Antwort:</b> antippen</span><span class="tag"><b>Dauer:</b> ca. 6 Min.</span></div>
     </div>
     <div class="round-body">
-      <p>Jedes Team hat vier farbige Karten <strong>A · B · C · D</strong>. Frage und Antworten vorlesen, bis drei zählen, alle Teams halten <em>gleichzeitig</em> ihre Karte hoch. Kein Schreiben, sofortige Auflösung, die Punkte notiert der Punkterichter direkt. Ideal zum Einstieg, weil die Hände nicht frei sein müssen – eine Karte geht auch mit Teller in der Hand.</p>
+      <p><b>Einleitung zum Vorlesen:</b> „Das Jahr ist noch ganz frisch, also starten wir mit dem Jahresanfang: Vorsätze, Bräuche und alles, was im Januar neu ist.“</p>
       <ol class="qlist">
-        <li><details class="q"><summary>In welchem Land ist es Tradition, an Weihnachten bei KFC frittiertes Hähnchen zu essen?<span class="opts">A Brasilien · B Japan · C Australien · D USA</span></summary><div class="ans"><b class="a">B – Japan</b><br>Auslöser war eine Werbekampagne in den 1970er-Jahren. Seitdem bestellen viele Familien ihr „Christmas Chicken“ wochenlang im Voraus.</div></details></li>
-        <li><details class="q"><summary>Welches Land schenkt London jedes Jahr den großen Weihnachtsbaum für den Trafalgar Square?<span class="opts">A Schweden · B Dänemark · C Norwegen · D Finnland</span></summary><div class="ans"><b class="a">C – Norwegen</b><br>Ein Dankeschön für die britische Unterstützung im Zweiten Weltkrieg – die Tradition läuft seit 1947.</div></details></li>
-        <li><details class="q"><summary>Der heilige Nikolaus war Bischof von Myra. In welchem heutigen Land liegt Myra?<span class="opts">A Griechenland · B Italien · C Israel · D Türkei</span></summary><div class="ans"><b class="a">D – Türkei</b><br>Myra liegt an der türkischen Südküste, heute die Stadt Demre. Der „Nikolaus aus der Türkei“ sorgt meist für überraschte Gesichter.</div></details></li>
-        <li><details class="q"><summary>„Stille Nacht, heilige Nacht“ wurde 1818 zum ersten Mal gesungen. In welchem Land?<span class="opts">A Deutschland · B Österreich · C Schweiz · D Polen</span></summary><div class="ans"><b class="a">B – Österreich</b><br>In Oberndorf bei Salzburg, an Heiligabend 1818. Heute ist es eines der bekanntesten Lieder der Welt.</div></details></li>
-        <li><details class="q"><summary>Was bedeutet das lateinische Wort, von dem „Advent“ kommt?<span class="opts">A Ankunft · B Erwartung · C Kerzenlicht · D Vorfreude</span></summary><div class="ans"><b class="a">A – Ankunft</b><br>Von lateinisch <i>adventus</i>. Gemeint ist die Ankunft von Christus – die Vorfreude ist sozusagen eingebaut.</div></details></li>
-        <li><details class="q"><summary>Stimmt's? „Coca-Cola hat den Weihnachtsmann rot angezogen.“<span class="opts">A Stimmt · B Stimmt nicht</span></summary><div class="ans"><b class="a">B – Stimmt nicht</b><br>Den rot gekleideten Weihnachtsmann gab es schon vorher auf Postkarten und in Zeitschriften. Die Coca-Cola-Werbung ab den 1930er-Jahren hat das Bild aber weltweit berühmt gemacht – deshalb hält sich der Mythos so hartnäckig.</div></details></li>
+        <li><details class="q"><summary>Nach wem ist der Monat Januar benannt?<span class="opts">A Juno · B Janus · C Jupiter · D Julius Caesar</span></summary><div class="ans"><b class="a">B – Janus</b><br>Der römische Gott der Türen und des Anfangs hat zwei Gesichter: Eins schaut zurück, eins nach vorn. Passt perfekt zum Jahreswechsel.<a class="src" href="https://www.timeanddate.com/calendar/months/january.html" target="_blank" rel="noopener">timeanddate.com</a></div></details></li>
+        <li><details class="q"><summary>Die Sternsinger schreiben „C+M+B“ an die Tür. Wofür stehen die Buchstaben laut Kirche?<span class="opts">A Caspar, Melchior, Balthasar · B Christus mansionem benedicat · C Christ, Maria, Bethlehem · D Cum magna benedictione</span></summary><div class="ans"><b class="a">B – Christus mansionem benedicat</b><br>Auf Deutsch: „Christus segne dieses Haus“. Ursprünglich wurden die Buchstaben als Initialen der Heiligen Drei Könige gedeutet, deshalb tippen fast alle auf A.<a class="src" href="https://www.evangelisch.de/inhalte/237884/05-01-2025/fest-der-heiligen-drei-koenige-segen-bringen-und-spenden-sammeln" target="_blank" rel="noopener">evangelisch.de</a></div></details></li>
+        <li><details class="q"><summary>In welchem dieser Bundesländer ist der 6. Januar (Heilige Drei Könige) ein gesetzlicher Feiertag?<span class="opts">A Niedersachsen · B Sachsen-Anhalt · C Hessen · D Nordrhein-Westfalen</span></summary><div class="ans"><b class="a">B – Sachsen-Anhalt</b><br>Außerdem in Bayern und Baden-Württemberg. Die Nachbarn in Sachsen-Anhalt hatten also frei, als wir arbeiten mussten.<a class="src" href="https://www.feiertage-deutschland.de/heilige-drei-koenige/" target="_blank" rel="noopener">feiertage-deutschland.de</a></div></details></li>
+        <li><details class="q"><summary>Welcher gute Vorsatz lag in der DAK-Umfrage für 2026 auf Platz 1?<span class="opts">A Mehr Sport · B Stress vermeiden · C Mehr Zeit für Familie und Freunde · D Gesünder essen</span></summary><div class="ans"><b class="a">C – Mehr Zeit für Familie und Freunde</b><br>62 Prozent nahmen sich das vor, ganz knapp vor „Stress vermeiden“ mit 61 Prozent.<br><span style="color:var(--gold)">⚠ Vor der Feier prüfen: Ende Dezember 2026 erscheint die Umfrage für 2027, dann ggf. auf „für 2027“ umstellen.</span><a class="src" href="https://www.dak.de/presse/bundesthemen/umfragen-studien/gute-vorsaetze-bei-jungen-menschen-im-trend_154232" target="_blank" rel="noopener">DAK-Gesundheit</a></div></details></li>
+        <li><details class="q"><summary>Auf wie viel Euro pro Stunde ist der gesetzliche Mindestlohn zum 1. Januar 2027 gestiegen?<span class="opts">A 13,90 € · B 14,60 € · C 15,00 € · D 15,50 €</span></summary><div class="ans"><b class="a">B – 14,60 €</b><br>2026 lag er bei 13,90 €. Die Erhöhung in zwei Stufen wurde schon 2025 beschlossen.<a class="src" href="https://www.bundesregierung.de/breg-de/aktuelles/mindestlohn-2026-2364720" target="_blank" rel="noopener">Bundesregierung</a></div></details></li>
+        <li><details class="q"><summary>Am 6. Februar 2027 beginnt das chinesische Neujahr. Welches Tierkreiszeichen löst dann das Pferd ab?<span class="opts">A Drache · B Ziege · C Tiger · D Hase</span></summary><div class="ans"><b class="a">B – Ziege</b><br>Manchmal auch Schaf genannt, beides gilt. Wer gerade im Januar Geburtstag hat, ist übrigens noch ein Pferd.<a class="src" href="https://www.farmersalmanac.com/chinese-zodiac-34122" target="_blank" rel="noopener">Farmers' Almanac</a></div></details></li>
       </ol>
-      <div class="note mod"><b>Moderation:</b> Antwortmöglichkeiten <strong>zweimal</strong> vorlesen, dann „3 – 2 – 1 – Karten hoch!“. Erst die Karten anschauen, dann die richtige Antwort ansagen – kurze Spannungspause, das macht den Reiz aus. Runde 1 bewusst leicht halten, damit alle Teams punkten.</div>
     </div>
   </div>
 
   <!-- RUNDE 2 -->
   <div class="round">
     <div class="round-head">
-      <div class="rn">Runde 2 · Allgemeinwissen</div>
-      <h3>🛍️ „Bunte Tüte“ – quer durch den Gemüsegarten</h3>
-      <div class="tags"><span class="tag"><b>Format:</b> offene Fragen</span><span class="tag"><b>Antwort:</b> Antwortzettel</span><span class="tag"><b>Dauer:</b> ca. 7 Min.</span></div>
+      <div class="rn">Runde 2 · Allgemeinwissen · Vorleser 🐷</div>
+      <h3>🛍️ „Bunte Tüte“</h3>
+      <div class="tags"><span class="tag"><b>Format:</b> offene Fragen</span><span class="tag p-only"><b>Antwort:</b> Antwortzettel</span><span class="tag d-only"><b>Antwort:</b> eintippen</span><span class="tag"><b>Dauer:</b> ca. 7 Min.</span></div>
     </div>
     <div class="round-body">
-      <p>Klassische Quiz-Night: Fragen nacheinander vorlesen, das Team schreibt auf den Zettel für Runde 2. Nach der letzten Frage Zettel einsammeln, <strong>direkt auflösen</strong> – die Punkte trägt der Punkterichter während des Essens ein. Eine Mischung aus „weiß ich sofort“ und „Moment, da war doch was“.</p>
+      <p><b>Einleitung zum Vorlesen:</b> „Jetzt wird's bunt: sechs Fragen quer durch alles, was man mal in der Schule hatte oder beim Kreuzworträtsel braucht. Schreibt einfach, was ihr denkt.“</p>
       <ol class="qlist">
-        <li><details class="q"><summary>Wie viele Bundesländer hat Deutschland?</summary><div class="ans"><b class="a">16</b><br>Bonus zum Mitraten: Drei davon sind Stadtstaaten – Berlin, Hamburg und Bremen.</div></details></li>
-        <li><details class="q"><summary>Welches chemische Element hat das Symbol „Au“?</summary><div class="ans"><b class="a">Gold</b><br>Von lateinisch <i>aurum</i>. Passt zur Jahreszeit – Goldkugeln, Goldsterne, Lametta.</div></details></li>
-        <li><details class="q"><summary>Welcher Fluss fließt durch Wien, Budapest und Belgrad?</summary><div class="ans"><b class="a">Die Donau</b><br>Sie fließt durch mehr Länder als jeder andere Fluss der Erde.</div></details></li>
-        <li><details class="q"><summary>Wie heißt die Hauptstadt von Australien?</summary><div class="ans"><b class="a">Canberra</b><br>Der Klassiker unter den Fangfragen – die meisten schreiben Sydney. Canberra wurde als Kompromiss zwischen Sydney und Melbourne gebaut.</div></details></li>
-        <li><details class="q"><summary>Welcher Planet ist der Sonne am nächsten?</summary><div class="ans"><b class="a">Merkur</b><br>Und trotzdem nicht der heißeste – das ist die Venus, wegen ihrer dichten Atmosphäre.</div></details></li>
-        <li><details class="q"><summary>Aus wie vielen Feldern besteht ein Schachbrett?</summary><div class="ans"><b class="a">64</b><br>8 × 8 Felder. Wer zuerst „8 mal 8“ gerechnet hat, hat schon gewonnen.</div></details></li>
+        <li><details class="q"><summary>Wie viele Bundesländer hat Deutschland?</summary><div class="ans"><b class="a">16</b><br>Drei davon sind Stadtstaaten: Berlin, Hamburg und Bremen.<span class="src basic"></span></div></details></li>
+        <li><details class="q"><summary>Welches chemische Element hat das Symbol „Au“?</summary><div class="ans"><b class="a">Gold</b><br>Von lateinisch <i>aurum</i>.<a class="src" href="https://www.spektrum.de/lexikon/chemie/gold/3827" target="_blank" rel="noopener">Spektrum Lexikon der Chemie</a></div></details></li>
+        <li><details class="q"><summary>Welcher Fluss fließt durch Wien, Budapest und Belgrad?</summary><div class="ans"><b class="a">Die Donau</b><br>Sie berührt zehn Länder, so viele wie kein anderer Fluss, und fließt durch vier Hauptstädte. Die vierte ist Bratislava.<a class="src" href="https://wissen.de/artikel/donaumetropolen" target="_blank" rel="noopener">wissen.de</a></div></details></li>
+        <li><details class="q"><summary>Wie heißt die Hauptstadt von Australien?</summary><div class="ans"><b class="a">Canberra</b><br>Der Klassiker unter den Fangfragen, die meisten schreiben Sydney. Weil sich Sydney und Melbourne nicht einigen konnten, wurde eine neue Hauptstadt gebaut; das Parlament zog 1927 dorthin.<a class="src" href="https://nca.gov.au/education/canberras-history/canberra-seat-government" target="_blank" rel="noopener">National Capital Authority</a></div></details></li>
+        <li><details class="q"><summary>Welcher Planet ist der Sonne am nächsten?</summary><div class="ans"><b class="a">Merkur</b><br>Der heißeste Planet ist trotzdem die Venus: Ihre dichte Atmosphäre wirkt wie ein Treibhaus, über 450 Grad.<a class="src" href="https://www.dlr.de/de/next/schule-und-ausbildung/lernmodule/sonnensystem/venus-heisse-holle-mit-dichter-atmosphare" target="_blank" rel="noopener">DLR</a></div></details></li>
+        <li><details class="q"><summary>Aus wie vielen Feldern besteht ein Schachbrett?</summary><div class="ans"><b class="a">64</b><br>8 × 8 Felder. Wer gerechnet statt geraten hat, war klar im Vorteil.<span class="src basic"></span></div></details></li>
       </ol>
-      <div class="note mod"><b>Moderation:</b> Jede Frage <strong>zweimal</strong> vorlesen, Fragennummer dazu sagen („Frage 3 …“). Etwa 30–40 Sekunden Bedenkzeit, dann weiter – nicht warten, bis alle fertig sind. Wer zu lange diskutiert, darf am Ende kurz Zeit bekommen. Bei der Auflösung erst fragen „Wer hat …?“, dann auflösen.</div>
     </div>
   </div>
 
   <!-- RUNDE 3 -->
   <div class="round">
     <div class="round-head">
-      <div class="rn">Runde 3 · Film &amp; Musik</div>
-      <h3>🎬🎵 „Popcorn &amp; Plätzchen“</h3>
-      <div class="tags"><span class="tag"><b>Format:</b> Emoji-Rätselblatt + Intro-Raten</span><span class="tag"><b>Antwort:</b> Zettel</span><span class="tag"><b>Dauer:</b> ca. 8 Min.</span><span class="tag"><b>Technik:</b> Bluetooth-Lautsprecher</span></div>
+      <div class="rn">Runde 3 · Jahresrückblick · Vorleser 🐞</div>
+      <h3>📅 „Das war 2026“</h3>
+      <div class="tags"><span class="tag"><b>Format:</b> Multiple Choice A–D</span><span class="tag p-only"><b>Antwort:</b> Karte hochhalten</span><span class="tag d-only"><b>Antwort:</b> antippen</span><span class="tag"><b>Dauer:</b> ca. 6 Min.</span></div>
     </div>
     <div class="round-body">
-      <p><strong>Teil A – Emoji-Rätsel (läuft beim Essen):</strong> Das Blatt mit den Emojis liegt schon während der zweiten Fingerfood-Welle auf dem Tisch. Die Teams knobeln nebenbei, zu Beginn der Runde wird eingesammelt. Gesucht sind Filme, die man zu Weihnachten kennt.</p>
+      <p><b>Einleitung zum Vorlesen:</b> „Bevor 2026 ganz vergessen ist, ein kurzer Blick zurück: Sport, Musik und Alltag. Mal sehen, wer letztes Jahr aufgepasst hat.“</p>
       <ol class="qlist">
-        <li><details class="q"><summary><span class="emoji">🏠👦✈️👨‍👩‍👧‍👦🪤</span></summary><div class="ans"><b class="a">Kevin – Allein zu Haus</b><br>Die Familie fliegt nach Paris, Kevin bleibt zurück und baut Fallen für die Einbrecher.</div></details></li>
-        <li><details class="q"><summary><span class="emoji">🌰🌰🌰👸🐴❄️</span></summary><div class="ans"><b class="a">Drei Haselnüsse für Aschenbrödel</b><br>Läuft jedes Jahr gefühlt auf allen Sendern gleichzeitig.</div></details></li>
-        <li><details class="q"><summary><span class="emoji">💚😠🎄🎁🏔️</span></summary><div class="ans"><b class="a">Der Grinch</b><br>Der grüne Weihnachtsmuffel, der Weihnachten stehlen will.</div></details></li>
-        <li><details class="q"><summary><span class="emoji">🍽️👵🐯🍷🍷🍷</span></summary><div class="ans"><b class="a">Dinner for One</b><br>Eigentlich ein Silvester-Klassiker – „The same procedure as every year“. Wer „Silvester“ dazuschreibt, bekommt Applaus, aber keinen Extrapunkt.</div></details></li>
-        <li><details class="q"><summary><span class="emoji">👦🎩🏰👴❤️</span></summary><div class="ans"><b class="a">Der kleine Lord</b><br>Ein Junge aus New York wird Erbe eines englischen Grafen und taut den grummeligen Großvater auf.</div></details></li>
-        <li><details class="q"><summary><span class="emoji">🏢💥👮🎄🔫</span></summary><div class="ans"><b class="a">Stirb langsam</b><br>Spielt an Heiligabend auf einer Firmenfeier. Ob das ein Weihnachtsfilm ist? Kurz abstimmen lassen – garantierter Lacher.</div></details></li>
+        <li><details class="q"><summary>Wer wurde 2026 Fußball-Weltmeister?<span class="opts">A Argentinien · B Frankreich · C Spanien · D England</span></summary><div class="ans"><b class="a">C – Spanien</b><br>1:0 nach Verlängerung gegen Argentinien im Finale bei New York. Das Tor schoss Ferran Torres in der 106. Minute. Für Spanien war es der zweite Titel nach 2010.<a class="src" href="https://www.zdfheute.de/sport/fussball-wm/fussball-wm-2026-spanien-weltmeister-100.html" target="_blank" rel="noopener">ZDFheute</a></div></details></li>
+        <li><details class="q"><summary>Wie viele Mannschaften spielten bei der WM 2026 mit?<span class="opts">A 32 · B 40 · C 48 · D 64</span></summary><div class="ans"><b class="a">C – 48</b><br>Es war die erste WM mit 48 Teams, ausgetragen in den USA, Kanada und Mexiko.<a class="src" href="https://www.inside.fifa.com/de/news/new-york-jersey-stadion-spanien-weltmeister-mbappe-haaland" target="_blank" rel="noopener">FIFA</a></div></details></li>
+        <li><details class="q"><summary>In welcher Stadt fand der 70. Eurovision Song Contest 2026 statt?<span class="opts">A Basel · B Wien · C Malmö · D Liverpool</span></summary><div class="ans"><b class="a">B – Wien</b><br>Weil JJ aus Österreich 2025 gewonnen hatte. Die anderen drei Städte waren die Gastgeber der Jahre davor.<a class="src" href="https://de.euronews.com/2025/08/20/eurovision-song-contest-2026-wird-in-wien-stattfinden" target="_blank" rel="noopener">Euronews</a></div></details></li>
+        <li><details class="q"><summary>Welches Land hat den ESC 2026 gewonnen?<span class="opts">A Finnland · B Schweden · C Bulgarien · D Australien</span></summary><div class="ans"><b class="a">C – Bulgarien</b><br>Die Sängerin Dara gewann mit „Bangaranga“, es war Bulgariens erster Sieg überhaupt. Deutschland wurde 23.<a class="src" href="https://www.stuttgarter-zeitung.de/kultur/eurovision-song-contest-2026-esc-in-wien-bulgarien-gewinnt-deutschland-nur-platz-23-79232637.html" target="_blank" rel="noopener">Stuttgarter Zeitung</a></div></details></li>
+        <li><details class="q"><summary>Welches Land stand bei den Olympischen Winterspielen 2026 in Mailand und Cortina ganz oben im Medaillenspiegel?<span class="opts">A Deutschland · B Norwegen · C USA · D Österreich</span></summary><div class="ans"><b class="a">B – Norwegen</b><br>Zum vierten Mal in Folge. Deutschland wurde Fünfter mit 26 Medaillen.<a class="src" href="https://www.srf.ch/sport/milano-cortina-2026/blick-auf-den-medaillenspiegel-nicht-nur-bei-der-schweiz-regnete-es-edelmetall" target="_blank" rel="noopener">SRF</a></div></details></li>
+        <li><details class="q"><summary>Was hat das Deutschlandticket 2026 im Monat gekostet?<span class="opts">A 49 € · B 58 € · C 63 € · D 69 €</span></summary><div class="ans"><b class="a">C – 63 €</b><br>Gestartet ist es im Mai 2023 mit 49 €, 2025 kostete es 58 €.<br><span style="color:var(--gold)">⚠ Ab 2027 wird der Preis über einen Kostenindex angepasst. Die Frage bezieht sich bewusst auf 2026 und bleibt damit richtig.</span><a class="src" href="https://www.t-online.de/finanzen/aktuelles/id_101063836/deutschlandticket-ist-teurer.html" target="_blank" rel="noopener">t-online</a></div></details></li>
       </ol>
-      <p style="margin-top:16px"><strong>Teil B – Intro-Raten:</strong> Die ersten 5–10 Sekunden eines Weihnachtslieds abspielen. Pro Lied je 1 Punkt für Titel und Interpret. Ein Mix aus den Jahrzehnten, damit 20- und 60-Jährige gleichermaßen etwas erkennen.</p>
-      <ol class="qlist">
-        <li><details class="q"><summary>Intro 1</summary><div class="ans"><b class="a">Last Christmas – Wham!</b><br>1984. Wer es als Erstes erkennt, hat beim „Whamageddon“ verloren 😉</div></details></li>
-        <li><details class="q"><summary>Intro 2</summary><div class="ans"><b class="a">All I Want for Christmas Is You – Mariah Carey</b><br>1994 erschienen, jedes Jahr wieder in den Charts.</div></details></li>
-        <li><details class="q"><summary>Intro 3</summary><div class="ans"><b class="a">Driving Home for Christmas – Chris Rea</b><br>Der Lied gewordene Stau auf dem Heimweg.</div></details></li>
-        <li><details class="q"><summary>Intro 4</summary><div class="ans"><b class="a">In der Weihnachtsbäckerei – Rolf Zuckowski</b><br>Den kennen die Jüngeren aus der Kita und die Älteren vom Vorsingen für die Kinder.</div></details></li>
-        <li class="reserve"><details class="q"><summary>Reserve-Intro</summary><div class="ans"><b class="a">Feliz Navidad – José Feliciano</b><br>Alternativ: Jingle Bell Rock – Bobby Helms.</div></details></li>
-      </ol>
-      <div class="note mod"><b>Moderation:</b> Die Lieder vorher in eine eigene Playlist legen und die Lautstärke testen – beim Essen ist es lauter als gedacht. Jedes Intro einmal spielen, kurz Zeit zum Schreiben, beim nächsten weiter. Zur Auflösung den Refrain kurz anspielen – dann singt meist der halbe Raum mit. Ist kein Lautsprecher da, Teil B weglassen und die Emoji-Liste auf 8 Filme erweitern.</div>
     </div>
   </div>
 
   <!-- RUNDE 4 -->
   <div class="round">
     <div class="round-head">
-      <div class="rn">Runde 4 · Finale</div>
+      <div class="rn">Runde 4 · Finale · Vorleser 🍄</div>
       <h3>🔮 „Schätzen &amp; Wetten“</h3>
-      <div class="tags"><span class="tag"><b>Format:</b> Schätzfragen</span><span class="tag"><b>Antwort:</b> Zettel</span><span class="tag"><b>Punkte:</b> nächster dran 2 / exakt 3</span><span class="tag"><b>Dauer:</b> ca. 6 Min.</span></div>
+      <div class="tags"><span class="tag"><b>Format:</b> Schätzfragen</span><span class="tag p-only"><b>Antwort:</b> Zettel</span><span class="tag d-only"><b>Antwort:</b> Zahl eintippen</span><span class="tag"><b>Punkte:</b> am nächsten dran 2 / exakt 3</span></div>
     </div>
     <div class="round-body">
-      <p>Beim Schätzen hat jeder eine Chance – auch wer sonst wenig weiß. Deshalb ist das Finale bewusst eine Schätzrunde: Hier kann noch jedes Team aufholen. Gesucht ist immer eine Zahl, das Team, das am nächsten dran ist, bekommt die Punkte.</p>
+      <p><b>Einleitung zum Vorlesen:</b> „Finale! Jetzt wird geschätzt. Hier hat jedes Team noch eine Chance, auch wer bisher wenig wusste. Gesucht ist immer eine Zahl, wer am nächsten dran ist, kassiert.“</p>
       <ol class="qlist">
-        <li><details class="q"><summary>Wie hoch ist der Kölner Dom (in Metern)?</summary><div class="ans"><b class="a">rund 157 m</b><br>Damit eine der höchsten Kirchen der Welt. Bauzeit: über 600 Jahre mit langer Pause.</div></details></li>
-        <li><details class="q"><summary>Wie hoch ist die Zugspitze (in Metern)?</summary><div class="ans"><b class="a">2.962 m</b><br>Deutschlands höchster Berg – direkt an der Grenze zu Österreich.</div></details></li>
-        <li><details class="q"><summary>Wie viele Knochen hat ein erwachsener Mensch?</summary><div class="ans"><b class="a">206</b><br>Babys haben deutlich mehr – viele wachsen im Laufe der Kindheit zusammen.</div></details></li>
-        <li><details class="q"><summary>Wie viele Tasten hat ein normales Klavier?</summary><div class="ans"><b class="a">88</b><br>52 weiße und 36 schwarze.</div></details></li>
-        <li><details class="q"><summary>In welchem Jahr wurde das erste iPhone vorgestellt?</summary><div class="ans"><b class="a">2007</b><br>Für die Jüngeren im Raum: Vorher hatte man Handys mit Tasten. Echt jetzt.</div></details></li>
-        <li class="reserve"><details class="q"><summary>Stechfrage bei Gleichstand: Wie viele Schokolinsen sind im Glas?</summary><div class="ans"><b class="a">vorher selbst abzählen</b><br>Ein Glas mit abgezählten Süßigkeiten steht den ganzen Abend gut sichtbar auf dem Buffet. Das Siegerteam darf es behalten.</div></details></li>
+        <li><details class="q"><summary>Wie hoch ist der Kölner Dom (in Metern)?</summary><div class="ans"><b class="a">rund 157 m</b><br>Gewertet wird die Schätzung, die am nächsten an 157 liegt. Baubeginn war 1248, fertig wurde er erst 1880. Danach war er ein paar Jahre lang das höchste Gebäude der Welt.<a class="src" href="https://www.kuladig.de/Objektansicht/Drucken/SWB-202977" target="_blank" rel="noopener">KuLaDig / LVR</a></div></details></li>
+        <li><details class="q"><summary>Wie hoch ist die Zugspitze (in Metern)?</summary><div class="ans"><b class="a">2.962 m</b><br>Deutschlands höchster Berg. Das Café auf dem Gipfel heißt deshalb einfach „2962“.<a class="src" href="https://en.wikipedia.org/wiki/Zugspitze" target="_blank" rel="noopener">Wikipedia</a></div></details></li>
+        <li><details class="q"><summary>Wie viele Knochen hat ein erwachsener Mensch?</summary><div class="ans"><b class="a">rund 206</b><br>Die Zahl schwankt von Mensch zu Mensch ein wenig. Babys kommen mit deutlich mehr zur Welt, viele wachsen später zusammen.<a class="src" href="https://www.barmer.de/presse/presseinformationen/newsletter-gesundheit-im-blick/knochen-1070640" target="_blank" rel="noopener">Barmer</a></div></details></li>
+        <li><details class="q"><summary>Wie viele Tasten hat ein normales Klavier?</summary><div class="ans"><b class="a">88</b><br>52 weiße und 36 schwarze.<a class="src" href="https://www.delamar.de/digitalpiano/wie-viele-tasten-hat-ein-klavier-64666" target="_blank" rel="noopener">delamar</a></div></details></li>
+        <li><details class="q"><summary>In welchem Jahr wurde das erste iPhone vorgestellt?</summary><div class="ans"><b class="a">2007</b><br>Am 9. Januar 2007, also fast genau vor 20 Jahren. Für die Jüngeren im Raum: Vorher hatten Handys Tasten.<a class="src" href="https://www.apple.com/chde/newsroom/2007/01/09Apple-Reinvents-the-Phone-with-iPhone/" target="_blank" rel="noopener">Apple Newsroom</a></div></details></li>
+        <li class="reserve"><details class="q"><summary>Stechfrage bei Gleichstand: Wie viele Schokolinsen sind im Glas?</summary><div class="ans"><b class="a">vorher selbst abzählen</b><br>Das Glas steht den ganzen Abend sichtbar auf dem Buffet. Das Siegerteam darf es behalten.</div></details></li>
       </ol>
-      <div class="note mod"><b>Moderation:</b> Auflösung <strong>spannend machen</strong>: erst alle Schätzungen vorlesen („Team Stern sagt 120 Meter, Team Tanne 200 …“), dann die echte Zahl. Danach Zettel an den Punkterichter, zwei Minuten durchatmen, dann <strong>Siegerehrung von hinten nach vorn</strong> – letzter Platz zuerst, Sieger zum Schluss.</div>
+    </div>
+  </div>
+
+  <!-- RÄTSELBLATT -->
+  <div class="round">
+    <div class="round-head" style="background:linear-gradient(90deg,var(--gold-weak),var(--panel) 70%)">
+      <div class="rn" style="color:#7a5a0a">Läuft nebenbei · zwischen Runde 1 und 3</div>
+      <h3>🎬 Rätselblatt: Welcher Film ist das?</h3>
+      <div class="tags"><span class="tag"><b>Format:</b> Blatt auf dem Tisch (in beiden Varianten Papier)</span><span class="tag"><b>Punkte:</b> 1 pro Film</span></div>
+    </div>
+    <div class="round-body">
+      <p>Beim Essen ist das ideal: Man kann nebenbei knobeln, ohne dass jemand vorliest. Die Filme sind Klassiker quer durch die Generationen.</p>
+      <ol class="qlist">
+        <li><details class="q"><summary><span class="emoji">🏠👦✈️👨‍👩‍👧‍👦🪤</span></summary><div class="ans"><b class="a">Kevin – Allein zu Haus</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">🚢🧊💔🎻</span></summary><div class="ans"><b class="a">Titanic</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">🦁👑🌅🐗</span></summary><div class="ans"><b class="a">Der König der Löwen</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">❄️👸⛄🏰</span></summary><div class="ans"><b class="a">Die Eiskönigin</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">🐠🔍🌊🐢</span></summary><div class="ans"><b class="a">Findet Nemo</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">🚗⚡⏰🔙</span></summary><div class="ans"><b class="a">Zurück in die Zukunft</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">🌰🌰🌰👸🐴</span></summary><div class="ans"><b class="a">Drei Haselnüsse für Aschenbrödel</b></div></details></li>
+        <li><details class="q"><summary><span class="emoji">🍽️👵🐯🍷🍷🍷</span></summary><div class="ans"><b class="a">Dinner for One</b><br>Läuft traditionell an Silvester.</div></details></li>
+      </ol>
     </div>
   </div>
 
@@ -397,81 +686,41 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
     <div class="round-head" style="background:linear-gradient(90deg,var(--green-weak),var(--panel) 70%)">
       <div class="rn" style="color:var(--green-dark)">Reserve</div>
       <h3>🧰 Ersatzfragen</h3>
-      <div class="tags"><span class="tag">falls eine Frage doppelt bekannt ist, zu schwer wirkt oder ein Gleichstand entschieden werden muss</span></div>
+      <div class="tags"><span class="tag">falls eine Frage wegfällt, zu schwer ist oder ein Gleichstand entschieden werden muss</span></div>
     </div>
     <div class="round-body">
       <ol class="qlist">
-        <li class="reserve"><details class="q"><summary>Wie viele Herzen hat ein Oktopus?</summary><div class="ans"><b class="a">3</b><br>Dazu blaues Blut – ein echtes Partywissen.</div></details></li>
-        <li class="reserve"><details class="q"><summary>Was ist das größte Organ des Menschen?</summary><div class="ans"><b class="a">Die Haut</b><br>Viele tippen auf Leber oder Darm.</div></details></li>
-        <li class="reserve"><details class="q"><summary>In welchem Jahr fiel die Berliner Mauer?</summary><div class="ans"><b class="a">1989</b><br>Am 9. November.</div></details></li>
-        <li class="reserve"><details class="q"><summary>Wie viele Sekunden hat ein Tag? (Schätzfrage)</summary><div class="ans"><b class="a">86.400</b><br>24 × 60 × 60 – wer rechnet statt schätzt, ist klar im Vorteil.</div></details></li>
+        <li class="reserve"><details class="q"><summary>Wie viele Ecken hat ein Schneekristall?<span class="opts">A 4 · B 5 · C 6 · D 8</span></summary><div class="ans"><b class="a">C – 6</b><br>Das liegt am Aufbau der Wassermoleküle: Sie lagern sich nur in Winkeln von 60 bzw. 120 Grad an.<a class="src" href="https://www.meteoschweiz.admin.ch/ueber-uns/meteoschweiz-blog/de/2023/12/kein-schneekristall-ist-wie-der-andere.html" target="_blank" rel="noopener">MeteoSchweiz</a></div></details></li>
+        <li class="reserve"><details class="q"><summary>Wie viele Herzen hat ein Oktopus?</summary><div class="ans"><b class="a">3</b><br>Dazu hat er blaues Blut, ein echtes Partywissen.<a class="src" href="https://www.visitsealife.com/hannover/en/whats-inside/areas/shipwreck/octopus/" target="_blank" rel="noopener">SEA LIFE Hannover</a></div></details></li>
+        <li class="reserve"><details class="q"><summary>Was ist das größte Organ des Menschen?</summary><div class="ans"><b class="a">Die Haut</b><br>1,5 bis 2 Quadratmeter. Viele tippen auf Leber oder Darm.<a class="src" href="https://www.onmeda.de/anatomie/haut.html" target="_blank" rel="noopener">Onmeda</a></div></details></li>
+        <li class="reserve"><details class="q"><summary>In welchem Jahr fiel die Berliner Mauer?</summary><div class="ans"><b class="a">1989</b><br>Am 9. November.<span class="src basic"></span></div></details></li>
       </ol>
     </div>
   </div>
 </section>
 
-<!-- 6 MODERATION -->
-<section id="moderation">
-  <h2><span class="num">6</span>Moderation – so läuft es rund</h2>
-  <p class="sub">Die Moderation entscheidet, ob das Quiz Spaß macht. Gute Nachricht: Mehr als freundlich, zügig und ein bisschen albern braucht es nicht.</p>
-  <div class="grid two">
-    <div class="card green">
-      <h3>Rollen</h3>
-      <ul>
-        <li><strong>Quizmaster:</strong> liest vor, löst auf, macht Stimmung. Spielt selbst nicht mit.</li>
-        <li><strong>Punkterichter:</strong> sammelt Zettel ein, zählt während des Essens, trägt in die Punktetafel ein. Kann auch spielen – dann aber nicht das eigene Team werten.</li>
-        <li><strong>DJ</strong> für die Musikrunde – kann der Quizmaster mit übernehmen.</li>
-      </ul>
-    </div>
-    <div class="card green">
-      <h3>Tempo</h3>
-      <ul>
-        <li>Rundenstart mit Signal (Glöckchen, Jingle) – dann wissen alle: jetzt geht's los.</li>
-        <li>Jede Frage zweimal vorlesen, dann zügig weiter.</li>
-        <li>Lieber eine Frage weniger als eine Runde, die sich zieht.</li>
-        <li>Spätestens nach 8 Minuten ist die Runde vorbei – das Essen wird sonst kalt.</li>
-      </ul>
-    </div>
-    <div class="card red">
-      <h3>Niedrigschwellig halten</h3>
-      <ul>
-        <li>Niemals einzelne Personen abfragen – immer nur Teams.</li>
-        <li>Falsche Antworten nicht vorführen, lustige gern vorlesen (mit Einverständnis).</li>
-        <li>Bei der Auflösung den Vorlesesatz nutzen – so lernt jeder etwas, statt sich nur geschlagen zu fühlen.</li>
-        <li>Leichte Fragen am Anfang, damit jedes Team früh punktet.</li>
-      </ul>
-    </div>
-    <div class="card red">
-      <h3>Wenn's hakt</h3>
-      <ul>
-        <li><strong>Streit um eine Antwort:</strong> großzügig werten, Halbe-Punkte gibt es nicht – im Zweifel für alle.</li>
-        <li><strong>Ein Team zieht davon:</strong> der Joker und die Schätzrunde gleichen aus; zur Not eine Bonusfrage für alle.</li>
-        <li><strong>Stimmung kippt Richtung „lass mal essen“:</strong> Runde kürzen, Rest als Reserve fürs Finale.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="say">Zwischenstand-Ansage vor einer Runde: „Kurzer Blick auf die Tabelle: Team Glocke führt mit 9 Punkten, aber dahinter ist es eng – Tanne 8, Stern 7, Schneemann 6. Wer jetzt seinen Joker spielen will, bringt ihn mir bitte vorbei. Runde 3: Popcorn und Plätzchen!“</div>
-</section>
-
 <!-- 7 MATERIAL -->
 <section id="material">
   <h2><span class="num">7</span>Material-Checkliste</h2>
-  <p class="sub">Alles bewusst analog – funktioniert ohne Beamer, WLAN und Akkus (bis auf den Lautsprecher).</p>
   <div class="card">
     <ul class="check">
-      <li><strong>15 Lose</strong> mit Symbolen (4 × ⭐, 4 × 🎄, 4 × 🔔, 3 × ⛄) + passende Sticker</li>
+      <li><strong>Lose:</strong> 5 Symbole × 5 Stück + passende Sticker</li>
       <li><strong>Namensschilder</strong></li>
-      <li><strong>4 Sätze A/B/C/D-Karten</strong> (je Buchstabe eine Farbe)</li>
-      <li><strong>Antwortzettel:</strong> pro Team einer für Runde 2, 3 und 4 – plus Reserve</li>
-      <li><strong>4 Emoji-Rätselblätter</strong> für Runde 3</li>
-      <li><strong>4 Joker-Karten</strong> (goldene Christbaumkugel)</li>
-      <li><strong>4 Klemmbretter oder feste Unterlagen</strong> + Stifte – auf Stehtischen schreibt es sich schlecht</li>
-      <li><strong>Moderationskarten</strong> (diese Seite ausdrucken)</li>
-      <li><strong>Punktetafel</strong> – Flipchart oder die Tabelle unten auf dem Handy</li>
-      <li><strong>Bluetooth-Lautsprecher</strong> + Playlist mit den Intros</li>
+      <li><strong>Rätselblätter</strong> (eins pro Team, in beiden Varianten)</li>
+      <li><strong>Glas mit abgezählten Schokolinsen</strong></li>
       <li><strong>Glöckchen</strong> als Startsignal</li>
-      <li><strong>Glas mit abgezählten Schokolinsen</strong> (Stechfrage)</li>
       <li><strong>Preise:</strong> Sieger + Trostpreis</li>
+      <li class="p-only"><strong>4 Rundenumschläge</strong> mit Fragen und verschlossenem Lösungsumschlag</li>
+      <li class="p-only"><strong>A/B/C/D-Karten</strong>, ein Satz pro Team</li>
+      <li class="p-only"><strong>Antwortzettel</strong> für Runde 2 und 4, plus Reserve</li>
+      <li class="p-only"><strong>Joker-Karten</strong>, eine pro Team</li>
+      <li class="p-only"><strong>Notizblatt</strong> für die Multiple-Choice-Runden (Team × Frage)</li>
+      <li class="p-only"><strong>Klemmbretter + Stifte</strong></li>
+      <li class="p-only"><strong>Punktetafel:</strong> Flipchart oder die Tabelle unten</li>
+      <li class="d-only"><strong>QR-Code</strong> ausgedruckt + Link für die Gruppe</li>
+      <li class="d-only"><strong>Powerbank</strong> für die Spielleitung</li>
+      <li class="d-only"><strong>Notfall-Set:</strong> komplettes Papier-Material</li>
+      <li class="d-only"><strong>Klemmbretter + Stifte</strong> fürs Rätselblatt</li>
     </ul>
   </div>
 </section>
@@ -479,10 +728,10 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
 <!-- 8 PUNKTETAFEL -->
 <section id="punkte">
   <h2><span class="num">8</span>Punktetafel</h2>
-  <p class="sub">Für den Punkterichter auf dem Handy: Teamnamen eintragen, Punkte pro Runde eingeben, Joker-Runde wählen – die Summe wird automatisch verdoppelt und sortiert. Die Eingaben bleiben auf diesem Gerät gespeichert.</p>
+  <p class="sub"><span class="d-only">In der Handy-Variante zählt die Seite selbst. Diese Tafel ist dann der Notfall-Plan.</span> Teamnamen eintragen, Punkte je Runde und Rätselblatt eingeben und die Joker-Runde wählen. Die Summe wird automatisch berechnet und die Führung markiert. Die Eingaben bleiben auf diesem Gerät gespeichert.</p>
   <div class="board-wrap">
     <table class="board" id="board">
-      <thead><tr><th>Team</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Bonus</th><th>Joker</th><th>Summe</th></tr></thead>
+      <thead><tr><th>Team</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Rätsel</th><th>Bonus</th><th>Joker</th><th>Summe</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
@@ -492,27 +741,68 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
   </div>
 </section>
 
-<!-- 9 ENTSCHEIDUNGEN -->
-<section id="entscheiden">
-  <h2><span class="num">9</span>Offene Punkte zum Entscheiden</h2>
-  <p class="sub">Was vor dem Abend noch festgelegt werden sollte – in Klammern, was ich direkt umsetzen kann.</p>
+<!-- 9 NAMEN -->
+<section id="namen">
+  <h2><span class="num">9</span>Ideen für den Namen</h2>
+  <p class="sub">Die Feier ist eine Weihnachtsfeier, die erst im neuen Jahr stattfindet. Ein paar Vorschläge mit Augenzwinkern:</p>
+  <div class="names">
+    <div class="name fav"><b>Weihnachtsfeier retard</b><span>„Mit verzögerter Freisetzung“. Den Begriff kennt in der Apotheke jeder. Favorit.</span></div>
+    <div class="name"><b>Weihnachten – Nachdosierung</b><span>Für alle, bei denen die erste Dosis im Dezember nicht gereicht hat.</span></div>
+    <div class="name"><b>Weihnachten, verlängert haltbar</b><span>Mindestens haltbar bis Mitte Januar.</span></div>
+    <div class="name"><b>Die Feier nach dem Fest</b><span>Neutral und freundlich, passt auch auf eine Einladung.</span></div>
+    <div class="name"><b>Jahresauftakt mit Nachschlag</b><span>Betont den Neustart und das Buffet.</span></div>
+    <div class="name"><b>X-Mas reloaded</b><span>Kurz und knackig für die Gruppe.</span></div>
+  </div>
+</section>
+
+<!-- 10 OFFEN -->
+<section id="offen">
+  <h2><span class="num">10</span>Stand &amp; offene Punkte</h2>
+  <h3 style="margin-top:6px">Schon entschieden</h3>
+  <div class="card">
+    <ul class="done">
+      <li><strong>Vorlesen wechselt:</strong> Jede Runde liest ein anderes Team vor. Niemand muss den ganzen Abend aussetzen.</li>
+      <li><strong>Teamzahl vor Ort:</strong> Material für bis zu 5 Teams, entschieden wird nach dem Zählen.</li>
+      <li><strong>Inhalt:</strong> Jahresanfang, Jahresrückblick 2026, viel Allgemeinwissen. Keine Musik-Runde, keine Insider-Runde.</li>
+      <li><strong>Später:</strong> Druckvorlagen und Feinschliff der Fragen, wenn das Konzept steht.</li>
+    </ul>
+  </div>
+  <h3 style="margin-top:18px">Noch offen – zum Abstimmen</h3>
+  <p class="sub" style="margin-bottom:10px">In Klammern steht, was sich direkt umsetzen lässt.</p>
   <ul class="dec">
-    <li><b class="k">E1</b><strong>Papier oder Bildschirm?</strong> Empfehlung Papier. Wenn ein Fernseher da ist, können Fragen zusätzlich als Folien laufen. <em>(Folien kann ich erstellen)</em></li>
-    <li><b class="k">E2</b><strong>4 Teams à 3–4 oder 5 Teams à 3?</strong> Empfehlung 4 – weniger Auswertung, mehr Mischung. <em>(passe ich auf der Seite an)</em></li>
-    <li><b class="k">E3</b><strong>Musikrunde ja/nein?</strong> Hängt am Lautsprecher und an der Lautstärke im Raum. <em>(Ersatzrunde mit mehr Emoji-Rätseln kann ich liefern; die Playlist selbst nicht)</em></li>
-    <li><b class="k">E4</b><strong>Heimspiel-Runde zum Arbeitsumfeld?</strong> Eine Runde mit Insider-Fragen über Firma, Kollegium und das gemeinsame Jahr („Wer hat …?“) ist oft der Höhepunkt. <em>(Format und Vorlage kann ich bauen – die Inhalte müssen von euch kommen)</em></li>
-    <li><b class="k">E5</b><strong>Druckvorlagen:</strong> Lose, A–D-Karten, Joker, Antwortzettel, Emoji-Rätselblatt, Moderationskarten. <em>(kann ich komplett als druckfertiges PDF erstellen)</em></li>
-    <li><b class="k">E6</b><strong>Schwierigkeit justieren:</strong> Fragen leichter/schwerer oder weitere Kategorien (Sport, Essen &amp; Trinken, 80er/90er …). <em>(kann ich umsetzen)</em></li>
+    <li><b class="k">M1</b><strong>Papier oder Handy?</strong> Siehe Abschnitt 1 mit Vor- und Nachteilen.
+      <div class="opt-list">a) Papier · b) Handy mit Papier als Notfall-Plan</div>
+      <em>(beides umsetzbar: Druckvorlagen bzw. die Quiz-Webseite)</em></li>
+    <li><b class="k">M2</b><strong>Gibt es am Ort Handyempfang oder WLAN?</strong> Davon hängt M1 ab. <em>(muss vor Ort geklärt werden)</em></li>
+    <li><b class="k">M3</b><strong>Bei der Handy-Variante: jedes Handy oder ein Handy pro Team?</strong> Mit jedem Handy sieht jeder die Frage; mit einem Handy pro Team liegen weniger Handys auf dem Tisch. <em>(beides umsetzbar)</em></li>
+    <li><b class="k">M4</b><strong>Teams: reiner Zufall oder gelenkter Zufall?</strong> Siehe Abschnitt 3. <em>(Lose und Tabelle liefere ich, die Zuordnung bei B macht ihr)</em></li>
+    <li><b class="k">M5</b><strong>Name der Feier:</strong> Einer aus Abschnitt 9 oder ein eigener? <em>(fließt in Seite, Ansagen und Druckvorlagen ein)</em></li>
+    <li><b class="k">M6</b><strong>Wer moderiert?</strong> Eine Person als Spielleitung, die trotzdem mitspielt. <em>(Drehbuch ist fertig, die Person müsst ihr finden)</em></li>
+    <li><b class="k">M7</b><strong>Preise:</strong> Was gibt es für Sieger und Trostpreis, und wer besorgt es? <em>(nicht von mir umsetzbar)</em></li>
   </ul>
 </section>
 
 </main>
 
-<footer><div class="wrap">Konzeptentwurf · Weihnachts-Quiz · Teil der <a href="index.html">etechnis Welt</a></div></footer>
+<footer><div class="wrap">Konzeptentwurf · Quiz-Abend · Teil der <a href="index.html">etechnis Welt</a> · Fakten geprüft im November 2026</div></footer>
 
 <script>
 (function(){
-  /* Antworten alle auf-/zuklappen */
+  /* Variante umschalten */
+  var KEYM="ew-quiz-mode";
+  function setMode(m){
+    document.body.classList.toggle("m-paper",m==="paper");
+    document.body.classList.toggle("m-digital",m==="digital");
+    try{localStorage.setItem(KEYM,m)}catch(e){}
+  }
+  var saved=null;try{saved=localStorage.getItem(KEYM)}catch(e){}
+  if(location.hash==="#handy")saved="digital";
+  if(saved==="digital"||saved==="paper")setMode(saved);
+  [].forEach.call(document.querySelectorAll(".mode button"),function(b){
+    b.addEventListener("click",function(){setMode(b.dataset.mode)});
+  });
+
+  /* Antworten auf-/zuklappen */
   var btn=document.getElementById("toggleAll");
   var all=function(){return document.querySelectorAll("details.q")};
   btn.addEventListener("click",function(){
@@ -520,46 +810,47 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
     [].forEach.call(all(),function(d){d.open=anyClosed});
     btn.textContent=anyClosed?"Alle Antworten verbergen":"Alle Antworten zeigen";
   });
-  /* Beim Drucken alle Antworten zeigen */
   var before=[];
   window.addEventListener("beforeprint",function(){before=[].map.call(all(),function(d){var o=d.open;d.open=true;return o})});
   window.addEventListener("afterprint",function(){[].forEach.call(all(),function(d,i){d.open=before[i]})});
 
   /* Punktetafel */
-  var KEY="ew-weihnachtsquiz-v1";
-  var DEF=[{n:"Team Stern ⭐"},{n:"Team Tanne 🎄"},{n:"Team Glocke 🔔"},{n:"Team Schneemann ⛄"}];
-  function blank(t){return {n:t.n||"",r:[t.r?t.r[0]:"",t.r?t.r[1]:"",t.r?t.r[2]:"",t.r?t.r[3]:""],b:t.b||"",j:t.j||"0"}}
+  var KEY="ew-quiz-board-v2", N=5; /* R1-R4, Rätsel */
+  var DEF=[{n:"🍀 Kleeblatt"},{n:"🐷 Glücksschwein"},{n:"🐞 Marienkäfer"},{n:"🍄 Fliegenpilz"}];
+  function blank(t){var r=[];for(var i=0;i<N;i++)r.push(t.r&&t.r[i]!=null?t.r[i]:"");return {n:t.n||"",r:r,b:t.b||"",j:t.j||"0"}}
   var state;
   try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){state=null}
   if(!Array.isArray(state)||!state.length)state=DEF.map(blank);else state=state.map(blank);
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
   function num(v){var x=parseFloat(String(v).replace(",","."));return isNaN(x)?0:x}
-  function total(t){var s=0;for(var i=0;i<4;i++){var p=num(t.r[i]);if(String(i+1)===t.j)p*=2;s+=p}return s+num(t.b)}
+  function total(t){var s=0;for(var i=0;i<N;i++){var p=num(t.r[i]);if(i<4&&String(i+1)===t.j)p*=2;s+=p}return s+num(t.b)}
   var tb=document.querySelector("#board tbody");
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
   function render(){
     tb.innerHTML="";
     state.forEach(function(t,ti){
       var tr=document.createElement("tr");
-      var html='<td><input type="text" data-k="n" value="'+t.n.replace(/"/g,"&quot;")+'" aria-label="Teamname"></td>';
-      for(var i=0;i<4;i++)html+='<td><input type="number" inputmode="numeric" data-k="r'+i+'" value="'+t.r[i]+'" aria-label="Runde '+(i+1)+'"></td>';
-      html+='<td><input type="number" inputmode="numeric" data-k="b" value="'+t.b+'" aria-label="Bonus"></td>';
-      html+='<td><select data-k="j" aria-label="Joker-Runde">'+["0","1","2","3","4"].map(function(v){return '<option value="'+v+'"'+(t.j===v?" selected":"")+'>'+(v==="0"?"–":"R"+v)+'</option>'}).join("")+'</select></td>';
-      html+='<td class="sum"></td>';
-      tr.innerHTML=html;tr.dataset.i=ti;tb.appendChild(tr);
+      var h='<td><input type="text" data-k="n" value="'+esc(t.n)+'" aria-label="Teamname"></td>';
+      var lab=["Runde 1","Runde 2","Runde 3","Runde 4","Rätselblatt"];
+      for(var i=0;i<N;i++)h+='<td><input type="number" inputmode="numeric" data-k="r'+i+'" value="'+esc(t.r[i])+'" aria-label="'+lab[i]+'"></td>';
+      h+='<td><input type="number" inputmode="numeric" data-k="b" value="'+esc(t.b)+'" aria-label="Bonus"></td>';
+      h+='<td><select data-k="j" aria-label="Joker-Runde">'+["0","1","2","3","4"].map(function(v){return '<option value="'+v+'"'+(t.j===v?" selected":"")+'>'+(v==="0"?"–":"R"+v)+'</option>'}).join("")+'</select></td>';
+      h+='<td class="sum"></td>';
+      tr.innerHTML=h;tr.dataset.i=ti;tb.appendChild(tr);
     });
     sums();
   }
   function sums(){
     var max=-Infinity;state.forEach(function(t){max=Math.max(max,total(t))});
-    [].forEach.call(tb.rows,function(tr){var t=state[tr.dataset.i];var s=total(t);tr.querySelector(".sum").textContent=s;tr.classList.toggle("lead",s>0&&s===max)});
+    [].forEach.call(tb.rows,function(tr){var s=total(state[tr.dataset.i]);tr.querySelector(".sum").textContent=s;tr.classList.toggle("lead",s>0&&s===max)});
   }
-  tb.addEventListener("input",function(e){
+  function upd(e){
     var el=e.target,tr=el.closest("tr");if(!tr)return;var t=state[tr.dataset.i],k=el.dataset.k;
     if(k==="n")t.n=el.value;else if(k==="b")t.b=el.value;else if(k==="j")t.j=el.value;else if(k&&k[0]==="r")t.r[+k[1]]=el.value;
     save();sums();
-  });
-  tb.addEventListener("change",function(e){if(e.target.dataset.k==="j"){state[e.target.closest("tr").dataset.i].j=e.target.value;save();sums()}});
-  document.getElementById("addTeam").addEventListener("click",function(){state.push(blank({n:"Team "+(state.length+1)}));save();render()});
+  }
+  tb.addEventListener("input",upd);tb.addEventListener("change",upd);
+  document.getElementById("addTeam").addEventListener("click",function(){state.push(blank({n:state.length===4?"⭐ Glücksstern":"Team "+(state.length+1)}));save();render()});
   document.getElementById("resetBoard").addEventListener("click",function(){if(confirm("Alle Punkte und Teamnamen zurücksetzen?")){state=DEF.map(blank);save();render()}});
   render();
 })();

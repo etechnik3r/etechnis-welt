@@ -13,7 +13,7 @@ erweitert wird. Als **Progressive Web App** installierbar.
 ├── elektroauto-kostenvergleich.html   Rechner: Kostenvergleich Verbrenner vs. Elektroauto
 ├── elektroauto-nachtfahrt.html        Ratgeber: Langstrecke – Tipps für Nachtfahrten
 ├── zendure-simulation.html            Simulation: Zendure-Speicher im Verbund
-├── weihnachtsquiz.html                Konzept: Weihnachts-Quiz in 4 Runden (eigenständig, nicht in der Navigation)
+├── weihnachtsquiz.html                Konzept: Quiz-Abend in 4 Runden, Papier/Handy umschaltbar (eigenständig, nicht in der Navigation)
 ├── css/
 │   ├── site.css                       Design-System (Tokens) + Basis + Navigation
 │   └── tools.css                      Wiederverwendbare Bausteine für Rechner/Tools
