@@ -307,22 +307,35 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
           <div class="cta">Team beitreten</div>
         </div></div></div><div class="phone-cap">1 · Link öffnen, Team wählen</div></div>
       <div class="phonewrap"><div class="phone"><div class="scr">
-        <div class="bar"><span>Runde 1 · Frage 2</span><span>⏱ 0:32</span></div>
+        <div class="bar"><span>Runde 1 · Frage 2</span><span>🐷</span></div>
         <div class="body">
           <div class="q">Nach wem ist der Januar benannt?</div>
           <div class="opt">A · Juno</div><div class="opt sel">B · Janus</div><div class="opt">C · Jupiter</div><div class="opt">D · Julius Caesar</div>
-          <div class="small">Team-Antwort: B · änderbar bis Zeitende</div>
-          <div class="cta">Abgegeben ✓</div>
-        </div></div></div><div class="phone-cap">2 · Frage beantworten</div></div>
+          <div class="small">Team-Auswahl: B · bis zum Einloggen änderbar</div>
+          <div class="cta">Antwort einloggen</div>
+        </div></div></div><div class="phone-cap">2 · Antwort wählen &amp; einloggen</div></div>
       <div class="phonewrap"><div class="phone"><div class="scr">
-        <div class="bar" style="background:var(--green)"><span>Vorleser · Runde 1</span><span>3/4</span></div>
+        <div class="bar" style="background:var(--green)"><span>Vorleser · Frage 2</span><span>3/4</span></div>
         <div class="body">
-          <div class="small">Abgaben: 🍀 ✓ 🐷 ✓ 🐞 ✓ 🍄 …</div>
+          <div class="q">Eingeloggt:</div>
+          <div class="row"><span>🍀 Kleeblatt</span><b style="color:var(--green)">✓</b></div>
+          <div class="row"><span>🐷 Glücksschwein</span><b style="color:var(--green)">✓</b></div>
+          <div class="row"><span>🐞 Marienkäfer</span><b style="color:var(--green)">✓</b></div>
+          <div class="row"><span>🍄 Fliegenpilz</span><b style="color:var(--red)">fehlt</b></div>
+          <div class="small">Tipp: Team Fliegenpilz direkt ansprechen.</div>
+          <div class="cta" style="background:#c9d1d4">Auflösen (wenn alle drin)</div>
+        </div></div></div><div class="phone-cap">3 · Vorleser sieht, wer fehlt</div></div>
+      <div class="phonewrap"><div class="phone"><div class="scr">
+        <div class="bar" style="background:var(--green)"><span>Vorleser · Frage 2</span><span>4/4 ✓</span></div>
+        <div class="body">
           <div class="q">Lösung: B · Janus</div>
           <div class="small">Zum Vorlesen: Der römische Gott mit zwei Gesichtern – eins schaut zurück, eins nach vorn. Passt zum Jahresanfang.</div>
-          <div class="cta red">Auflösen</div>
+          <div class="row"><span>🍀 B</span><b style="color:var(--green)">+1</b></div>
+          <div class="row"><span>🐷 B</span><b style="color:var(--green)">+1</b></div>
+          <div class="row"><span>🐞 A</span><b>0</b></div>
+          <div class="row"><span>🍄 B</span><b style="color:var(--green)">+1</b></div>
           <div class="cta">Nächste Frage</div>
-        </div></div></div><div class="phone-cap">3 · Vorleser-Ansicht</div></div>
+        </div></div></div><div class="phone-cap">4 · Auflösung &amp; Punkte</div></div>
       <div class="phonewrap"><div class="phone"><div class="scr">
         <div class="bar"><span>Zwischenstand</span><span>nach R1</span></div>
         <div class="body">
@@ -332,7 +345,7 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
           <div class="row"><span>🍄 Fliegenpilz</span><b>5</b></div>
           <div class="row"><span>🐞 Marienkäfer</span><b>3</b></div>
           <div class="small" style="margin-top:auto">Erscheint erst, wenn die Spielleitung ihn freigibt.</div>
-        </div></div></div><div class="phone-cap">4 · Punktestand</div></div>
+        </div></div></div><div class="phone-cap">5 · Zwischenstand</div></div>
     </div>
     <div class="grid two" style="margin-top:10px">
       <div class="card">
@@ -340,7 +353,8 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
         <ul>
           <li>Eine Webseite in PHP, die Daten liegen in einer kleinen Datei auf dem Webspace (SQLite oder JSON). Eine Datenbank muss niemand einrichten.</li>
           <li>Die Handys fragen alle 1–2 Sekunden nach dem aktuellen Stand. Das läuft auf jedem normalen Webspace.</li>
-          <li>Jedes Teammitglied sieht die Frage. Antworten kann jede Person aus dem Team; es gilt die zuletzt abgeschickte Antwort, und alle im Team sehen sie sofort.</li>
+          <li>Jedes Teammitglied sieht die Frage. Das Team wählt gemeinsam eine Antwort und <strong>loggt sie ein</strong>; danach ist sie fest. Es gibt <strong>kein Zeitlimit</strong>.</li>
+          <li>Der Vorleser sieht live, welche Teams schon eingeloggt haben, und kann die fehlenden direkt ansprechen. „Auflösen“ geht erst, wenn alle drin sind. Nur für den Notfall (Akku leer) gibt es „Ohne dieses Team auflösen“ mit Rückfrage.</li>
           <li>Multiple Choice und Schätzfragen wertet die Seite allein aus. Bei offenen Antworten macht sie einen Vorschlag, der Vorleser bestätigt mit ✓ oder ✗. So ist „Gold“ und „gold“ egal.</li>
           <li>Gespeichert werden nur Teamnamen und Antworten, nach dem Abend wird alles gelöscht.</li>
         </ul>
@@ -442,8 +456,8 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
       </ul>
     </div>
     <div class="card gold">
-      <h3>🍀 Der Joker</h3>
-      <p>Jedes Team hat <strong>einen Joker</strong>. Wer ihn <strong>vor Beginn einer Runde</strong> einsetzt, bekommt in dieser Runde <strong>doppelte Punkte</strong>. <span class="p-only">Dazu die Joker-Karte bei der Spielleitung abgeben.</span><span class="d-only">Dazu auf dem Handy „Joker setzen“ tippen, das geht nur vor der ersten Frage.</span></p>
+      <h3>✅ Erst alle, dann die Auflösung</h3>
+      <p><span class="p-only">Aufgelöst wird erst, wenn alle Teams ihre Karte zeigen bzw. ihren Zettel abgegeben haben.</span><span class="d-only">Aufgelöst wird erst, wenn <strong>alle Teams ihre Antwort eingeloggt</strong> haben. Es gibt kein Zeitlimit; der Vorleser sieht, wer noch fehlt, und feuert die Nachzügler an.</span></p>
     </div>
     <div class="card">
       <h3>Fair Play</h3>
@@ -472,7 +486,7 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
     <div class="scene-body">
       <div class="do p-only"><ol>
         <li>Pro Runde einen Umschlag packen: „Runde X – Fragen“ mit der Vorleser-Karte und darin einen kleineren, zugeklebten Umschlag „Runde X – Lösungen“.</li>
-        <li>Lose (5 Symbole × 5), Sticker, Antwortzettel, A–D-Karten, Joker-Karten, Rätselblätter und Stifte in eine Kiste packen.</li>
+        <li>Lose (5 Symbole × 5), Sticker, Antwortzettel, A–D-Karten, Rätselblätter und Stifte in eine Kiste packen.</li>
         <li>Klemmbretter oder feste Unterlagen mitnehmen. Auf Stehtischen schreibt es sich schlecht.</li>
         <li>Ein Glas mit Schokolinsen abzählen. Das ist die Stechfrage, falls es am Ende einen Gleichstand gibt.</li>
       </ol></div>
@@ -500,10 +514,10 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
   <div class="scene">
     <div class="scene-head"><span class="sn">Szene 2</span><h3>Begrüßung &amp; Regeln</h3><span class="who">Spielleitung · 3 Min.</span></div>
     <div class="scene-body">
-      <div class="say p-only">„Herzlich willkommen zur Weihnachtsfeier, ein bisschen später als im Kalender, dafür mit Quiz! Über den Abend verteilt gibt's vier kurze Runden, immer dann, wenn ihr etwas zu essen habt. Jede Runde liest jemand aus einem anderen Team vor, so spielen alle mit. Pro richtiger Antwort gibt's einen Punkt. Jedes Team hat einen Joker, den gebt ihr vor einer Runde bei mir ab, dann zählt die Runde doppelt. Nach der ersten Runde bekommt ihr außerdem ein Rätselblatt, das löst ihr nebenbei beim Essen. Handys bleiben in der Tasche. Wer googelt, bringt beim Finale den ersten Toast aus. Jetzt habt ihr zwei Minuten: Gebt euch einen Teamnamen und bestimmt, wer bei euch schreibt.“</div>
-      <div class="say d-only">„Herzlich willkommen zur Weihnachtsfeier, ein bisschen später als im Kalender, dafür mit Quiz! Über den Abend verteilt gibt's vier kurze Runden, immer dann, wenn ihr etwas zu essen habt. Die Fragen kommen auf eure Handys. Jede Runde liest jemand aus einem anderen Team vor, so spielen alle mit. Ihr antwortet als Team, es zählt die zuletzt abgeschickte Antwort. Jedes Team hat einen Joker, den setzt ihr vor einer Runde auf dem Handy, dann zählt die Runde doppelt. Nach der ersten Runde gibt's außerdem ein Rätselblatt auf Papier, das löst ihr nebenbei beim Essen. Das Handy ist nur zum Antworten da. Wer googelt, bringt beim Finale den ersten Toast aus. Jetzt habt ihr zwei Minuten: Gebt euch einen Teamnamen und tippt ihn ein.“</div>
+      <div class="say p-only">„Herzlich willkommen zur Weihnachtsfeier, ein bisschen später als im Kalender, dafür mit Quiz! Über den Abend verteilt gibt's vier kurze Runden, immer dann, wenn ihr etwas zu essen habt. Jede Runde liest jemand aus einem anderen Team vor, so spielen alle mit. Pro richtiger Antwort gibt's einen Punkt. Nach der ersten Runde bekommt ihr außerdem ein Rätselblatt, das löst ihr nebenbei beim Essen. Handys bleiben in der Tasche. Wer googelt, bringt beim Finale den ersten Toast aus. Jetzt habt ihr zwei Minuten: Gebt euch einen Teamnamen und bestimmt, wer bei euch schreibt.“</div>
+      <div class="say d-only">„Herzlich willkommen zur Weihnachtsfeier, ein bisschen später als im Kalender, dafür mit Quiz! Über den Abend verteilt gibt's vier kurze Runden, immer dann, wenn ihr etwas zu essen habt. Die Fragen kommen auf eure Handys. Jede Runde liest jemand aus einem anderen Team vor, so spielen alle mit. Ihr antwortet als Team: Wenn ihr euch einig seid, loggt ihr die Antwort ein. Es gibt keinen Zeitdruck, aufgelöst wird erst, wenn alle Teams eingeloggt haben. Nach der ersten Runde gibt's außerdem ein Rätselblatt auf Papier, das löst ihr nebenbei beim Essen. Das Handy ist nur zum Antworten da. Wer googelt, bringt beim Finale den ersten Toast aus. Jetzt habt ihr zwei Minuten: Gebt euch einen Teamnamen und tippt ihn ein.“</div>
       <div class="do"><ul>
-        <li><span class="p-only">Pro Team verteilen: Klemmbrett, Stift, Antwortzettel, A–D-Karten, Joker-Karte. Teamnamen auf der Punktetafel notieren.</span><span class="d-only">Auf der Spielleitungs-Seite prüfen, ob alle Teams verbunden sind (grüner Haken).</span></li>
+        <li><span class="p-only">Pro Team verteilen: Klemmbrett, Stift, Antwortzettel, A–D-Karten. Teamnamen auf der Punktetafel notieren.</span><span class="d-only">Auf der Spielleitungs-Seite prüfen, ob alle Teams verbunden sind (grüner Haken).</span></li>
         <li>Optional: Für den lustigsten Teamnamen gibt's einen Bonuspunkt.</li>
       </ul></div>
     </div>
@@ -515,10 +529,9 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
       <div class="do"><ol>
         <li>Mit Glöckchen oder Glas um Aufmerksamkeit bitten.</li>
         <li>Zwischenstand ansagen (ab Runde 2).</li>
-        <li>Joker einsammeln<span class="d-only"> (die Seite zeigt, wer ihn gesetzt hat)</span>.</li>
         <li>Vorleser-Team aufrufen, das Team schickt eine Person nach vorn. <span class="p-only">Ihr den Umschlag der Runde geben.</span><span class="d-only">Auf der Spielleitungs-Seite das Vorleser-Team auswählen; auf dessen Handy erscheint die Vorleser-Ansicht.</span></li>
       </ol></div>
-      <div class="say">„Kurzer Blick auf die Tabelle: [Team] führt mit [X] Punkten, dahinter [Team] mit [Y] … Wer seinen Joker spielen will, macht das jetzt. Vorlesen darf diese Runde Team [Symbol]. Wer von euch kommt nach vorn?“</div>
+      <div class="say">„Kurzer Blick auf die Tabelle: [Team] führt mit [X] Punkten, dahinter [Team] mit [Y] … Vorlesen darf diese Runde Team [Symbol]. Wer von euch kommt nach vorn?“</div>
     </div>
   </div>
 
@@ -535,13 +548,14 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
         <li>Alle Zettel zur Spielleitung, fertig. Applaus für dich!</li>
       </ol></div>
       <div class="do d-only"><ol>
-        <li>Auf deinem Handy steht „Du liest Runde X vor“. Die Antworten siehst du erst, wenn alle abgegeben haben.</li>
+        <li>Auf deinem Handy steht „Du liest Runde X vor“. Die Lösung siehst du erst, wenn alle Teams eingeloggt haben.</li>
         <li>Die Einleitung der Runde vorlesen (steht auf dem Handy), dann „Frage 1 freigeben“ tippen.</li>
         <li>Die Frage erscheint bei allen. Lies sie trotzdem laut und <strong>zweimal</strong> vor, das gibt Stimmung.</li>
-        <li>Unten siehst du, wie viele Teams abgegeben haben. Sind alle durch oder ist die Zeit um, tippst du „Auflösen“.</li>
+        <li>Du siehst, welche Teams schon eingeloggt haben. Fehlt noch jemand, sprich das Team direkt an (Ansage unten). Sobald alle drin sind, tippst du „Auflösen“.</li>
         <li>Jetzt erscheinen Lösung und der Satz zum Vorlesen. Beides vorlesen. Bei offenen Antworten zeigt dir die Seite die Team-Antworten mit Vorschlag; tippe ✓ oder ✗.</li>
         <li>„Nächste Frage“ tippen. Nach der letzten Frage gibst du das Wort zurück an die Spielleitung.</li>
       </ol></div>
+      <div class="say d-only">Wenn ein Team fehlt: „Team [Symbol], wir warten nur noch auf euch! Einigt euch und loggt ein, dann gibt's die Auflösung.“</div>
       <div class="say">„Hallo zusammen, ich lese euch Runde [X] vor: [Titel der Runde]. Es gibt [Anzahl] Fragen, ich lese jede zweimal vor. Los geht's mit Frage 1 …“</div>
       <div class="note mod"><b>Tipps fürs Vorlesen:</b> Langsam und laut sprechen, lieber eine Frage weniger als eine Runde, die sich zieht. Bei der Auflösung kurz fragen „Wer hatte das?“, das sorgt für Jubel. Niemals einzelne Personen vorführen, immer nur Teams.</div>
     </div>
@@ -713,7 +727,6 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
       <li class="p-only"><strong>4 Rundenumschläge</strong> mit Fragen und verschlossenem Lösungsumschlag</li>
       <li class="p-only"><strong>A/B/C/D-Karten</strong>, ein Satz pro Team</li>
       <li class="p-only"><strong>Antwortzettel</strong> für Runde 2 und 4, plus Reserve</li>
-      <li class="p-only"><strong>Joker-Karten</strong>, eine pro Team</li>
       <li class="p-only"><strong>Notizblatt</strong> für die Multiple-Choice-Runden (Team × Frage)</li>
       <li class="p-only"><strong>Klemmbretter + Stifte</strong></li>
       <li class="p-only"><strong>Punktetafel:</strong> Flipchart oder die Tabelle unten</li>
@@ -728,10 +741,10 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
 <!-- 8 PUNKTETAFEL -->
 <section id="punkte">
   <h2><span class="num">8</span>Punktetafel</h2>
-  <p class="sub"><span class="d-only">In der Handy-Variante zählt die Seite selbst. Diese Tafel ist dann der Notfall-Plan.</span> Teamnamen eintragen, Punkte je Runde und Rätselblatt eingeben und die Joker-Runde wählen. Die Summe wird automatisch berechnet und die Führung markiert. Die Eingaben bleiben auf diesem Gerät gespeichert.</p>
+  <p class="sub"><span class="d-only">In der Handy-Variante zählt die Seite selbst. Diese Tafel ist dann der Notfall-Plan.</span> Teamnamen eintragen, Punkte je Runde und Rätselblatt eingeben. Die Summe wird automatisch berechnet und die Führung markiert. Die Eingaben bleiben auf diesem Gerät gespeichert.</p>
   <div class="board-wrap">
     <table class="board" id="board">
-      <thead><tr><th>Team</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Rätsel</th><th>Bonus</th><th>Joker</th><th>Summe</th></tr></thead>
+      <thead><tr><th>Team</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>Rätsel</th><th>Bonus</th><th>Summe</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
@@ -764,6 +777,8 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
       <li><strong>Vorlesen wechselt:</strong> Jede Runde liest ein anderes Team vor. Niemand muss den ganzen Abend aussetzen.</li>
       <li><strong>Teamzahl vor Ort:</strong> Material für bis zu 5 Teams, entschieden wird nach dem Zählen.</li>
       <li><strong>Inhalt:</strong> Jahresanfang, Jahresrückblick 2026, viel Allgemeinwissen. Keine Musik-Runde, keine Insider-Runde.</li>
+      <li><strong>Kein Joker:</strong> Jede Runde zählt gleich, das hält die Regeln einfach.</li>
+      <li><strong>Handy-Variante ohne Zeitlimit:</strong> Aufgelöst wird, wenn alle Teams eingeloggt haben; der Vorleser sieht, wer fehlt.</li>
       <li><strong>Später:</strong> Druckvorlagen und Feinschliff der Fragen, wenn das Konzept steht.</li>
     </ul>
   </div>
@@ -815,15 +830,15 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
   window.addEventListener("afterprint",function(){[].forEach.call(all(),function(d,i){d.open=before[i]})});
 
   /* Punktetafel */
-  var KEY="ew-quiz-board-v2", N=5; /* R1-R4, Rätsel */
+  var KEY="ew-quiz-board-v3", N=5; /* R1-R4, Rätsel */
   var DEF=[{n:"🍀 Kleeblatt"},{n:"🐷 Glücksschwein"},{n:"🐞 Marienkäfer"},{n:"🍄 Fliegenpilz"}];
-  function blank(t){var r=[];for(var i=0;i<N;i++)r.push(t.r&&t.r[i]!=null?t.r[i]:"");return {n:t.n||"",r:r,b:t.b||"",j:t.j||"0"}}
+  function blank(t){var r=[];for(var i=0;i<N;i++)r.push(t.r&&t.r[i]!=null?t.r[i]:"");return {n:t.n||"",r:r,b:t.b||""}}
   var state;
   try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){state=null}
   if(!Array.isArray(state)||!state.length)state=DEF.map(blank);else state=state.map(blank);
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
   function num(v){var x=parseFloat(String(v).replace(",","."));return isNaN(x)?0:x}
-  function total(t){var s=0;for(var i=0;i<N;i++){var p=num(t.r[i]);if(i<4&&String(i+1)===t.j)p*=2;s+=p}return s+num(t.b)}
+  function total(t){var s=0;for(var i=0;i<N;i++){var p=num(t.r[i]);s+=p}return s+num(t.b)}
   var tb=document.querySelector("#board tbody");
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
   function render(){
@@ -834,7 +849,6 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
       var lab=["Runde 1","Runde 2","Runde 3","Runde 4","Rätselblatt"];
       for(var i=0;i<N;i++)h+='<td><input type="number" inputmode="numeric" data-k="r'+i+'" value="'+esc(t.r[i])+'" aria-label="'+lab[i]+'"></td>';
       h+='<td><input type="number" inputmode="numeric" data-k="b" value="'+esc(t.b)+'" aria-label="Bonus"></td>';
-      h+='<td><select data-k="j" aria-label="Joker-Runde">'+["0","1","2","3","4"].map(function(v){return '<option value="'+v+'"'+(t.j===v?" selected":"")+'>'+(v==="0"?"–":"R"+v)+'</option>'}).join("")+'</select></td>';
       h+='<td class="sum"></td>';
       tr.innerHTML=h;tr.dataset.i=ti;tb.appendChild(tr);
     });
@@ -846,7 +860,7 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding:22px 0 40px;colo
   }
   function upd(e){
     var el=e.target,tr=el.closest("tr");if(!tr)return;var t=state[tr.dataset.i],k=el.dataset.k;
-    if(k==="n")t.n=el.value;else if(k==="b")t.b=el.value;else if(k==="j")t.j=el.value;else if(k&&k[0]==="r")t.r[+k[1]]=el.value;
+    if(k==="n")t.n=el.value;else if(k==="b")t.b=el.value;else if(k&&k[0]==="r")t.r[+k[1]]=el.value;
     save();sums();
   }
   tb.addEventListener("input",upd);tb.addEventListener("change",upd);
